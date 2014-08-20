@@ -3,6 +3,12 @@ library ROOM;
 import 'RoomType.dart';
 import 'TileObject.dart';
 import 'TileType.dart';
+import 'Game.dart';
+import 'MonsterType.dart';
+import 'Monster.dart';
+import 'Player.dart';
+import 'PlayerType.dart';
+import 'Enum.dart';
 
 class Room
 {
@@ -15,7 +21,8 @@ class Room
   int maxY;
   int midX;
   int midY;
-  List<List<TileObject>> contents = [];
+  List<List<Enum>> contents = [];
+  toString() => "$roomType";
   
   Room(this.minX, this.minY, int width, int height, RoomType roomType)
   {
@@ -25,6 +32,7 @@ class Room
     this.height = this.maxY - this.minY + 1;
     this.midX = this.minX + this.width ~/ 2;
     this.midY = this.minY + this.height ~/ 2;
+    this.roomType = roomType;
     
     this.clearRoom();
     this.addContents();
@@ -44,7 +52,7 @@ class Room
       row = [];
       for(int x = 0, width = this.width; x < width - 2; x++)
       {
-        row.add(new TileObject(x, y, TileType.GROUND));
+        row.add(TileType.GROUND);
       }      
       this.contents.add(row);
     }
@@ -52,17 +60,14 @@ class Room
   
   void addContents()
   {
-    /*switch(roomType)
+    switch(roomType)
     {
-      case SPIKEY:
-        for(int i = 0; i < RNG.nextInt(this.width); i++)
-        {
-          int x = RNG.nextInt(this.width - 2);
-          int y = RNG.nextInt(this.height - 2);
-          contents[y][x] = new Tile(this.minX + 1 + x, this.maxY - 1 - y, SPIKES);
-        }
+      case RoomType.STARTROOM:
+        int x = RNG.nextInt(this.width - 2);
+        int y = RNG.nextInt(this.height - 2);
+        contents[y][x] = PlayerType.GENERIC;
         break;
-      case MONSTERROOM:
+      /*case MONSTERROOM:
         for(int i = 0; i < RNG.nextInt(3) + this.width ~/ 3; i++)
         {
           int x = RNG.nextInt(this.width - 2);
@@ -74,9 +79,9 @@ class Room
         int x = RNG.nextInt(this.width - 2);
         int y = RNG.nextInt(this.height - 2);
         contents[y][x] = new Item(x, y);
-        break;
+        break;*/
       default:
         break;
-    }*/
+    }
   }
 }

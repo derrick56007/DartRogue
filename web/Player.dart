@@ -1,8 +1,9 @@
 library PLAYER;
 
 import 'Entity.dart';
+import 'TileObject.dart';
 
 class Player extends Entity
 {
-  Player(int x, int y, var type) : super(x, y, type);
+  Player(int x, int y, TileObject tileObject, var type) : super(x, y, tileObject, type);
 }

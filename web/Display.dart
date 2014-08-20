@@ -46,7 +46,7 @@ class Display
       'WALL' : "□",
       'STONE' : "8",
       'GROUND' : ".",
-      'PLAYER' : "@",
+      'GENERIC' : "@",
       'UNKNOWN' : "X",
       'SPIKES' : "^",
       'BONES' : "%",

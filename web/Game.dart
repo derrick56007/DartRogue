@@ -4,13 +4,19 @@ import 'World.dart';
 import 'Display.dart';
 import 'Input.dart';
 import 'dart:math';
-import 'dart:html';
+import 'dart:html' hide Player;
+import 'Monster.dart';
+import 'Player.dart';
 
 World world;
 Display display;
 Input input;
-bool allVisible = true;
+bool allVisible = false;
 Random RNG;
+Element playerStats;
+Element enemyStats;
+Element narration;
+Element decision;
 
 class Game 
 {
@@ -19,6 +25,7 @@ class Game
   
   Game()
   {
+    addDefineElements();
     if (window.location.href.contains("?")) 
     {
       try
@@ -64,4 +71,116 @@ dynamic getRandomWeighted(List chanceList)
 int getPosOrNeg(int number, int range)
 {
   return number + (RNG.nextBool() ? -RNG.nextInt(range) : RNG.nextInt(range));
+}
+
+void addDefineElements()
+{
+  playerStats = makeStats("player");
+  querySelector("#HUD").children.add(playerStats);
+  playerStats = querySelector("#playerStats");
+  
+  enemyStats = makeStats("enemy");
+  querySelector("#HUD").children.add(enemyStats);
+  enemyStats = querySelector("#enemyStats");
+  enemyStats.style.opacity = "0";
+  
+  narration = querySelector("#narration");
+  
+  decision = new Element.div();
+  decision.id = "decision";
+  Element title = new Element.div();
+  title.text = "Decision";
+  title.className = "statTitle";
+  decision.children.add(title);
+  Element ynHolder = new Element.div();
+  ynHolder.id = "ynHolder";
+  Element yes = new Element.div();
+  yes.text = "YES";
+  yes.className = "choice";
+  Element no = new Element.div();
+  no.text = "NO";
+  no.className = "choice";
+  ynHolder.children.add(yes);
+  ynHolder.children.add(no);
+  decision.children.add(ynHolder);
+  querySelector("#narrationHolder").children.add(decision);
+  decision = querySelector("#decision");
+  decision.style.opacity = "0";
+  
+  for(int i = 0; i < 9; i++)
+  {
+    addToNarration(" ", "black");
+  }
+}
+
+Element makeStats(String statName)
+{
+  Element stats = new Element.div();
+  stats.id = "${statName}Stats";
+  stats.className = "stats";
+  
+  Element name = new Element.div();
+  name.className = "statTitle";
+  name.text = statName.toUpperCase();
+  stats.children.add(name);
+  
+  Element HP = new Element.div();
+  //HP.className = "statTitle";
+  HP.text = "HP:";
+  stats.children.add(HP);
+  
+  Element atk = new Element.div();
+  //atk.className = "statTitle";
+  atk.text = "ATK:";
+  stats.children.add(atk);
+  
+  Element def = new Element.div();
+  //def.className = "statTitle";
+  def.text = "DEF:";
+  stats.children.add(def);
+  
+  Element items = new Element.div();
+  items.className = "itemsStat";
+  items.text = "Items:";
+  stats.children.add(items);
+  
+  return stats;
+}
+
+void refreshPlayerStats(Player player)
+{
+  playerStats.children[1].text = "HP: ${player.HP}/${player.MAXHP}";
+  playerStats.children[2].text = "ATK: ${player.atk}";
+  playerStats.children[3].text = "DEF: ${player.def}";
+  playerStats.children[4].text = "Items: ${player.items}";
+}
+
+void refreshEnemyStats(Monster monster)
+{
+  enemyStats.children[1].text = "HP: ${monster.HP}/${monster.MAXHP}";
+  enemyStats.children[2].text = "ATK: ${monster.atk}";
+  enemyStats.children[3].text = "DEF: ${monster.def}";
+  enemyStats.children[4].text = "Items: ${monster.items}";
+  enemyStats.style.opacity = "1";
+}
+
+void addToNarration(String text, String color)
+{
+  Element line = new Element.div();
+  line.className = "narrationLine";
+  line.style.color = color;
+  line.text = text;
+  narration.children.add(line);
+  narration.scrollTop = narration.scrollHeight;
+  
+  while(narration.children.length > 10)
+  {
+    narration.children.first.remove();
+  }
+  
+  for(int i = narration.children.length - 1; i > 0; i)
+  {
+    narration.children[i].style.opacity = "${(i+1)/10}";
+    i--;
+  }
 }
