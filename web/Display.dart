@@ -12,12 +12,12 @@ class Display
   void displayWorld()
   {
     display.children.clear();
-    for(int i = 0, length = world.grid.length; i < length; i++)
+    for(int i = 0, length = world.grid.nodes.length; i < length; i++)
     {
       String lineText = "";
-      for(int j = 0, length2 = world.grid[i].length; j < length2; j++)
+      for(int j = 0, length2 = world.grid.nodes[i].length; j < length2; j++)
       {
-        lineText = lineText + getChar(world.grid[i][j]);
+        lineText = lineText + getChar(world.grid.nodes[i][j]);
       }
       Element line = new Element.div();
       line.text = lineText;
@@ -50,6 +50,7 @@ class Display
       'UNKNOWN' : "X",
       'SPIKES' : "^",
       'BONES' : "%",
+      "GOBLIN" : "G"
     };
   }
 }

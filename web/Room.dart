@@ -67,14 +67,15 @@ class Room
         int y = RNG.nextInt(this.height - 2);
         contents[y][x] = PlayerType.GENERIC;
         break;
-      /*case MONSTERROOM:
+      case RoomType.MONSTERROOM:
         for(int i = 0; i < RNG.nextInt(3) + this.width ~/ 3; i++)
         {
           int x = RNG.nextInt(this.width - 2);
           int y = RNG.nextInt(this.height - 2);
-          contents[y][x] = new Monster(this.minX + 1 + x, this.maxY - 1 - y, 1, 0, 5);
+          contents[y][x] = MonsterType.GOBLIN;
         }
         break;
+        /*
       case TREASUREROOM:
         int x = RNG.nextInt(this.width - 2);
         int y = RNG.nextInt(this.height - 2);

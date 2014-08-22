@@ -12,13 +12,10 @@ import 'dart:math';
 import 'Enum.dart';
 import 'PlayerType.dart';
 import 'dart:html' hide Player;
-import 'grid.dart';
-import 'jps.dart';
-import 'astar.dart';
 
 class World
 {
-  Grid grid;
+  List<List<TileObject>> grid = [];
   int width;
   int height;
   List<Room> rooms = [];
@@ -27,7 +24,6 @@ class World
   
   World(this.width, this.height)
   {
-    this.grid = new Grid(this.width, this.height);
     clearGrid();
     generateContent();
   }
@@ -50,17 +46,15 @@ class World
     if(moveX != 0 || moveY != 0)
     {
       enemyStats.style.opacity = "0";
-      if(!grid.nodes[player.tileObject.y + moveY][player.tileObject.x + moveX].isSolid)
+      if(!grid[player.tileObject.y + moveY][player.tileObject.x + moveX].isSolid)
       {
-        grid.nodes[player.tileObject.y][player.tileObject.x] = player.tileObject;
-        player.x = player.tileObject.x + moveX;
-        player.y = player.tileObject.y + moveY;
-        player.tileObject = grid.nodes[player.y][player.x];
-        grid.nodes[player.y][player.x] = player;
+        grid[player.tileObject.y][player.tileObject.x] = player.tileObject;
+        player.tileObject = grid[player.tileObject.y + moveY][player.tileObject.x + moveX];
+        grid[player.tileObject.y][player.tileObject.x] = player;
       }
       else
       {
-        touchedTile(grid.nodes[player.tileObject.y + moveY][player.tileObject.x + moveX]);
+        touchedTile(grid[player.tileObject.y + moveY][player.tileObject.x + moveX]);
       }
       timeStep();
     }
@@ -75,23 +69,15 @@ class World
   
   void timeStepMonsters() //TODO timeStepMonsters()
   {
-    //
-    var jps = new AStarFinder();
-    for(int i = 0, length = monsters.length; i < length; i++)
+    for(int i = 0; i < this.height; i++)
     {
-      var monster = monsters[i];
-      if(monster.followingCountdown > 0)
-      { 
-        monster.pathToPlayer = jps.findPath(monster.x, monster.y, this.player.x, this.player.y, grid.clone());
-      }
-    }
-    
-    monsters.sort((a,b) => a.pathToPlayer.length.compareTo(b.pathToPlayer.length));
-    for(int i = 0, length = monsters.length; i < length; i++)
-    {
-      if(monsters[i].pathToPlayer.length > 0)
+      for(int j = 0; j < this.width; j++)
       {
-        monsters[i].timeStep();
+        if(grid[i][j] is Monster)
+        {
+          Monster monster = grid[i][j];
+          monster.timeStep();
+        }
       }
     }
   }
@@ -104,7 +90,7 @@ class World
       {
         for(int j = 0; j < this.width; j++)
         {
-          grid.nodes[i][j].isVisible = false;
+          grid[i][j].isVisible = false;
         }
       }
     }
@@ -140,19 +126,19 @@ class World
       int numerator = longest >> 1 ;
       for (int i=0;i<=longest;i++) 
       {
-        var tileObject = grid.nodes[y][x];
+        var tileObject = grid[y][x];
         tileObject.isVisible = true;
         
         if(tileObject is Monster)
         {
           Monster monster = tileObject;
-          if(monster.followingCountdown < monster.COUNTMAX)
+          if(monster.followingCountdown != monster.COUNTMAX)
           {
             monster.followCountSetMax();
           }
         }
         
-        if (!grid.nodes[y][x].isOpaque) break;
+        if (!grid[y][x].isOpaque) break;
         
         numerator += shortest ;
         if (!(numerator < longest)) 
@@ -222,7 +208,7 @@ class World
           row.add(new TileObject(x, y, TileType.WALL));
         }
       }      
-      grid.nodes.add(row);
+      grid.add(row);
     }
   }
   
@@ -370,17 +356,16 @@ class World
   {
     if(type is TileType)
     {
-      grid.nodes[y][x] = new TileObject(x, y, type);
+      grid[y][x] = new TileObject(x, y, type);
     }
     else if(type is MonsterType)
     {
-      grid.nodes[y][x] = new Monster(x, y, new TileObject(x, y, TileType.GROUND), type);
-      monsters.add(grid.nodes[y][x]);
+      grid[y][x] = new Monster(x, y, grid[y][x], type);
     }
     else if(type is PlayerType)
     {
-      grid.nodes[y][x] = new Player(x, y, new TileObject(x, y, TileType.GROUND), type);
-      player = grid.nodes[y][x];
+      grid[y][x] = new Player(x, y, new TileObject(x, y, TileType.GROUND), type);
+      player = grid[y][x];
     }
   }
 }

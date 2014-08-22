@@ -21,7 +21,7 @@ Element decision;
 class Game 
 {
   int seed;
-  int randMax = 1 << 32;
+  int randMax = 100000;
   
   Game()
   {

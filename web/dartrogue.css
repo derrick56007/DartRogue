@@ -6,10 +6,10 @@ body {
   text-align: center;
 }
 
-@font-face {
+/*@font-face {
   font-family: Roboto-Regular;
   src: url(assets/fonts/Roboto-Regular.ttf);
-}
+}*/
 
 #display {
   display:inline-block;
