@@ -4,6 +4,7 @@ import 'Entity.dart';
 import 'TileObject.dart';
 import 'PlayerType.dart';
 import 'Game.dart';
+import 'Monster.dart';
 
 class Player extends Entity
 {
@@ -27,13 +28,14 @@ class Player extends Entity
     }
   }
   
-  void getAttackedWithDmg(Entity entity)
+  void getAttackedWithDmg(Monster monster)
   {
-    takeDmg(entity);
-    addToNarration("A" + " ${entity.type} attacks you! (${entity.atk} dmg)".toLowerCase(), "red");
+    takeDmg(monster);
+    addToNarration("A ${monster.type.NAME} attacks you! (${monster.atk} dmg)", "red");
     if(this.HP > 0)
     {
       refreshStats(this);
+      monster.getAttackedWithDmg(this);
     }
     else
     {

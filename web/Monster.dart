@@ -5,6 +5,9 @@ import 'TileObject.dart';
 import 'Game.dart';
 import 'Player.dart';
 import 'MonsterType.dart';
+import 'TileType.dart';
+import 'dart:math';
+import 'ItemType.dart';
 
 class Monster extends Entity
 {
@@ -18,6 +21,7 @@ class Monster extends Entity
     this.isWalkable = false;
     setAttributes();
     this.HP = this.MAXHP;
+    this.items.add(ItemType.KEY);
   }
   
   void setAttributes()
@@ -36,9 +40,9 @@ class Monster extends Entity
   
   void timeStep()
   {
-    if(followingCountdown > 0)
+    if(this.followingCountdown > 0)
     {
-      followingCountdown--;
+      this.followingCountdown--;
       if(this.pathToPlayer.length > 2)
       {
         moveTowardsPlayer();
@@ -70,13 +74,22 @@ class Monster extends Entity
   void getAttackedWithDmg(Player player)
   {
     takeDmg(player);
-    addToNarration("You attack a "+ "${this.type}! (${player.atk} dmg)".toLowerCase(), "black");
+    addToNarration("You attack a ${this.type.NAME}! (${player.atk} dmg)", "black");
     if(this.HP > 0)
     {
       refreshStats(this);
     }
     else
     {
+      if(this.items.length > 0)
+      {
+        world.setAtCoordinate(this.x, this.y, this.items[new Random().nextInt(this.items.length)]);
+      }
+      else
+      {
+        world.setAtCoordinate(this.x, this.y, TileType.BONES);
+      }
+      world.monsters.remove(this);
       enemyStats.style.opacity = "0";
     }
   }

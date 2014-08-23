@@ -8,7 +8,9 @@ import 'MonsterType.dart';
 import 'Monster.dart';
 import 'Player.dart';
 import 'PlayerType.dart';
+import 'Item.dart';
 import 'Enum.dart';
+import 'ItemType.dart';
 
 class Room
 {
@@ -75,12 +77,11 @@ class Room
           contents[y][x] = MonsterType.GOBLIN;
         }
         break;
-        /*
-      case TREASUREROOM:
+      case RoomType.TREASUREROOM:
         int x = RNG.nextInt(this.width - 2);
         int y = RNG.nextInt(this.height - 2);
-        contents[y][x] = new Item(x, y);
-        break;*/
+        contents[y][x] = ItemType.KEY;
+        break;
       default:
         break;
     }

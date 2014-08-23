@@ -2,14 +2,17 @@ library TILEOBJECT;
 
 import 'Game.dart';
 import 'TileType.dart';
+import 'Enum.dart';
+import 'ItemType.dart';
 
 class TileObject
 {
-  var type;
+  Enum type;
   bool isOpaque;
   bool isVisible =  allVisible;
   bool isSolid = false;
-  bool isWalkable = false; //for pathfinding
+  bool isWalkable;
+  //bool isWalkable; //for pathfinding
   int x;
   int y;
   num g, h, f;
@@ -23,25 +26,26 @@ class TileObject
     {
       this.isSolid = true;
       this.isOpaque = false;
-      this.isWalkable = false;
+      this.isWalkable = !this.isSolid;
+      
     }
     else if(this.type == TileType.GROUND)
     {
       this.isSolid = false;
       this.isOpaque = true;
-      this.isWalkable = true;
+      this.isWalkable = !this.isSolid;
     }
     else if(this.type == TileType.STONE)
     {
       this.isSolid = true;
       this.isOpaque = false;
-      this.isWalkable = false;
+      this.isWalkable = !this.isSolid;
     }
     else if(this.type == TileType.BONES)
     {
       this.isSolid = false;
       this.isOpaque = true;
-      this.isWalkable = true;
+      this.isWalkable = !this.isSolid;
     }
   }
 }

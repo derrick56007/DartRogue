@@ -6,7 +6,12 @@ import 'MonsterType.dart';
 import 'PlayerType.dart';
 import 'Monster.dart';
 import 'Player.dart';
-import 'Game.dart';
+import 'ItemType.dart';
+import 'Item.dart';
+import 'WeaponType.dart';
+//import 'Weapon.dart';
+import 'ArmorType.dart';
+//import 'Armor.dart';
 
 /**
  * The Grid class, which serves as the encapsulation of the layout of the nodes.
@@ -62,7 +67,7 @@ class Grid {
    * @param {boolean} walkable - Whether the position is walkable.
    */
   setWalkableAt(x, y, walkable) {
-    this.nodes[y][x].isWalkable = walkable;
+    this.nodes[y][x].isWalkable = !walkable; //TODO
   }
 
 
@@ -194,7 +199,19 @@ class Grid {
     {
       return new Player(x, y, new TileObject(x, y, TileType.GROUND), type);
     }
-    return "Derp";
+    else if(type is ItemType)
+    {
+      return new Item(x, y, type);
+    }
+    else if(type is WeaponType)
+    {
+      
+    }
+    else if(type is ArmorType)
+    {
+      
+    }
+    return "error at grid.dart class, getAtCoordinate()";
   }
 }
 

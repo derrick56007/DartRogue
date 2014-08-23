@@ -11,10 +11,12 @@ import 'Monster.dart';
 import 'dart:math';
 import 'Enum.dart';
 import 'PlayerType.dart';
-import 'dart:html' hide Player;
 import 'grid.dart';
-import 'jps.dart';
 import 'astar.dart';
+import 'ItemType.dart';
+import 'WeaponType.dart';
+import 'ArmorType.dart';
+import 'Item.dart';
 
 class World
 {
@@ -87,7 +89,7 @@ class World
     }
     
     monsters.sort((a,b) => a.pathToPlayer.length.compareTo(b.pathToPlayer.length));
-    for(int i = 0, length = monsters.length; i < length; i++)
+    for(int i = 0; i < monsters.length; i++)
     {
       if(monsters[i].pathToPlayer.length > 0)
       {
@@ -169,49 +171,19 @@ class World
       }
   }
   
-  void touchedTile(var tileObject) //TODO
+  void touchedTile(var tileObject) //TODO touchedTile()
   {
-    print(tileObject.type);
-    /*switch (tileObject)
-    {
-      case ITEM:
-        addToNarration("You picked up an item", "black");
-        player.items.add(pickUpItem(tile));
-        break;
-      case SPIKES:
-        addToNarration("(-1 HP) You stepped on spikes!", "red");
-        player.takeDmg(1);
-        refreshPlayerStats(player);
-        break;
-      case MONSTER:
-        addToNarration("You attack a monster! (${player.atk} dmg)", "black");
-        grid[tile.y][tile.x].takeDmg(player.atk);
-        if(grid[tile.y][tile.x].HP <= 0)
-        {
-          addToNarration("You killed a monster!", "black");
-          grid[tile.y][tile.x] = new Tile(tile.x, tile.y, BONES);
-        }
-        else
-        {
-          refreshEnemyStats(grid[tile.y][tile.x]);
-          addToNarration("(-${grid[tile.y][tile.x].atk} HP)A monster hit you!", "red");
-          player.takeDmg(1);
-          refreshPlayerStats(player);
-        }
-        break;
-      default:
-        break;
-    }*/
+    print(tileObject.type.NAME);
     
     if(tileObject is Monster)
     {
       Monster monster = tileObject;
       monster.getAttackedWithDmg(player);
-      if(monster.HP <= 0)
-      {
-        setAtCoordinate(monster.x, monster.y, TileType.BONES);
-        monsters.remove(monster);
-      }
+    }
+    else if(tileObject is Item)
+    {
+      player.items.add(tileObject.type);
+      setAtCoordinate(tileObject.x, tileObject.y, TileType.GROUND);
     }
   }
   
@@ -377,7 +349,7 @@ class World
     }
   }
   
-  void setAtCoordinate(int x, int y, dynamic type) //TODO setAtCoordinate()
+  void setAtCoordinate(int x, int y, Enum type) //TODO setAtCoordinate()
   {
     if(type is TileType)
     {
@@ -392,6 +364,18 @@ class World
     {
       grid.nodes[y][x] = new Player(x, y, new TileObject(x, y, TileType.GROUND), type);
       player = grid.nodes[y][x];
+    }
+    else if(type is ItemType)
+    {
+      grid.nodes[y][x] = new Item(x, y, type);
+    }
+    else if(type is WeaponType)
+    {
+      
+    }
+    else if(type is ArmorType)
+    {
+      
     }
   }
 }

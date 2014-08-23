@@ -2,9 +2,9 @@ library PLAYERTYPE;
 
 import 'Enum.dart';
 
-class PlayerType<String> extends Enum<String>
+class PlayerType<String> extends Enum<String, String>
 {
-  const PlayerType(String val) : super(val);
+  const PlayerType(String val, String name) : super(val, name);
   
-  static const PlayerType GENERIC = const PlayerType("GENERIC");
+  static const PlayerType GENERIC = const PlayerType("P", "generic player");
 }

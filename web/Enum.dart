@@ -1,8 +1,9 @@
 library ENUM;
 
-abstract class Enum<T>
+abstract class Enum<T,N>
 {
   final T value;
-  const Enum(this.value);
+  final N NAME;
+  const Enum(this.value, this.NAME);
   toString() => "${this.value}";
 }

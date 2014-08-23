@@ -2,13 +2,13 @@ library TILETYPE;
 
 import 'Enum.dart';
 
-class TileType<String> extends Enum<String>
+class TileType<String> extends Enum<String, String>
 {
-  const TileType(String val) : super(val);
+  const TileType(String val, String name) : super(val, name);
   
-  static const TileType GROUND = const TileType("GROUND");
-  static const TileType WALL = const TileType("WALL");
-  static const TileType STONE = const TileType("STONE");
-  static const TileType SPIKE = const TileType("SPIKE");
-  static const TileType BONES = const TileType("BONES");
+  static const TileType GROUND = const TileType(".", "ground");
+  static const TileType WALL = const TileType("□", "wall");
+  static const TileType STONE = const TileType("8", "stone");
+  static const TileType SPIKE = const TileType("^", "spike");
+  static const TileType BONES = const TileType("%", "bones");
 }

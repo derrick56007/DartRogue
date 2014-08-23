@@ -2,10 +2,10 @@ library MONSTERTYPE;
 
 import 'Enum.dart';
 
-class MonsterType<String> extends Enum<String>
+class MonsterType<String> extends Enum<String, String>
 {
-  const MonsterType(String val) : super(val);
+  const MonsterType(String val, String name) : super(val, name);
   
-  static const MonsterType GOBLIN = const MonsterType("GOBLIN");
-  static const MonsterType LIZARD = const MonsterType("LIZARD");
+  static const MonsterType GOBLIN = const MonsterType("G", "goblin");
+  static const MonsterType LIZARD = const MonsterType("L", "lizard");
 }

@@ -130,7 +130,7 @@ smoothenPath(grid, path) {
 
             if (!grid.isWalkableAt(testCoord[0], testCoord[1])) {
                 blocked = true;
-                newPath.push([lx, ly]);
+                newPath.add([lx, ly]); //TODO push change
                 sx = lx;
                 sy = ly;
                 break;

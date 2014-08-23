@@ -1,6 +1,7 @@
 library ENTITY;
 
 import 'TileObject.dart';
+import 'Enum.dart';
 
 class Entity extends TileObject
 {
@@ -8,8 +9,26 @@ class Entity extends TileObject
   int def = 0;
   int MAXHP = 0;
   int HP = 0;
-  List items = [];
+  List<Enum> items = [];
   TileObject tileObject;
+  itemToString() => getItemNames();
+  
+  String getItemNames()
+  {
+    String string = "";
+    for(int i = 0, length = items.length; i < length; i++)
+    {
+      if(i == length - 1)
+      {
+        string = string + items[i].NAME;
+      }
+      else
+      {
+        string = string + items[i].NAME + ", ";
+      }
+    }
+    return string;
+  }
   
   Entity(int x, int y, this.tileObject, var type) : super(x, y, type)
   {

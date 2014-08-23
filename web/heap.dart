@@ -126,14 +126,15 @@ _heapify(array, cmp) {
   _results1 = [];
   for (var _j = 0, _ref = (array.length / 2).floor();
       0 <= _ref ? _j < _ref : _j > _ref; 0 <= _ref ? _j++ : _j--){
-    _results1.push(_j);
+    _results1.add(_j);
+    //_results1.push(_j); //TODO push change
   }
-  _ref1 = _results1.reverse();
+  _ref1 = _results1.reversed; //.reverse(); // TODO changed reversed 
   _results = [];
   _i = 0;
   for (_len = _ref1.length; _i < _len; _i++) {
     i = _ref1[_i];
-    _results.push(_siftup(array, i, cmp));
+    _results.add(_siftup(array, i, cmp)); //TODO push change
   }
   return _results;
 }
@@ -204,7 +205,7 @@ _nsmallest(array, n, cmp) {
   _results = [];
   i = _j = 0;
   for (_ref1 = min(n, array.length); 0 <= _ref1 ? _j < _ref1 : _j > _ref1; i = 0 <= _ref1 ? ++_j : --_j) {
-    _results.push(_heappop(array, cmp));
+    _results.add(_heappop(array, cmp)); //TODO push change
   }
   return _results;
 }

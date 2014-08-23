@@ -6,7 +6,6 @@ import 'TileObject.dart';
 
 class Display
 {
-  final Map charSet = getCharSet();
   final Element display = querySelector("#display");
   
   void displayWorld()
@@ -30,27 +29,11 @@ class Display
   {
     if(!tile.isVisible)
     {
-      return charSet['SHADOW'];
+      return "●";
     }
     else
     {
-      return charSet[tile.toString()];
+      return tile.toString();
     }
-  }
-  
-  static Map getCharSet()
-  {
-    return 
-    {
-      'SHADOW' : "●",
-      'WALL' : "□",
-      'STONE' : "8",
-      'GROUND' : ".",
-      'GENERIC' : "@",
-      'UNKNOWN' : "X",
-      'SPIKES' : "^",
-      'BONES' : "%",
-      "GOBLIN" : "G"
-    };
   }
 }

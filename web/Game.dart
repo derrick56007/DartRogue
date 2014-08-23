@@ -5,7 +5,6 @@ import 'Display.dart';
 import 'Input.dart';
 import 'dart:math';
 import 'dart:html' hide Player;
-import 'Monster.dart';
 import 'Player.dart';
 import 'Entity.dart';
 
@@ -164,7 +163,7 @@ void refreshStats(dynamic entity)
   el.children[1].text = "HP: ${ent.HP}/${ent.MAXHP}";
   el.children[2].text = "ATK: ${ent.atk}";
   el.children[3].text = "DEF: ${ent.def}";
-  el.children[4].text = "Items: ${ent.items}";
+  el.children[4].text = "Items: ${ent.itemToString()}";
 }
 
 void addToNarration(String text, String color)
