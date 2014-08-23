@@ -9,7 +9,7 @@ class TileObject
   bool isOpaque;
   bool isVisible =  allVisible;
   bool isSolid = false;
-  bool isWalkable = false;
+  bool isWalkable = false; //for pathfinding
   int x;
   int y;
   num g, h, f;
@@ -36,6 +36,12 @@ class TileObject
       this.isSolid = true;
       this.isOpaque = false;
       this.isWalkable = false;
+    }
+    else if(this.type == TileType.BONES)
+    {
+      this.isSolid = false;
+      this.isOpaque = true;
+      this.isWalkable = true;
     }
   }
 }

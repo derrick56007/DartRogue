@@ -7,6 +7,7 @@ import 'dart:math';
 import 'dart:html' hide Player;
 import 'Monster.dart';
 import 'Player.dart';
+import 'Entity.dart';
 
 World world;
 Display display;
@@ -21,7 +22,7 @@ Element decision;
 class Game 
 {
   int seed;
-  int randMax = 100000;
+  int randMax = 1 << 32;
   
   Game()
   {
@@ -147,21 +148,23 @@ Element makeStats(String statName)
   return stats;
 }
 
-void refreshPlayerStats(Player player)
+void refreshStats(dynamic entity)
 {
-  playerStats.children[1].text = "HP: ${player.HP}/${player.MAXHP}";
-  playerStats.children[2].text = "ATK: ${player.atk}";
-  playerStats.children[3].text = "DEF: ${player.def}";
-  playerStats.children[4].text = "Items: ${player.items}";
-}
-
-void refreshEnemyStats(Monster monster)
-{
-  enemyStats.children[1].text = "HP: ${monster.HP}/${monster.MAXHP}";
-  enemyStats.children[2].text = "ATK: ${monster.atk}";
-  enemyStats.children[3].text = "DEF: ${monster.def}";
-  enemyStats.children[4].text = "Items: ${monster.items}";
-  enemyStats.style.opacity = "1";
+  var el;
+  Entity ent = entity;
+  if(entity is Player)
+  {
+    el = playerStats;
+  }
+  else
+  {
+    el = enemyStats;
+    el.style.opacity = "1";
+  }
+  el.children[1].text = "HP: ${ent.HP}/${ent.MAXHP}";
+  el.children[2].text = "ATK: ${ent.atk}";
+  el.children[3].text = "DEF: ${ent.def}";
+  el.children[4].text = "Items: ${ent.items}";
 }
 
 void addToNarration(String text, String color)

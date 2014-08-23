@@ -38,7 +38,7 @@ class World
     setRooms();
     loopDigCorridors();
     setRoomContents();
-    refreshPlayerStats(player);
+    refreshStats(player);
     loopTiles();
   }
   
@@ -70,7 +70,7 @@ class World
   {
     timeStepMonsters();
     loopTiles();
-    refreshPlayerStats(player);
+    refreshStats(player);
   }
   
   void timeStepMonsters() //TODO timeStepMonsters()
@@ -172,9 +172,9 @@ class World
   void touchedTile(var tileObject) //TODO
   {
     print(tileObject.type);
-    switch (tileObject)
+    /*switch (tileObject)
     {
-      /*case ITEM:
+      case ITEM:
         addToNarration("You picked up an item", "black");
         player.items.add(pickUpItem(tile));
         break;
@@ -198,9 +198,20 @@ class World
           player.takeDmg(1);
           refreshPlayerStats(player);
         }
-        break;*/
+        break;
       default:
         break;
+    }*/
+    
+    if(tileObject is Monster)
+    {
+      Monster monster = tileObject;
+      monster.getAttackedWithDmg(player);
+      if(monster.HP <= 0)
+      {
+        setAtCoordinate(monster.x, monster.y, TileType.BONES);
+        monsters.remove(monster);
+      }
     }
   }
   

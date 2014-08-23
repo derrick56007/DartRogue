@@ -4,10 +4,11 @@ import 'Entity.dart';
 import 'TileObject.dart';
 import 'Game.dart';
 import 'Player.dart';
+import 'MonsterType.dart';
 
 class Monster extends Entity
 {
-  int COUNTMAX = 6;
+  int COUNTMAX = 0;
   int followingCountdown = 0;
   int followX, followY;
   List pathToPlayer = [];
@@ -15,6 +16,22 @@ class Monster extends Entity
   {
     this.isSolid = true;
     this.isWalkable = false;
+    setAttributes();
+    this.HP = this.MAXHP;
+  }
+  
+  void setAttributes()
+  {
+    switch(this.type)
+    {
+      case MonsterType.GOBLIN:
+        this.MAXHP = 5;
+        this.atk = 1;
+        this.COUNTMAX = 6;
+        break;
+      default:
+        break;
+    }
   }
   
   void timeStep()
@@ -28,7 +45,7 @@ class Monster extends Entity
       }
       else
       {
-        print("attack");
+        world.player.getAttackedWithDmg(this);
       }
     }
   }
@@ -48,5 +65,19 @@ class Monster extends Entity
   void followCountSetMax()
   {
     this.followingCountdown = COUNTMAX;
+  }
+  
+  void getAttackedWithDmg(Player player)
+  {
+    takeDmg(player);
+    addToNarration("You attack a "+ "${this.type}! (${player.atk} dmg)".toLowerCase(), "black");
+    if(this.HP > 0)
+    {
+      refreshStats(this);
+    }
+    else
+    {
+      enemyStats.style.opacity = "0";
+    }
   }
 }

@@ -12,6 +12,7 @@ class Input
 
   void keyPressed (int e)
   {
+    print(new DateTime.now());
     if(e == KeyCode.SEVEN || e == KeyCode.EIGHT || e == KeyCode.NINE || e == KeyCode.SIX || e == KeyCode.THREE || e == KeyCode.TWO || e == KeyCode.ONE || e == KeyCode.FOUR || e == KeyCode.Q || e == KeyCode.W || e == KeyCode.E || e == KeyCode.D || e == KeyCode.C || e == KeyCode.X || e == KeyCode.Z || e == KeyCode.A)
     {
       int moveY = 0;
@@ -89,6 +90,7 @@ class Input
       }
       world.movePlayer(moveX, moveY);
       display.displayWorld();
+      print(new DateTime.now());
     }
   }
 }
