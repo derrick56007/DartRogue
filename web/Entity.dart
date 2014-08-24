@@ -2,6 +2,7 @@ library ENTITY;
 
 import 'TileObject.dart';
 import 'Enum.dart';
+import 'Game.dart';
 
 class Entity extends TileObject
 {
@@ -44,5 +45,19 @@ class Entity extends TileObject
       damage = 1;
     }
     this.HP -= damage;
+  }
+  
+  void moveTo(x, y)
+  {
+    world.grid.nodes[this.tileObject.y][this.tileObject.x] = this.tileObject;
+    this.x = x;
+    this.y = y;
+    this.tileObject = world.grid.nodes[this.y][this.x];
+    world.grid.nodes[this.y][this.x]= this; 
+  }
+  
+  void doWhenDead()
+  {
+    
   }
 }

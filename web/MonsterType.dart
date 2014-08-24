@@ -8,4 +8,5 @@ class MonsterType<String> extends Enum<String, String>
   
   static const MonsterType GOBLIN = const MonsterType("G", "goblin");
   static const MonsterType LIZARD = const MonsterType("L", "lizard");
+  static const MonsterType KEYHOLDER = const MonsterType("G", "keyholder");
 }

@@ -11,7 +11,7 @@ import 'Entity.dart';
 World world;
 Display display;
 Input input;
-bool allVisible = false;
+bool allVisible = true;
 Random RNG;
 Element playerStats;
 Element enemyStats;
@@ -65,7 +65,7 @@ dynamic getRandomWeighted(List chanceList)
     }
   }
   
-  return -69;
+  return "getRandomWeighted in class game.dart";
 }
 
 int getPosOrNeg(int number, int range)

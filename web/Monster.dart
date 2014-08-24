@@ -8,6 +8,7 @@ import 'MonsterType.dart';
 import 'TileType.dart';
 import 'dart:math';
 import 'ItemType.dart';
+import 'dartrogue.dart';
 
 class Monster extends Entity
 {
@@ -15,6 +16,8 @@ class Monster extends Entity
   int followingCountdown = 0;
   int followX, followY;
   List pathToPlayer = [];
+  Random rng;
+  
   Monster(int x, int y, TileObject tileObject, var type) : super(x, y, tileObject, type)
   {
     this.isSolid = true;
@@ -22,6 +25,7 @@ class Monster extends Entity
     setAttributes();
     this.HP = this.MAXHP;
     this.items.add(ItemType.KEY);
+    this.rng = new Random(RNG.nextInt(1 << 32));
   }
   
   void setAttributes()
@@ -52,6 +56,10 @@ class Monster extends Entity
         world.player.getAttackedWithDmg(this);
       }
     }
+    else
+    {
+      moveIdle();
+    }
   }
   
   void moveTowardsPlayer()
@@ -63,6 +71,19 @@ class Monster extends Entity
       this.y = pathToPlayer[1][1];
       this.tileObject = world.grid.nodes[this.y][this.x];
       world.grid.nodes[this.y][this.x] = this;
+    }
+  }
+  
+  void moveIdle()
+  {
+    if(this.rng.nextInt(5) == 0)
+    {
+      int moveX = rng.nextInt(3) - 1;
+      int moveY = rng.nextInt(3) - 1;
+      if(!world.grid.nodes[this.y + moveY][this.x + moveX].isSolid)
+      {
+        moveTo(this.x + moveX, this.y + moveY);
+      }
     }
   }
   
@@ -81,16 +102,32 @@ class Monster extends Entity
     }
     else
     {
-      if(this.items.length > 0)
+      doWhenDead();
+    }
+  }
+  
+  void doWhenDead()
+  {
+    if(this.type == MonsterType.KEYHOLDER)
+    {
+      world.setAtCoordinate(this.x, this.y, ItemType.KEY);
+    }
+    else
+    {
+      if(this.rng.nextInt(3) == 0 && this.items.length > 0)
       {
-        world.setAtCoordinate(this.x, this.y, this.items[new Random().nextInt(this.items.length)]);
+        world.setAtCoordinate(this.x, this.y, this.items[this.rng.nextInt(this.items.length)]);
       }
       else
       {
-        world.setAtCoordinate(this.x, this.y, TileType.BONES);
+        if(!(world.grid.nodes[this.y][this.x].type is ItemType))
+        {
+          world.setAtCoordinate(this.x, this.y, TileType.BONES);
+        }
       }
       world.monsters.remove(this);
       enemyStats.style.opacity = "0";
     }
+    addToNarration("You killed a ${this.type.NAME}!", "green");
   }
 }

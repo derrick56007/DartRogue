@@ -5,6 +5,8 @@ import 'TileObject.dart';
 import 'PlayerType.dart';
 import 'Game.dart';
 import 'Monster.dart';
+import 'Item.dart';
+import 'TileType.dart';
 
 class Player extends Entity
 {
@@ -30,16 +32,60 @@ class Player extends Entity
   
   void getAttackedWithDmg(Monster monster)
   {
-    takeDmg(monster);
-    addToNarration("A ${monster.type.NAME} attacks you! (${monster.atk} dmg)", "red");
-    if(this.HP > 0)
+    monster.getAttackedWithDmg(this);
+    if(monster.HP > 0)
     {
-      refreshStats(this);
-      monster.getAttackedWithDmg(this);
+      takeDmg(monster);
+      addToNarration("A ${monster.type.NAME} attacks you! (${monster.atk} dmg)", "red");
+      if(this.HP > 0)
+      {
+        refreshStats(this);
+      }
+      else
+      {
+        refreshStats(this);// TODO died
+        addDeathToNarration(monster);
+      }
     }
-    else
+  }
+  
+  void movePlayer(int x, int y)
+  {
+    int moveY = y;
+    int moveX = x;
+
+    if(moveX != 0 || moveY != 0)
     {
-      print("you died!");
+      enemyStats.style.opacity = "0";
+      if(!world.grid.nodes[this.tileObject.y + moveY][this.tileObject.x + moveX].isSolid)
+      {
+        moveTo(this.x + moveX, this.y + moveY);
+      }
+      else
+      {
+        touchedTile(world.grid.nodes[this.y + moveY][this.x + moveX]);
+      }
+      world.timeStep();
     }
+    else if(moveX == 0 && moveY == 0) //TODO timestep debugging, remove when finished
+    {
+      world.timeStep();
+    }
+  }
+  
+  void touchedTile(var tileObject) //TODO touchedTile()
+  {
+    print(tileObject.type.NAME);
+    
+    if(tileObject is Item)
+    {
+      this.items.add(tileObject.type);
+      world.setAtCoordinate(tileObject.x, tileObject.y, TileType.GROUND);
+    }
+  }
+  
+  void addDeathToNarration(Monster monster)
+  {
+    addToNarration("You got killed by a ${monster.type.NAME}", "red");
   }
 }

@@ -44,30 +44,6 @@ class World
     loopTiles();
   }
   
-  void movePlayer(int x, int y) //TODO movePlayer()
-  {
-    int moveY = y;
-    int moveX = x;
-
-    if(moveX != 0 || moveY != 0)
-    {
-      enemyStats.style.opacity = "0";
-      if(!grid.nodes[player.tileObject.y + moveY][player.tileObject.x + moveX].isSolid)
-      {
-        grid.nodes[player.tileObject.y][player.tileObject.x] = player.tileObject;
-        player.x = player.tileObject.x + moveX;
-        player.y = player.tileObject.y + moveY;
-        player.tileObject = grid.nodes[player.y][player.x];
-        grid.nodes[player.y][player.x] = player;
-      }
-      else
-      {
-        touchedTile(grid.nodes[player.tileObject.y + moveY][player.tileObject.x + moveX]);
-      }
-      timeStep();
-    }
-  }
-  
   void timeStep() //TODO timeStep()
   {
     timeStepMonsters();
@@ -91,10 +67,7 @@ class World
     monsters.sort((a,b) => a.pathToPlayer.length.compareTo(b.pathToPlayer.length));
     for(int i = 0; i < monsters.length; i++)
     {
-      if(monsters[i].pathToPlayer.length > 0)
-      {
-        monsters[i].timeStep();
-      }
+      monsters[i].timeStep();
     }
   }
   
@@ -169,22 +142,6 @@ class World
             y += dy2;
         }
       }
-  }
-  
-  void touchedTile(var tileObject) //TODO touchedTile()
-  {
-    print(tileObject.type.NAME);
-    
-    if(tileObject is Monster)
-    {
-      Monster monster = tileObject;
-      monster.getAttackedWithDmg(player);
-    }
-    else if(tileObject is Item)
-    {
-      player.items.add(tileObject.type);
-      setAtCoordinate(tileObject.x, tileObject.y, TileType.GROUND);
-    }
   }
   
   void clearGrid() //TODO clearGrid()
