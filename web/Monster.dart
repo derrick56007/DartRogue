@@ -70,6 +70,10 @@ class Monster extends Entity
       this.y = pathToPlayer[1][1];
       this.tileObject = world.grid.nodes[this.y][this.x];
       world.grid.nodes[this.y][this.x] = this;
+      if(this.tileObject.type == TileType.SPIKE)
+      {
+        this.HP -= 1;
+      }
     }
   }
   
@@ -119,14 +123,7 @@ class Monster extends Entity
       }
       else
       {
-        if(this.tileObject is Item)
-        {
-          world.setAtCoordinate(this.x, this.y, tileObject.type);
-        }
-        else
-        {
-          world.setAtCoordinate(this.x, this.y, TileType.BONES);
-        }
+        world.setAtCoordinate(this.x, this.y, tileObject.type);
       }
       world.monsters.remove(this);
       enemyStats.style.opacity = "0";

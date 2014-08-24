@@ -78,6 +78,14 @@ class Room
         int y = RNG.nextInt(this.height - 2);
         contents[y][x] = ItemType.TREASURECHEST;
         break;
+      case RoomType.SPIKEROOM:
+        for(int i = 0; i < RNG.nextInt(3) + this.width ~/ 3; i++)
+        {
+          int x = RNG.nextInt(this.width - 2);
+          int y = RNG.nextInt(this.height - 2);
+          contents[y][x] = TileType.SPIKE;
+        }
+        break;
       default:
         break;
     }

@@ -11,12 +11,13 @@ import 'Entity.dart';
 World world;
 Display display;
 Input input;
-bool allVisible = true;
+bool allVisible = false;
 Random RNG;
 Element playerStats;
 Element enemyStats;
 Element narration;
 Element decision;
+int difficulty = 0;
 
 class Game 
 {
@@ -169,6 +170,10 @@ void refreshStats(dynamic entity)
   {
     el = enemyStats;
     el.style.opacity = "1";
+  }
+  if(!(entity is Player))
+  {
+    el.children[0].text = "${ent.type.NAME}".toUpperCase();
   }
   el.children[1].text = "HP: ${ent.HP}/${ent.MAXHP}";
   el.children[2].text = "ATK: ${ent.atk} +${ent.weapon.atk}";

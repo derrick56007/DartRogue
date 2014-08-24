@@ -41,8 +41,8 @@ class Player extends Entity
     monster.getAttackedWithDmg(this);
     if(monster.HP > 0)
     {
-      takeDmg(monster);
-      addToNarration("A ${monster.type.NAME} attacks you! (${monster.atk} dmg)", "red");
+      int damage = takeDmg(monster);
+      addToNarration("A ${monster.type.NAME} attacks you! (-$damage HP)", "red");
       if(this.HP > 0)
       {
         refreshStats(this);
@@ -63,16 +63,21 @@ class Player extends Entity
     if(moveX != 0 || moveY != 0)
     {
       enemyStats.style.opacity = "0";
-      if(!(world.grid.nodes[this.tileObject.y + moveY][this.tileObject.x + moveX] is Item))
+      TileObject tileToMoveTo = world.grid.nodes[this.y + moveY][this.x + moveX];
+      if(!(tileToMoveTo is Item))
       {
-        if(!world.grid.nodes[this.tileObject.y + moveY][this.tileObject.x + moveX].isSolid)
+        if(!tileToMoveTo.isSolid)
         {
           moveTo(this.x + moveX, this.y + moveY);
+        }
+        else //TODO for debugging
+        {
+          print(tileToMoveTo.type.NAME); //TODO print touched item
         }
       }
       else
       {
-        touchedTile(world.grid.nodes[this.y + moveY][this.x + moveX]);
+        touchedItem(world.grid.nodes[this.y + moveY][this.x + moveX]);
       }
       world.timeStep();
     }
@@ -82,54 +87,65 @@ class Player extends Entity
     }
   }
   
-  void touchedTile(TileObject tileObject) //TODO touchedTile()
+  void touchedItem(Item item) //TODO touchedItem()
   {
-    print(tileObject.type.NAME); //TODO print touched tile
-    
-    if(tileObject.type == ItemType.TREASURECHEST)
+    print(item.type.NAME); //TODO print touched item
+    if(item.type == ItemType.TREASURECHEST)
     {
-      Chest chest = tileObject;
-      world.grid.nodes[chest.y][chest.x] = chest.treasure;
-      addToNarration("You opened a chest", "green");
+      if(this.items.contains(ItemType.KEY))
+      {
+        this.items.remove(ItemType.KEY);
+        Chest chest = item;
+        world.setAtCoordinate(chest.x, chest.y, chest.treasureType);
+        addToNarration("You used a key to open a chest (-1 key)", "green");
+        if(!(chest.treasureType is ItemType) && !(chest.treasureType is ArmorType) && !(chest.treasureType is WeaponType))
+        {
+          addToNarration("The chest contains ${chest.treasureType.NAME}...", "red");
+        }
+      }
+      else
+      {
+        addToNarration("You need a key to open this chest!", "black");
+      }
     }
-    else if(tileObject is Item)
+    else if(item is Item)
     {
-      addToInventory(tileObject);
-      addToNarration("You picked up a ${tileObject.type.NAME}", "green");
+      addToInventory(item);
+      addToNarration("You picked up ${item.type.NAME}", "green");
     }
   }
   
-  void addToInventory(TileObject tileObject)
+  void addToInventory(Item item)
   {
-    if(tileObject is Armor)
+    if(item is Armor)
     {
       if(this.armor != ArmorType.NONE)
       {
-        print("not empty");
-        world.setAtCoordinate(tileObject.x, tileObject.y, this.armor);
+        world.setAtCoordinate(item.x, item.y, this.armor);
       }
       else
       {
-        world.setAtCoordinate(tileObject.x, tileObject.y, TileType.GROUND);
+        world.setAtCoordinate(item.x, item.y, TileType.GROUND);
       }
-      this.armor = tileObject.type;
+      this.armor = item.type;
     }
-    else if(tileObject is Weapon)
+    else if(item is Weapon)
     {
       if(this.weapon != WeaponType.NONE)
       {
-        world.setAtCoordinate(tileObject.x, tileObject.y, this.weapon);
+        world.setAtCoordinate(item.x, item.y, this.weapon);
       }
       else
       {
-        world.setAtCoordinate(tileObject.x, tileObject.y, TileType.GROUND);
+        world.setAtCoordinate(item.x, item.y, TileType.GROUND);
       }
-      this.weapon = tileObject.type;
+      this.weapon = item.type;
     }
-    else if(tileObject is Item)
+    else if(item is Item)
     {
-      this.items.add(type);
-      world.setAtCoordinate(tileObject.x, tileObject.y, TileType.GROUND);
+      this.items.add(item.type);
+      print(type.value);
+      world.setAtCoordinate(item.x, item.y, TileType.GROUND);
     }
   }
   

@@ -6,6 +6,7 @@ import 'Game.dart';
 import 'WeaponType.dart';
 import 'TileType.dart';
 import 'ArmorType.dart';
+import 'Player.dart';
 
 class Entity extends TileObject
 {
@@ -43,7 +44,7 @@ class Entity extends TileObject
     this.tileObject = new TileObject(x, y, TileType.GROUND);
   }
   
-  void takeDmg(Entity entity)
+  int takeDmg(Entity entity)
   {
     int damage = (this.def + this.armor.def) - (entity.atk + entity.weapon.atk);
     if(damage <= 0)
@@ -51,6 +52,7 @@ class Entity extends TileObject
       damage = 1;
     }
     this.HP -= damage;
+    return damage;
   }
   
   void moveTo(x, y)
@@ -60,6 +62,14 @@ class Entity extends TileObject
     this.y = y;
     this.tileObject = world.grid.nodes[this.y][this.x];
     world.grid.nodes[this.y][this.x]= this; 
+    if(this.tileObject.type == TileType.SPIKE)
+    {
+      this.HP -= 1;
+      if(this is Player)
+      {
+        addToNarration("You stepped on spikes", "red");
+      }
+    }
   }
   
   void doWhenDead()

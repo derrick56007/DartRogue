@@ -46,5 +46,11 @@ class TileObject
       this.isOpaque = true;
       this.isWalkable = !this.isSolid;
     }
+    else if(this.type == TileType.SPIKE)
+    {
+      this.isSolid = false;
+      this.isOpaque = true;
+      this.isWalkable = true;
+    }
   }
 }
