@@ -9,9 +9,9 @@ import 'Player.dart';
 import 'ItemType.dart';
 import 'Item.dart';
 import 'WeaponType.dart';
-//import 'Weapon.dart';
+import 'Weapon.dart';
 import 'ArmorType.dart';
-//import 'Armor.dart';
+import 'Armor.dart';
 
 /**
  * The Grid class, which serves as the encapsulation of the layout of the nodes.
@@ -193,11 +193,11 @@ class Grid {
     }
     else if(type is MonsterType)
     {
-      return new Monster(x, y, new TileObject(x, y, TileType.GROUND), type);
+      return new Monster(x, y, type);
     }
     else if(type is PlayerType)
     {
-      return new Player(x, y, new TileObject(x, y, TileType.GROUND), type);
+      return new Player(x, y, type);
     }
     else if(type is ItemType)
     {
@@ -205,11 +205,11 @@ class Grid {
     }
     else if(type is WeaponType)
     {
-      
+      return new Weapon(x, y, type);
     }
     else if(type is ArmorType)
     {
-      
+      return new Armor(x, y, type);
     }
     return "error at grid.dart class, getAtCoordinate()";
   }

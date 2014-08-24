@@ -76,7 +76,7 @@ class Room
       case RoomType.TREASUREROOM:
         int x = RNG.nextInt(this.width - 2);
         int y = RNG.nextInt(this.height - 2);
-        contents[y][x] = ItemType.KEY;
+        contents[y][x] = ItemType.TREASURECHEST;
         break;
       default:
         break;

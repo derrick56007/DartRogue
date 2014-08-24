@@ -1,14 +1,15 @@
 library ITEM;
 
 import 'TileObject.dart';
+import 'Enum.dart';
 
 class Item extends TileObject
 {
   String decription;
-  Item(int x, int y, var type) : super(x, y, type)
+  Item(int x, int y, Enum type) : super(x, y, type)
   {
-    this.isSolid = true;
+    this.isSolid = false;
     this.isOpaque = true;
-    this.isWalkable = !this.isSolid;
+    this.isWalkable = true;
   }
 }

@@ -17,6 +17,9 @@ import 'ItemType.dart';
 import 'WeaponType.dart';
 import 'ArmorType.dart';
 import 'Item.dart';
+import 'Chest.dart';
+import 'Armor.dart';
+import 'Weapon.dart';
 
 class World
 {
@@ -251,10 +254,6 @@ class World
             {
               setAtCoordinate(room.maxX, room.minY + j, TileType.WALL);
             }
-            else
-            {
-              //setAtCoordinate(room.minX + k, room.minY + j, TileType.GROUND);
-            }
           }
         }
       }
@@ -314,25 +313,29 @@ class World
     }
     else if(type is MonsterType)
     {
-      grid.nodes[y][x] = new Monster(x, y, new TileObject(x, y, TileType.GROUND), type);
+      grid.nodes[y][x] = new Monster(x, y, type);
       monsters.add(grid.nodes[y][x]);
     }
     else if(type is PlayerType)
     {
-      grid.nodes[y][x] = new Player(x, y, new TileObject(x, y, TileType.GROUND), type);
+      grid.nodes[y][x] = new Player(x, y, type);
       player = grid.nodes[y][x];
+    }
+    else if(type == ItemType.TREASURECHEST)
+    {
+      grid.nodes[y][x] = new Chest(x, y);
+    }
+    else if(type is WeaponType)
+    {
+      grid.nodes[y][x] = new Weapon(x, y, type);
+    }
+    else if(type is ArmorType)
+    {
+      grid.nodes[y][x] = new Armor(x, y, type);
     }
     else if(type is ItemType)
     {
       grid.nodes[y][x] = new Item(x, y, type);
-    }
-    else if(type is WeaponType)
-    {
-      
-    }
-    else if(type is ArmorType)
-    {
-      
     }
   }
 }

@@ -139,6 +139,16 @@ Element makeStats(String statName)
   def.text = "DEF:";
   stats.children.add(def);
   
+  Element weapon = new Element.div();
+  //def.className = "statTitle";
+  weapon.text = "WEAPON:";
+  stats.children.add(weapon);
+  
+  Element armor = new Element.div();
+  //def.className = "statTitle";
+  armor.text = "ARMOR:";
+  stats.children.add(armor);
+  
   Element items = new Element.div();
   items.className = "itemsStat";
   items.text = "Items:";
@@ -161,9 +171,11 @@ void refreshStats(dynamic entity)
     el.style.opacity = "1";
   }
   el.children[1].text = "HP: ${ent.HP}/${ent.MAXHP}";
-  el.children[2].text = "ATK: ${ent.atk}";
-  el.children[3].text = "DEF: ${ent.def}";
-  el.children[4].text = "Items: ${ent.itemToString()}";
+  el.children[2].text = "ATK: ${ent.atk} +${ent.weapon.atk}";
+  el.children[3].text = "DEF: ${ent.def} +${ent.armor.def}";
+  el.children[4].text = "WEAPON: ${ent.weapon.NAME} +${ent.weapon.atk} atk";
+  el.children[5].text = "ARMOR: ${ent.armor.NAME} +${ent.armor.def} def";
+  el.children[6].text = "ITEMS: ${ent.itemToString()}";
 }
 
 void addToNarration(String text, String color)

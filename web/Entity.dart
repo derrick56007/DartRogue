@@ -1,8 +1,11 @@
 library ENTITY;
 
 import 'TileObject.dart';
-import 'Enum.dart';
+import 'ItemType.dart';
 import 'Game.dart';
+import 'WeaponType.dart';
+import 'TileType.dart';
+import 'ArmorType.dart';
 
 class Entity extends TileObject
 {
@@ -10,7 +13,9 @@ class Entity extends TileObject
   int def = 0;
   int MAXHP = 0;
   int HP = 0;
-  List<Enum> items = [];
+  List<ItemType> items = [];
+  ArmorType armor =  ArmorType.NONE;
+  WeaponType weapon =  WeaponType.NONE;
   TileObject tileObject;
   itemToString() => getItemNames();
   
@@ -31,15 +36,16 @@ class Entity extends TileObject
     return string;
   }
   
-  Entity(int x, int y, this.tileObject, var type) : super(x, y, type)
+  Entity(int x, int y, var type) : super(x, y, type)
   {
     this.isOpaque = true;
     this.isSolid = true;
+    this.tileObject = new TileObject(x, y, TileType.GROUND);
   }
   
   void takeDmg(Entity entity)
   {
-    int damage = this.def - entity.atk;
+    int damage = (this.def + this.armor.def) - (entity.atk + entity.weapon.atk);
     if(damage <= 0)
     {
       damage = 1;

@@ -1,7 +1,7 @@
 library MONSTER;
 
 import 'Entity.dart';
-import 'TileObject.dart';
+import 'Item.dart';
 import 'Game.dart';
 import 'Player.dart';
 import 'MonsterType.dart';
@@ -17,7 +17,7 @@ class Monster extends Entity
   List pathToPlayer = [];
   Random rng;
   
-  Monster(int x, int y, TileObject tileObject, var type) : super(x, y, tileObject, type)
+  Monster(int x, int y, MonsterType type) : super(x, y, type)
   {
     this.isSolid = true;
     this.isWalkable = false;
@@ -119,7 +119,11 @@ class Monster extends Entity
       }
       else
       {
-        if(!(world.grid.nodes[this.y][this.x].type is ItemType))
+        if(this.tileObject is Item)
+        {
+          world.setAtCoordinate(this.x, this.y, tileObject.type);
+        }
+        else
         {
           world.setAtCoordinate(this.x, this.y, TileType.BONES);
         }
