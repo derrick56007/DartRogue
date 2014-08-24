@@ -93,7 +93,7 @@ class World
     }
   }
   
-  void lineOfSight(int x,int y,int x2, int y2) //TODO lineOFSight()
+  void lineOfSight(int x,int y,int x2, int y2) //TODO lineOfSight()
   {
       int w = x2 - x ;
       int h = y2 - y ;

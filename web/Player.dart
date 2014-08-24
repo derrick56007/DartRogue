@@ -75,7 +75,7 @@ class Player extends Entity
   
   void touchedTile(var tileObject) //TODO touchedTile()
   {
-    print(tileObject.type.NAME);
+    print(tileObject.type.NAME); //TODO print touched tile
     
     if(tileObject is Item)
     {

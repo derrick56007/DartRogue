@@ -67,7 +67,7 @@ class Grid {
    * @param {boolean} walkable - Whether the position is walkable.
    */
   setWalkableAt(x, y, walkable) {
-    this.nodes[y][x].isWalkable = !walkable; //TODO
+    this.nodes[y][x].isWalkable = !walkable;
   }
 
 

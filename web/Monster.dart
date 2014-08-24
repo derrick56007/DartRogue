@@ -8,7 +8,6 @@ import 'MonsterType.dart';
 import 'TileType.dart';
 import 'dart:math';
 import 'ItemType.dart';
-import 'dartrogue.dart';
 
 class Monster extends Entity
 {

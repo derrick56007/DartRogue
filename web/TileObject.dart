@@ -3,7 +3,6 @@ library TILEOBJECT;
 import 'Game.dart';
 import 'TileType.dart';
 import 'Enum.dart';
-import 'ItemType.dart';
 
 class TileObject
 {

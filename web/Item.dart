@@ -1,7 +1,6 @@
 library ITEM;
 
 import 'TileObject.dart';
-import 'ItemType.dart';
 
 class Item extends TileObject
 {
