@@ -1,17 +1,17 @@
 library GAME;
 
-import 'World.dart';
+import 'World/World.dart';
 import 'Display.dart';
 import 'Input.dart';
 import 'dart:math';
 import 'dart:html' hide Player;
-import 'Player.dart';
-import 'Entity.dart';
+import 'Entity/Player/Player.dart';
+import 'Entity/Entity.dart';
 
 World world;
 Display display;
 Input input;
-bool allVisible = false;
+bool allVisible = true;
 Random RNG;
 Element playerStats;
 Element enemyStats;

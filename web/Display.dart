@@ -2,7 +2,7 @@ library DISPLAY;
 
 import 'dart:html';
 import 'Game.dart';
-import 'TileObject.dart';
+import 'World/TileObject/TileObject.dart';
 
 class Display
 {
