@@ -296,37 +296,37 @@ var $$ = {};
       if ($.RNG.nextInt$1(4) !== 0)
         switch ($.difficulty) {
           case 0:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_oZA], [15, C.ArmorType_GQO], [35, C.WeaponType_uv0], [15, C.WeaponType_vp5]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_oZA], [15, C.ArmorType_GQO], [35, C.WeaponType_yYD], [15, C.WeaponType_ydF]]);
             break;
           case 1:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_0], [15, C.ArmorType_kFs], [35, C.WeaponType_a9P], [15, C.WeaponType_zpk]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_0], [15, C.ArmorType_kFs], [35, C.WeaponType_OCd], [15, C.WeaponType_86y]]);
             break;
           case 2:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_8Gl], [15, C.ArmorType_jhf], [35, C.WeaponType_3uE], [15, C.WeaponType_s6Q]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_8Gl], [15, C.ArmorType_jhf], [35, C.WeaponType_GRA], [15, C.WeaponType_sje]]);
             break;
           case 3:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_yyz], [15, C.ArmorType_GDb], [35, C.WeaponType_Uwh], [15, C.WeaponType_yXb]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_yyz], [15, C.ArmorType_GDb], [35, C.WeaponType_ekJ], [15, C.WeaponType_LhI]]);
             break;
           case 4:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_Ual], [15, C.ArmorType_Jsm], [35, C.WeaponType_vE9], [15, C.WeaponType_6z6]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_Ual], [15, C.ArmorType_Jsm], [35, C.WeaponType_Lx4], [15, C.WeaponType_A8J]]);
             break;
           case 5:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_Cu4], [15, C.ArmorType_i5H], [35, C.WeaponType_23h], [15, C.WeaponType_StS]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_Cu4], [15, C.ArmorType_i5H], [35, C.WeaponType_oyn], [15, C.WeaponType_1iR]]);
             break;
           case 6:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_00], [15, C.ArmorType_GIS], [35, C.WeaponType_0], [15, C.WeaponType_SJh]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_00], [15, C.ArmorType_GIS], [35, C.WeaponType_QHU], [15, C.WeaponType_YfA]]);
             break;
           case 7:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_GzW], [15, C.ArmorType_mVm], [35, C.WeaponType_O16], [15, C.WeaponType_ASw]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_GzW], [15, C.ArmorType_mVm], [35, C.WeaponType_O50], [15, C.WeaponType_yHF]]);
             break;
           case 8:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_S7B], [15, C.ArmorType_Tn6], [35, C.WeaponType_gc6], [15, C.WeaponType_GRA]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_S7B], [15, C.ArmorType_Tn6], [35, C.WeaponType_Fh9], [15, C.WeaponType_kwb]]);
             break;
           case 9:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_2Vk], [15, C.ArmorType_86y], [35, C.WeaponType_SXx], [15, C.WeaponType_S8J]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_2Vk], [15, C.ArmorType_86y], [35, C.WeaponType_iTd], [15, C.WeaponType_MYE]]);
             break;
           case 10:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_dSs], [15, C.ArmorType_wrR], [35, C.WeaponType_QGe], [15, C.WeaponType_a9P0]]);
+            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_dSs], [15, C.ArmorType_wrR], [35, C.WeaponType_QKc], [15, C.WeaponType_OCd0]]);
             break;
           default:
             break;
@@ -628,13 +628,120 @@ var $$ = {};
 ["INPUT", "Input.dart", , B, {
   "^": "",
   Input: {
-    "^": "Object;",
+    "^": "Object;keys,timer",
+    validKey$1: function(e) {
+      if (e === 103 || e === 104 || e === 105 || e === 102 || e === 99 || e === 98 || e === 97 || e === 100 || e === 101 || e === 81 || e === 87 || e === 69 || e === 68 || e === 67 || e === 88 || e === 90 || e === 65 || e === 83)
+        return true;
+      return false;
+    },
+    keyUpHandler$1: function(e) {
+      var t1, t2;
+      t1 = this.keys;
+      if (C.JSArray_methods.contains$1(t1, e)) {
+        C.JSArray_methods.remove$1(t1, e);
+        t2 = this.timer;
+        if (t2 != null)
+          t2.cancel$0();
+        if (t1.length > 0)
+          this.timer = P.Timer_Timer$periodic(C.Duration_100000, new B.Input_keyUpHandler_closure(this));
+      }
+    },
+    keyDownHandler$1: function(e) {
+      var t1 = this.keys;
+      if (!C.JSArray_methods.contains$1(t1, e)) {
+        this.keyPressed$1(e);
+        t1.push(e);
+        t1 = this.timer;
+        if (t1 != null)
+          t1.cancel$0();
+        this.timer = P.Timer_Timer$periodic(C.Duration_100000, new B.Input_keyDownHandler_closure(this, e));
+      }
+    },
+    keyPressed$1: function(e) {
+      var moveY, moveX;
+      switch (e) {
+        case 104:
+          moveY = -1;
+          moveX = 0;
+          break;
+        case 87:
+          moveY = -1;
+          moveX = 0;
+          break;
+        case 98:
+          moveY = 1;
+          moveX = 0;
+          break;
+        case 88:
+          moveY = 1;
+          moveX = 0;
+          break;
+        case 100:
+          moveY = 0;
+          moveX = -1;
+          break;
+        case 65:
+          moveY = 0;
+          moveX = -1;
+          break;
+        case 102:
+          moveY = 0;
+          moveX = 1;
+          break;
+        case 68:
+          moveY = 0;
+          moveX = 1;
+          break;
+        case 103:
+          moveY = -1;
+          moveX = -1;
+          break;
+        case 81:
+          moveY = -1;
+          moveX = -1;
+          break;
+        case 105:
+          moveY = -1;
+          moveX = 1;
+          break;
+        case 69:
+          moveY = -1;
+          moveX = 1;
+          break;
+        case 99:
+          moveY = 1;
+          moveX = 1;
+          break;
+        case 67:
+          moveY = 1;
+          moveX = 1;
+          break;
+        case 97:
+          moveY = 1;
+          moveX = -1;
+          break;
+        case 90:
+          moveY = 1;
+          moveX = -1;
+          break;
+        default:
+          moveY = 0;
+          moveX = 0;
+          break;
+      }
+      $.world.player.movePlayer$2(moveX, moveY);
+      $.display.displayWorld$0();
+    },
     Input$0: function() {
       var t1 = H.setRuntimeTypeInfo(new W._EventStream(window, C.EventStreamProvider_keydown._eventType, false), [null]);
       H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._target, t1._eventType, W._wrapZone(new B.Input_closure(this)), t1._useCapture), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
+      t1 = H.setRuntimeTypeInfo(new W._EventStream(window, C.EventStreamProvider_keyup._eventType, false), [null]);
+      H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._target, t1._eventType, W._wrapZone(new B.Input_closure0(this)), t1._useCapture), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
+      t1 = H.setRuntimeTypeInfo(new W._EventStream(window, C.EventStreamProvider_mousedown._eventType, false), [null]);
+      H.setRuntimeTypeInfo(new W._EventStreamSubscription(0, t1._target, t1._eventType, W._wrapZone(new B.Input_closure1(this)), t1._useCapture), [H.getTypeArgumentByIndex(t1, 0)])._tryResume$0();
     },
     static: {Input$: function() {
-        var t1 = new B.Input();
+        var t1 = new B.Input([], null);
         t1.Input$0();
         return t1;
       }}
@@ -642,88 +749,40 @@ var $$ = {};
   Input_closure: {
     "^": "Closure:13;this_0",
     call$1: function(e) {
-      var t1, t2, moveY, moveX;
-      t1 = J.get$keyCode$x(e);
-      t2 = new P.DateTime(Date.now(), false);
-      t2.DateTime$_now$0();
-      P.print(t2);
-      if (t1 === 55 || t1 === 56 || t1 === 57 || t1 === 54 || t1 === 51 || t1 === 50 || t1 === 49 || t1 === 52 || t1 === 81 || t1 === 87 || t1 === 69 || t1 === 68 || t1 === 67 || t1 === 88 || t1 === 90 || t1 === 65 || t1 === 83) {
-        switch (t1) {
-          case 56:
-            moveY = -1;
-            moveX = 0;
-            break;
-          case 87:
-            moveY = -1;
-            moveX = 0;
-            break;
-          case 50:
-            moveY = 1;
-            moveX = 0;
-            break;
-          case 88:
-            moveY = 1;
-            moveX = 0;
-            break;
-          case 52:
-            moveY = 0;
-            moveX = -1;
-            break;
-          case 65:
-            moveY = 0;
-            moveX = -1;
-            break;
-          case 54:
-            moveY = 0;
-            moveX = 1;
-            break;
-          case 68:
-            moveY = 0;
-            moveX = 1;
-            break;
-          case 55:
-            moveY = -1;
-            moveX = -1;
-            break;
-          case 81:
-            moveY = -1;
-            moveX = -1;
-            break;
-          case 57:
-            moveY = -1;
-            moveX = 1;
-            break;
-          case 69:
-            moveY = -1;
-            moveX = 1;
-            break;
-          case 51:
-            moveY = 1;
-            moveX = 1;
-            break;
-          case 67:
-            moveY = 1;
-            moveX = 1;
-            break;
-          case 49:
-            moveY = 1;
-            moveX = -1;
-            break;
-          case 90:
-            moveY = 1;
-            moveX = -1;
-            break;
-          default:
-            moveY = 0;
-            moveX = 0;
-            break;
-        }
-        $.world.player.movePlayer$2(moveX, moveY);
-        $.display.displayWorld$0();
-        t1 = new P.DateTime(Date.now(), false);
-        t1.DateTime$_now$0();
-        P.print(t1);
-      }
+      var t1 = this.this_0;
+      if (t1.validKey$1(J.get$keyCode$x(e)))
+        t1.keyDownHandler$1(e.keyCode);
+    }
+  },
+  Input_closure0: {
+    "^": "Closure:13;this_1",
+    call$1: function(e) {
+      var t1 = this.this_1;
+      if (t1.validKey$1(J.get$keyCode$x(e)))
+        t1.keyUpHandler$1(e.keyCode);
+    }
+  },
+  Input_closure1: {
+    "^": "Closure:14;this_2",
+    call$1: function(e) {
+      var t1 = this.this_2;
+      C.JSArray_methods.set$length(t1.keys, 0);
+      t1 = t1.timer;
+      if (t1 != null)
+        t1.cancel$0();
+    }
+  },
+  Input_keyUpHandler_closure: {
+    "^": "Closure:15;this_0",
+    call$1: function(d) {
+      var t1 = this.this_0;
+      t1.keyPressed$1(C.JSArray_methods.get$last(t1.keys));
+    }
+  },
+  Input_keyDownHandler_closure: {
+    "^": "Closure:15;this_0,e_1",
+    call$1: function(d) {
+      this.this_0.keyPressed$1(this.e_1);
     }
   }
 }],
@@ -841,17 +900,17 @@ var $$ = {};
           $.world.setAtCoordinate$3(this.x, this.y, C.ItemType_K_key);
         else {
           t1 = this.rng.nextInt$1(3) === 0 && this.items.length > 0;
-          t3 = this.x;
-          t4 = $.world;
+          t3 = $.world;
+          t4 = this.x;
           t5 = this.y;
           if (t1) {
             t1 = this.items;
             t6 = this.rng.nextInt$1(t1.length);
             if (t6 >>> 0 !== t6 || t6 >= t1.length)
               return H.ioore(t1, t6);
-            t4.setAtCoordinate$3(t3, t5, t1[t6]);
+            t3.setAtCoordinate$3(t4, t5, t1[t6]);
           } else
-            t4.setAtCoordinate$3(t3, t5, J.get$type$x(this.tileObject));
+            t3.setAtCoordinate$3(t4, t5, J.get$type$x(this.tileObject));
           C.JSArray_methods.remove$1($.world.monsters, this);
           J.set$opacity$x($.enemyStats.style, "0");
         }
@@ -1616,6 +1675,12 @@ var $$ = {};
         return H.setRuntimeTypeInfo([], [H.getTypeArgumentByIndex(receiver, 0)]);
       return H.setRuntimeTypeInfo(receiver.slice(start, end), [H.getTypeArgumentByIndex(receiver, 0)]);
     },
+    get$last: function(receiver) {
+      var t1 = receiver.length;
+      if (t1 > 0)
+        return receiver[t1 - 1];
+      throw H.wrapException(P.StateError$("No elements"));
+    },
     contains$1: function(receiver, other) {
       var i;
       for (i = 0; i < receiver.length; ++i)
@@ -2132,13 +2197,13 @@ var $$ = {};
     return x == null || typeof x === "string" || typeof x === "number" || typeof x === "boolean";
   },
   startRootIsolate_closure: {
-    "^": "Closure:14;box_0,entry_1",
+    "^": "Closure:16;box_0,entry_1",
     call$0: function() {
       this.entry_1.call$1(this.box_0.args_0);
     }
   },
   startRootIsolate_closure0: {
-    "^": "Closure:14;box_0,entry_2",
+    "^": "Closure:16;box_0,entry_2",
     call$0: function() {
       this.entry_2.call$2(this.box_0.args_0, null);
     }
@@ -2463,7 +2528,7 @@ var $$ = {};
     "^": "Object;"
   },
   IsolateNatives__processWorkerMessage_closure: {
-    "^": "Closure:14;entryPoint_0,args_1,message_2,isSpawnUri_3,startPaused_4,replyTo_5",
+    "^": "Closure:16;entryPoint_0,args_1,message_2,isSpawnUri_3,startPaused_4,replyTo_5",
     call$0: function() {
       H.IsolateNatives__startIsolate(this.entryPoint_0, this.args_1, this.message_2, this.isSpawnUri_3, this.startPaused_4, this.replyTo_5);
     }
@@ -2502,7 +2567,7 @@ var $$ = {};
     }
   },
   IsolateNatives__startNonWorker_closure: {
-    "^": "Closure:14;box_0,functionName_1,isSpawnUri_2,startPaused_3,replyPort_4",
+    "^": "Closure:16;box_0,functionName_1,isSpawnUri_2,startPaused_3,replyPort_4",
     call$0: function() {
       var t1 = this.box_0;
       H.IsolateNatives__startIsolate(init.globalFunctions[this.functionName_1](), t1.args_0, t1.message_1, this.isSpawnUri_2, this.startPaused_3, this.replyPort_4);
@@ -2605,7 +2670,7 @@ var $$ = {};
     $isCapability: true
   },
   _NativeJsSendPort_send_closure: {
-    "^": "Closure:14;box_0,this_1,shouldSerialize_2",
+    "^": "Closure:16;box_0,this_1,shouldSerialize_2",
     call$0: function() {
       var t1, t2;
       t1 = this.this_1._receivePort;
@@ -2985,6 +3050,29 @@ var $$ = {};
   },
   TimerImpl: {
     "^": "Object;_once,_inEventLoop,_handle",
+    cancel$0: function() {
+      if ($.get$globalThis().setTimeout != null) {
+        if (this._inEventLoop)
+          throw H.wrapException(P.UnsupportedError$("Timer in event loop cannot be canceled."));
+        if (this._handle == null)
+          return;
+        H.leaveJsAsync();
+        if (this._once)
+          $.get$globalThis().clearTimeout(this._handle);
+        else
+          $.get$globalThis().clearInterval(this._handle);
+        this._handle = null;
+      } else
+        throw H.wrapException(P.UnsupportedError$("Canceling a timer."));
+    },
+    TimerImpl$periodic$2: function(milliseconds, callback) {
+      var t1 = $.get$globalThis();
+      if (t1.setTimeout != null) {
+        ++init.globalState.topEventLoop._activeJsAsyncCount;
+        this._handle = t1.setInterval(H.convertDartClosureToJS(new H.TimerImpl$periodic_closure(this, callback), 0), milliseconds);
+      } else
+        throw H.wrapException(P.UnsupportedError$("Periodic timer."));
+    },
     TimerImpl$2: function(milliseconds, callback) {
       var t1, t2;
       if (milliseconds === 0)
@@ -3010,6 +3098,10 @@ var $$ = {};
         var t1 = new H.TimerImpl(true, false, null);
         t1.TimerImpl$2(milliseconds, callback);
         return t1;
+      }, TimerImpl$periodic: function(milliseconds, callback) {
+        var t1 = new H.TimerImpl(false, false, null);
+        t1.TimerImpl$periodic$2(milliseconds, callback);
+        return t1;
       }}
   },
   TimerImpl_internalCallback: {
@@ -3025,6 +3117,12 @@ var $$ = {};
       this.this_2._handle = null;
       H.leaveJsAsync();
       this.callback_3.call$0();
+    }
+  },
+  TimerImpl$periodic_closure: {
+    "^": "Closure:16;this_0,callback_1",
+    call$0: function() {
+      this.callback_1.call$1(this.this_0);
     }
   },
   CapabilityImpl: {
@@ -3146,11 +3244,6 @@ var $$ = {};
       }
     }
     throw H.wrapException(P.RangeError$range(charCode, 0, 1114111));
-  },
-  Primitives_lazyAsJsDate: function(receiver) {
-    if (receiver.date === void 0)
-      receiver.date = new Date(receiver.millisecondsSinceEpoch);
-    return receiver.date;
   },
   Primitives_getProperty: function(object, key) {
     if (object == null || typeof object === "boolean" || typeof object === "number" || typeof object === "string")
@@ -4068,31 +4161,31 @@ var $$ = {};
     }
   },
   invokeClosure_closure: {
-    "^": "Closure:14;closure_0",
+    "^": "Closure:16;closure_0",
     call$0: function() {
       return this.closure_0.call$0();
     }
   },
   invokeClosure_closure0: {
-    "^": "Closure:14;closure_1,arg1_2",
+    "^": "Closure:16;closure_1,arg1_2",
     call$0: function() {
       return this.closure_1.call$1(this.arg1_2);
     }
   },
   invokeClosure_closure1: {
-    "^": "Closure:14;closure_3,arg1_4,arg2_5",
+    "^": "Closure:16;closure_3,arg1_4,arg2_5",
     call$0: function() {
       return this.closure_3.call$2(this.arg1_4, this.arg2_5);
     }
   },
   invokeClosure_closure2: {
-    "^": "Closure:14;closure_6,arg1_7,arg2_8,arg3_9",
+    "^": "Closure:16;closure_6,arg1_7,arg2_8,arg3_9",
     call$0: function() {
       return this.closure_6.call$3(this.arg1_7, this.arg2_8, this.arg3_9);
     }
   },
   invokeClosure_closure3: {
-    "^": "Closure:14;closure_10,arg1_11,arg2_12,arg3_13,arg4_14",
+    "^": "Closure:16;closure_10,arg1_11,arg2_12,arg3_13,arg4_14",
     call$0: function() {
       return this.closure_10.call$4(this.arg1_11, this.arg2_12, this.arg3_13, this.arg4_14);
     }
@@ -4295,7 +4388,7 @@ var $$ = {};
     }
   },
   initHooks_closure0: {
-    "^": "Closure:16;getUnknownTag_1",
+    "^": "Closure:17;getUnknownTag_1",
     call$2: function(o, tag) {
       return this.getUnknownTag_1(o, tag);
     }
@@ -4873,6 +4966,14 @@ var $$ = {};
     }
     return P._rootCreateTimer(t1, null, t1, duration, t1.bindCallback$2$runGuarded(callback, true));
   },
+  Timer_Timer$periodic: function(duration, callback) {
+    var t1 = $.Zone__current;
+    if (t1 === C.C__RootZone) {
+      t1.toString;
+      return P._rootCreatePeriodicTimer(t1, null, t1, duration, callback);
+    }
+    return P._rootCreatePeriodicTimer(t1, null, t1, duration, t1.bindUnaryCallback$2$runGuarded(callback, true));
+  },
   _createTimer: function(duration, callback) {
     var milliseconds = C.JSInt_methods._tdivFast$1(duration._duration, 1000);
     return H.TimerImpl$(milliseconds < 0 ? 0 : milliseconds, callback);
@@ -4927,8 +5028,15 @@ var $$ = {};
   _rootCreateTimer: function($self, $parent, zone, duration, callback) {
     return P._createTimer(duration, C.C__RootZone !== zone ? zone.bindCallback$1(callback) : callback);
   },
+  _rootCreatePeriodicTimer: function($self, $parent, zone, duration, callback) {
+    var milliseconds;
+    if (C.C__RootZone !== zone)
+      callback = zone.bindUnaryCallback$1(callback);
+    milliseconds = C.JSInt_methods._tdivFast$1(duration._duration, 1000);
+    return H.TimerImpl$periodic(milliseconds < 0 ? 0 : milliseconds, callback);
+  },
   _AsyncRun__scheduleImmediateJsOverride_internalCallback: {
-    "^": "Closure:14;callback_0",
+    "^": "Closure:16;callback_0",
     call$0: function() {
       H.leaveJsAsync();
       this.callback_0.call$0();
@@ -5237,7 +5345,7 @@ var $$ = {};
       }}
   },
   _Future__addListener_closure: {
-    "^": "Closure:14;this_0,listener_1",
+    "^": "Closure:16;this_0,listener_1",
     call$0: function() {
       P._Future__propagateToListeners(this.this_0, this.listener_1);
     }
@@ -5249,7 +5357,7 @@ var $$ = {};
     }
   },
   _Future__chainForeignFuture_closure0: {
-    "^": "Closure:17;target_1",
+    "^": "Closure:18;target_1",
     call$2: function(error, stackTrace) {
       this.target_1._completeError$2(error, stackTrace);
     },
@@ -5258,25 +5366,25 @@ var $$ = {};
     }
   },
   _Future__asyncComplete_closure: {
-    "^": "Closure:14;this_0,coreFuture_1",
+    "^": "Closure:16;this_0,coreFuture_1",
     call$0: function() {
       P._Future__chainCoreFuture(this.coreFuture_1, this.this_0);
     }
   },
   _Future__asyncComplete_closure0: {
-    "^": "Closure:14;this_2,value_3",
+    "^": "Closure:16;this_2,value_3",
     call$0: function() {
       this.this_2._completeWithValue$1(this.value_3);
     }
   },
   _Future__asyncCompleteError_closure: {
-    "^": "Closure:14;this_0,error_1,stackTrace_2",
+    "^": "Closure:16;this_0,error_1,stackTrace_2",
     call$0: function() {
       this.this_0._completeError$2(this.error_1, this.stackTrace_2);
     }
   },
   _Future__propagateToListeners_handleValueCallback: {
-    "^": "Closure:18;box_1,listener_3,sourceValue_4,zone_5",
+    "^": "Closure:19;box_1,listener_3,sourceValue_4,zone_5",
     call$0: function() {
       var e, s, t1, t2, exception;
       try {
@@ -5408,7 +5516,7 @@ var $$ = {};
     }
   },
   _Future__propagateToListeners_handleWhenCompleteCallback_closure0: {
-    "^": "Closure:17;box_0,listener_12",
+    "^": "Closure:18;box_0,listener_12",
     call$2: function(error, stackTrace) {
       var t1, completeResult;
       t1 = this.box_0;
@@ -5468,7 +5576,7 @@ var $$ = {};
     }
   },
   Stream_forEach__closure: {
-    "^": "Closure:14;action_4,element_5",
+    "^": "Closure:16;action_4,element_5",
     call$0: function() {
       return this.action_4.call$1(this.element_5);
     }
@@ -5479,7 +5587,7 @@ var $$ = {};
     }
   },
   Stream_forEach_closure0: {
-    "^": "Closure:14;future_6",
+    "^": "Closure:16;future_6",
     call$0: function() {
       this.future_6._complete$1(null);
     }
@@ -5491,7 +5599,7 @@ var $$ = {};
     }
   },
   Stream_length_closure0: {
-    "^": "Closure:14;box_0,future_1",
+    "^": "Closure:16;box_0,future_1",
     call$0: function() {
       this.future_1._complete$1(this.box_0.count_0);
     }
@@ -5508,7 +5616,7 @@ var $$ = {};
     }
   },
   Stream_first_closure0: {
-    "^": "Closure:14;future_3",
+    "^": "Closure:16;future_3",
     call$0: function() {
       this.future_3._completeError$1(new P.StateError("No elements"));
     }
@@ -5632,7 +5740,7 @@ var $$ = {};
     }
   },
   _StreamController__subscribe_closure: {
-    "^": "Closure:14;this_0",
+    "^": "Closure:16;this_0",
     call$0: function() {
       P._runGuarded(this.this_0.get$_onListen());
     }
@@ -5976,7 +6084,7 @@ var $$ = {};
     }
   },
   _PendingEvents_schedule_closure: {
-    "^": "Closure:14;this_0,dispatch_1",
+    "^": "Closure:16;this_0,dispatch_1",
     call$0: function() {
       var t1, oldState;
       t1 = this.this_0;
@@ -6013,19 +6121,19 @@ var $$ = {};
     }
   },
   _cancelAndError_closure: {
-    "^": "Closure:14;future_0,error_1,stackTrace_2",
+    "^": "Closure:16;future_0,error_1,stackTrace_2",
     call$0: function() {
       return this.future_0._completeError$2(this.error_1, this.stackTrace_2);
     }
   },
   _cancelAndErrorClosure_closure: {
-    "^": "Closure:19;subscription_0,future_1",
+    "^": "Closure:20;subscription_0,future_1",
     call$2: function(error, stackTrace) {
       return P._cancelAndError(this.subscription_0, this.future_1, error, stackTrace);
     }
   },
   _cancelAndValue_closure: {
-    "^": "Closure:14;future_0,value_1",
+    "^": "Closure:16;future_0,value_1",
     call$0: function() {
       return this.future_0._complete$1(this.value_1);
     }
@@ -6074,16 +6182,19 @@ var $$ = {};
         return new P._BaseZone_bindUnaryCallback_closure(this, registered);
       else
         return new P._BaseZone_bindUnaryCallback_closure0(this, registered);
+    },
+    bindUnaryCallback$1: function(f) {
+      return this.bindUnaryCallback$2$runGuarded(f, true);
     }
   },
   _BaseZone_bindCallback_closure: {
-    "^": "Closure:14;this_0,registered_1",
+    "^": "Closure:16;this_0,registered_1",
     call$0: function() {
       return this.this_0.runGuarded$1(this.registered_1);
     }
   },
   _BaseZone_bindCallback_closure0: {
-    "^": "Closure:14;this_2,registered_3",
+    "^": "Closure:16;this_2,registered_3",
     call$0: function() {
       return this.this_2.run$1(this.registered_3);
     }
@@ -6101,13 +6212,13 @@ var $$ = {};
     }
   },
   _rootHandleUncaughtError_closure: {
-    "^": "Closure:14;error_0,stackTrace_1",
+    "^": "Closure:16;error_0,stackTrace_1",
     call$0: function() {
       P._scheduleAsyncCallback(new P._rootHandleUncaughtError__closure(this.error_0, this.stackTrace_1));
     }
   },
   _rootHandleUncaughtError__closure: {
-    "^": "Closure:14;error_2,stackTrace_3",
+    "^": "Closure:16;error_2,stackTrace_3",
     call$0: function() {
       var t1, trace;
       t1 = this.error_2;
@@ -7332,7 +7443,7 @@ var $$ = {};
     H.printString(line);
   },
   NoSuchMethodError_toString_closure: {
-    "^": "Closure:20;box_0",
+    "^": "Closure:21;box_0",
     call$2: function(key, value) {
       var t1 = this.box_0;
       if (t1.i_1 > 0)
@@ -7347,63 +7458,6 @@ var $$ = {};
   "+bool": 0,
   Comparable: {
     "^": "Object;"
-  },
-  DateTime: {
-    "^": "Object;millisecondsSinceEpoch<,isUtc",
-    $eq: function(_, other) {
-      if (other == null)
-        return false;
-      if (!J.getInterceptor(other).$isDateTime)
-        return false;
-      return this.millisecondsSinceEpoch === other.millisecondsSinceEpoch && this.isUtc === other.isUtc;
-    },
-    compareTo$1: function(_, other) {
-      return C.JSNumber_methods.compareTo$1(this.millisecondsSinceEpoch, other.get$millisecondsSinceEpoch());
-    },
-    get$hashCode: function(_) {
-      return this.millisecondsSinceEpoch;
-    },
-    toString$0: function(_) {
-      var t1, y, m, d, h, min, sec, ms;
-      t1 = this.isUtc;
-      y = P.DateTime__fourDigits(t1 ? H.Primitives_lazyAsJsDate(this).getUTCFullYear() + 0 : H.Primitives_lazyAsJsDate(this).getFullYear() + 0);
-      m = P.DateTime__twoDigits(t1 ? H.Primitives_lazyAsJsDate(this).getUTCMonth() + 1 : H.Primitives_lazyAsJsDate(this).getMonth() + 1);
-      d = P.DateTime__twoDigits(t1 ? H.Primitives_lazyAsJsDate(this).getUTCDate() + 0 : H.Primitives_lazyAsJsDate(this).getDate() + 0);
-      h = P.DateTime__twoDigits(t1 ? H.Primitives_lazyAsJsDate(this).getUTCHours() + 0 : H.Primitives_lazyAsJsDate(this).getHours() + 0);
-      min = P.DateTime__twoDigits(t1 ? H.Primitives_lazyAsJsDate(this).getUTCMinutes() + 0 : H.Primitives_lazyAsJsDate(this).getMinutes() + 0);
-      sec = P.DateTime__twoDigits(t1 ? H.Primitives_lazyAsJsDate(this).getUTCSeconds() + 0 : H.Primitives_lazyAsJsDate(this).getSeconds() + 0);
-      ms = P.DateTime__threeDigits(t1 ? H.Primitives_lazyAsJsDate(this).getUTCMilliseconds() + 0 : H.Primitives_lazyAsJsDate(this).getMilliseconds() + 0);
-      if (t1)
-        return y + "-" + m + "-" + d + " " + h + ":" + min + ":" + sec + "." + ms + "Z";
-      else
-        return y + "-" + m + "-" + d + " " + h + ":" + min + ":" + sec + "." + ms;
-    },
-    DateTime$_now$0: function() {
-      H.Primitives_lazyAsJsDate(this);
-    },
-    $isDateTime: true,
-    static: {"^": "DateTime_MONDAY,DateTime_TUESDAY,DateTime_WEDNESDAY,DateTime_THURSDAY,DateTime_FRIDAY,DateTime_SATURDAY,DateTime_SUNDAY,DateTime_DAYS_PER_WEEK,DateTime_JANUARY,DateTime_FEBRUARY,DateTime_MARCH,DateTime_APRIL,DateTime_MAY,DateTime_JUNE,DateTime_JULY,DateTime_AUGUST,DateTime_SEPTEMBER,DateTime_OCTOBER,DateTime_NOVEMBER,DateTime_DECEMBER,DateTime_MONTHS_PER_YEAR,DateTime__MAX_MILLISECONDS_SINCE_EPOCH", DateTime__fourDigits: function(n) {
-        var absN, sign;
-        absN = Math.abs(n);
-        sign = n < 0 ? "-" : "";
-        if (absN >= 1000)
-          return "" + n;
-        if (absN >= 100)
-          return sign + "0" + H.S(absN);
-        if (absN >= 10)
-          return sign + "00" + H.S(absN);
-        return sign + "000" + H.S(absN);
-      }, DateTime__threeDigits: function(n) {
-        if (n >= 100)
-          return "" + n;
-        if (n >= 10)
-          return "0" + n;
-        return "00" + n;
-      }, DateTime__twoDigits: function(n) {
-        if (n >= 10)
-          return "" + n;
-        return "0" + n;
-      }}
   },
   $double: {
     "^": "num;",
@@ -7457,7 +7511,7 @@ var $$ = {};
       }}
   },
   Duration_toString_sixDigits: {
-    "^": "Closure:21;",
+    "^": "Closure:22;",
     call$1: function(n) {
       if (n >= 100000)
         return "" + n;
@@ -7473,7 +7527,7 @@ var $$ = {};
     }
   },
   Duration_toString_twoDigits: {
-    "^": "Closure:21;",
+    "^": "Closure:22;",
     call$1: function(n) {
       if (n >= 10)
         return "" + n;
@@ -7894,6 +7948,10 @@ var $$ = {};
     "^": "HtmlElement;error=",
     "%": "HTMLAudioElement|HTMLMediaElement|HTMLVideoElement"
   },
+  MouseEvent: {
+    "^": "UIEvent;",
+    "%": "DragEvent|MSPointerEvent|MouseEvent|MouseScrollEvent|MouseWheelEvent|PointerEvent|WheelEvent"
+  },
   Node: {
     "^": "EventTarget;parent:parentElement=,text:textContent}",
     remove$0: function(receiver) {
@@ -7993,7 +8051,7 @@ var $$ = {};
   },
   UIEvent: {
     "^": "Event;",
-    "%": "CompositionEvent|DragEvent|FocusEvent|MSPointerEvent|MouseEvent|MouseScrollEvent|MouseWheelEvent|PointerEvent|SVGZoomEvent|TextEvent|TouchEvent|WheelEvent;UIEvent"
+    "%": "CompositionEvent|FocusEvent|SVGZoomEvent|TextEvent|TouchEvent;UIEvent"
   },
   Window: {
     "^": "EventTarget;closed=",
@@ -8015,6 +8073,9 @@ var $$ = {};
     },
     set$opacity: function(receiver, value) {
       this.setProperty$3(receiver, "opacity", value, "");
+    },
+    set$width: function(receiver, value) {
+      this.setProperty$3(receiver, "width", value, "");
     }
   },
   _ChildrenElementList: {
@@ -8580,8 +8641,28 @@ var $$ = {};
 ["", "dartrogue.dart", , U, {
   "^": "",
   main: [function() {
+    var t1, t2, t3;
     $.game = A.Game$();
     $.display.displayWorld$0();
+    $.holderElement = document.querySelector("#holder");
+    $.displayElement = document.querySelector("#display");
+    $.narrationHolderElement = document.querySelector("#narrationHolder");
+    $.narrationElement = document.querySelector("#narration");
+    t1 = $.holderElement.style;
+    t2 = $.displayElement;
+    t2.toString;
+    t2 = C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(t2.clientWidth));
+    t3 = document.querySelector("#HUD");
+    t3.toString;
+    J.set$width$x(t1, "" + (t2 + C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(t3.clientWidth)) + 10) + "px");
+    t3 = $.narrationHolderElement.style;
+    t2 = $.holderElement;
+    t2.toString;
+    J.set$width$x(t3, "" + C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(t2.clientWidth)) + "px");
+    t2 = $.narrationElement.style;
+    t3 = $.displayElement;
+    t3.toString;
+    J.set$width$x(t2, "" + C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(t3.clientWidth)) + "px");
   }, "call$0", "main$closure", 0, 0, 2]
 },
 1],
@@ -9066,14 +9147,13 @@ P.$int.$asComparable = [P.num];
 P.$int.$isObject = true;
 W.Node.$isNode = true;
 W.Node.$isObject = true;
-P.num.$isComparable = true;
-P.num.$asComparable = [P.num];
-P.num.$isObject = true;
 P.String.$isString = true;
 P.String.$isComparable = true;
 P.String.$asComparable = [P.String];
 P.String.$isObject = true;
-P.Duration.$isDuration = true;
+P.num.$isComparable = true;
+P.num.$asComparable = [P.num];
+P.num.$isObject = true;
 P.Duration.$isComparable = true;
 P.Duration.$asComparable = [P.Duration];
 P.Duration.$isObject = true;
@@ -9082,6 +9162,8 @@ W.Element.$isNode = true;
 W.Element.$isObject = true;
 W.KeyboardEvent.$isKeyboardEvent = true;
 W.KeyboardEvent.$isObject = true;
+W.MouseEvent.$isMouseEvent = true;
+W.MouseEvent.$isObject = true;
 H.RawReceivePortImpl.$isObject = true;
 H._IsolateEvent.$isObject = true;
 H._IsolateContext.$isObject = true;
@@ -9100,10 +9182,6 @@ P.Future.$isFuture = true;
 P.Future.$isObject = true;
 P._DelayedEvent.$is_DelayedEvent = true;
 P._DelayedEvent.$isObject = true;
-P.DateTime.$isDateTime = true;
-P.DateTime.$isComparable = true;
-P.DateTime.$asComparable = [null];
-P.DateTime.$isObject = true;
 P.StreamSubscription.$isStreamSubscription = true;
 P.StreamSubscription.$isObject = true;
 // getInterceptor methods
@@ -9311,6 +9389,9 @@ J.set$opacity$x = function(receiver, value) {
 J.set$text$x = function(receiver, value) {
   return J.getInterceptor$x(receiver).set$text(receiver, value);
 };
+J.set$width$x = function(receiver, value) {
+  return J.getInterceptor$x(receiver).set$width(receiver, value);
+};
 J.toString$0 = function(receiver) {
   return J.getInterceptor(receiver).toString$0(receiver);
 };
@@ -9349,7 +9430,10 @@ C.C__DelayedDone = new P._DelayedDone();
 C.C__JSRandom = new P._JSRandom();
 C.C__RootZone = new P._RootZone();
 C.Duration_0 = new P.Duration(0);
+C.Duration_100000 = new P.Duration(100000);
 C.EventStreamProvider_keydown = new W.EventStreamProvider("keydown");
+C.EventStreamProvider_keyup = new W.EventStreamProvider("keyup");
+C.EventStreamProvider_mousedown = new W.EventStreamProvider("mousedown");
 C.ItemType_8aB = new B.ItemType("T", "treasure chest");
 C.ItemType_K_key = new B.ItemType("K", "key");
 C.JS_CONST_0 = function(hooks) {
@@ -9500,29 +9584,29 @@ C.Type_AHF = H.createRuntimeType('NativeTypedArray');
 C.Type_EQs = H.createRuntimeType('GlobalEventHandlers');
 C.Type_QyU = H.createRuntimeType('WindowEventHandlers');
 C.Type_wOW = H.createRuntimeType('NativeTypedArrayOfInt');
-C.WeaponType_0 = new L.WeaponType(13, "A", "a iron viking sword");
 C.WeaponType_0_W_knuckles = new L.WeaponType(0, "W", "knuckles");
-C.WeaponType_23h = new L.WeaponType(11, "A", "a platinum longsword");
-C.WeaponType_3uE = new L.WeaponType(5, "A", "a silver sledgehammer");
-C.WeaponType_6z6 = new L.WeaponType(10, "A", "a nickel rapier");
-C.WeaponType_ASw = new L.WeaponType(16, "A", "a titanim scythe");
-C.WeaponType_GRA = new L.WeaponType(18, "A", "Godric's sword");
-C.WeaponType_O16 = new L.WeaponType(15, "A", "the daywalker");
-C.WeaponType_QGe = new L.WeaponType(21, "A", "adamantium claws");
-C.WeaponType_S8J = new L.WeaponType(20, "A", "Hiro's sword");
-C.WeaponType_SJh = new L.WeaponType(14, "A", "the rhindon");
-C.WeaponType_SXx = new L.WeaponType(19, "A", "the anduril");
-C.WeaponType_StS = new L.WeaponType(12, "A", "a steel flambard");
-C.WeaponType_Uwh = new L.WeaponType(7, "A", "a copper axe");
-C.WeaponType_a9P = new L.WeaponType(3, "A", "a zinc club");
-C.WeaponType_a9P0 = new L.WeaponType(22, "A", "a saber of light");
-C.WeaponType_gc6 = new L.WeaponType(17, "A", "the excalibur");
-C.WeaponType_s6Q = new L.WeaponType(6, "A", "a aluminum hatchet");
-C.WeaponType_uv0 = new L.WeaponType(1, "A", "a lead bar");
-C.WeaponType_vE9 = new L.WeaponType(9, "A", "a bronze cutlass");
-C.WeaponType_vp5 = new L.WeaponType(2, "A", "a tin crowbar");
-C.WeaponType_yXb = new L.WeaponType(8, "A", "a brass shortsword");
-C.WeaponType_zpk = new L.WeaponType(4, "A", "a gold hammer");
+C.WeaponType_1iR = new L.WeaponType(12, "W", "a steel flambard");
+C.WeaponType_86y = new L.WeaponType(4, "W", "a gold hammer");
+C.WeaponType_A8J = new L.WeaponType(10, "W", "a nickel rapier");
+C.WeaponType_Fh9 = new L.WeaponType(17, "W", "the excalibur");
+C.WeaponType_GRA = new L.WeaponType(5, "W", "a silver sledgehammer");
+C.WeaponType_LhI = new L.WeaponType(8, "W", "a brass shortsword");
+C.WeaponType_Lx4 = new L.WeaponType(9, "W", "a bronze cutlass");
+C.WeaponType_MYE = new L.WeaponType(20, "W", "Hiro's sword");
+C.WeaponType_O50 = new L.WeaponType(15, "W", "the daywalker");
+C.WeaponType_OCd = new L.WeaponType(3, "W", "a zinc club");
+C.WeaponType_OCd0 = new L.WeaponType(22, "W", "a saber of light");
+C.WeaponType_QHU = new L.WeaponType(13, "W", "a iron viking sword");
+C.WeaponType_QKc = new L.WeaponType(21, "W", "adamantium claws");
+C.WeaponType_YfA = new L.WeaponType(14, "W", "the rhindon");
+C.WeaponType_ekJ = new L.WeaponType(7, "W", "a copper axe");
+C.WeaponType_iTd = new L.WeaponType(19, "W", "the anduril");
+C.WeaponType_kwb = new L.WeaponType(18, "W", "Godric's sword");
+C.WeaponType_oyn = new L.WeaponType(11, "W", "a platinum longsword");
+C.WeaponType_sje = new L.WeaponType(6, "W", "a aluminum hatchet");
+C.WeaponType_yHF = new L.WeaponType(16, "W", "a titanim scythe");
+C.WeaponType_yYD = new L.WeaponType(1, "W", "a lead bar");
+C.WeaponType_ydF = new L.WeaponType(2, "W", "a tin crowbar");
 $.libraries_to_load = {};
 $.world = null;
 $.display = null;
@@ -9553,6 +9637,10 @@ $._lastCallback = null;
 $.Zone__current = C.C__RootZone;
 $.Expando__keyCount = 0;
 $.game = null;
+$.holderElement = null;
+$.displayElement = null;
+$.narrationHolderElement = null;
+$.narrationElement = null;
 $.Device__isOpera = null;
 $.Device__isWebKit = null;
 Isolate.$lazy($, "roomChance", "roomChance", "get$roomChance", function() {
@@ -9671,8 +9759,9 @@ init.metadata = [{func: "dynamic__String", args: [P.String]},
 {func: "int__dynamic_dynamic", ret: P.$int, args: [null, null]},
 {func: "args2", args: [null, null]},
 {func: "dynamic__KeyboardEvent", args: [W.KeyboardEvent]},
-{func: "args0"},
+{func: "dynamic__MouseEvent", args: [W.MouseEvent]},
 {func: "args1", args: [null]},
+{func: "args0"},
 {func: "dynamic__dynamic_String", args: [null, P.String]},
 {func: "dynamic__dynamic__dynamic", args: [null], opt: [null]},
 {func: "bool_", ret: P.bool},
