@@ -24,7 +24,7 @@ class Monster extends Entity
     setAttributes();
     this.HP = this.MAXHP;
     this.items.add(ItemType.KEY);
-    this.rng = new Random(RNG.nextInt(1 << 32));
+    this.rng = new Random(RNG.nextInt(pow(2, 32)));
   }
   
   void setAttributes()
