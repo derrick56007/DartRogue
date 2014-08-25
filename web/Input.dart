@@ -11,17 +11,34 @@ class Input
   
   Input()
   {
-    window.onKeyDown.listen((KeyboardEvent e){ keyDownHandler(checkValidKey(e.keyCode));});
-    window.onKeyUp.listen((KeyboardEvent e){ keyUpHandler(checkValidKey(e.keyCode));});
+    window.onKeyDown.listen((KeyboardEvent e)
+    { 
+      if(validKey(e.keyCode))
+      {
+        keyDownHandler(e.keyCode);
+      }
+    });
+    window.onKeyUp.listen((KeyboardEvent e)
+    { 
+      if(validKey(e.keyCode))
+      {
+        keyUpHandler(e.keyCode);
+      }
+    });
+    window.onMouseDown.listen((MouseEvent e)
+    { 
+      keys.clear();
+      if(timer != null) timer.cancel();
+    });
   }
   
-  int checkValidKey(int e)
+  bool validKey(int e)
   {
     if(e == KeyCode.NUM_SEVEN || e == KeyCode.NUM_EIGHT || e == KeyCode.NUM_NINE || e == KeyCode.NUM_SIX || e == KeyCode.NUM_THREE || e == KeyCode.NUM_TWO || e == KeyCode.NUM_ONE || e == KeyCode.NUM_FOUR || e == KeyCode.NUM_FIVE|| e == KeyCode.Q || e == KeyCode.W || e == KeyCode.E || e == KeyCode.D || e == KeyCode.C || e == KeyCode.X || e == KeyCode.Z || e == KeyCode.A || e == KeyCode.S)
     {
-      return e;
+      return true;
     }
-    return 0;
+    return false;
   }
   
   void keyUpHandler(int e)
@@ -47,7 +64,7 @@ class Input
 
   void keyPressed (int e)
   {
-    print(new DateTime.now());
+    //print(new DateTime.now());
 
     int moveY = 0;
     int moveX = 0;
@@ -124,7 +141,7 @@ class Input
     }
     world.player.movePlayer(moveX, moveY);
     display.displayWorld();
-    print(new DateTime.now());
+    //print(new DateTime.now());
   }
   
   /*void delay()
