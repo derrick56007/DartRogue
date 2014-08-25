@@ -1,0 +1,126 @@
+body {
+  background-color: #F8F8F8;
+  font-family: "Courier New";
+  font-size: 14px;
+  font-weight: normal;
+  text-align: center;
+}
+
+@font-face {
+  font-family: Roboto-Regular;
+  src: url(Assets/Fonts/Roboto-Regular.ttf);
+}
+
+#display {
+  display:inline-block;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+h1 {
+  text-align: center;
+}
+
+#holder {
+  width: 1010px;
+  margin: auto;
+}
+
+.worldLine {
+  display: table;
+  margin-top: -4px;
+  margin-bottom: -4px;
+}
+
+#HUD {
+  width:  200px;
+  height: 595px;
+  display:inline-block;
+  vertical-align: top;
+}
+
+.stats {
+  width:  198px;
+  height: 286px;
+  display:table;
+  margin-bottom: 20px;
+  font-family: Roboto-Regular;
+}
+
+.stats, #narration, #display, #decision, .choice
+{
+  border: solid 1px black;
+  border-radius: 3px;
+  text-align: left;
+}
+
+.itemsStat
+{
+  white-space: pre-wrap;      /* CSS3 */   
+  white-space: -moz-pre-wrap; /* Firefox */    
+  white-space: -pre-wrap;     /* Opera <7 */   
+  white-space: -o-pre-wrap;   /* Opera 7 */    
+  word-wrap: break-word;      /* IE */
+}
+
+#narrationHolder
+{
+  height: 210px;
+  width: 1010px;
+  margin: auto;
+}
+
+#narration
+{
+  height: 210px;
+  width: 800px;
+  overflow: hidden;
+  display: inline-block;
+  float: left;
+}
+
+.statTitle
+{
+  font-size: 2em;
+  text-align: center;
+  margin-top: 5px;
+}
+
+.narrationLine {
+  font-family: Roboto-Regular;
+  text-align: left;
+  white-space: pre-wrap;      /* CSS3 */   
+  white-space: -moz-pre-wrap; /* Firefox */    
+  white-space: -pre-wrap;     /* Opera <7 */   
+  white-space: -o-pre-wrap;   /* Opera 7 */    
+  word-wrap: break-word;      /* IE */
+  margin-bottom: 9px;
+}
+
+#decision
+{
+  font-family: Roboto-Regular;
+  display: inline-block;
+  width: 198px;
+  height: 210px;
+  float: right;
+  overflow: hidden;
+}
+
+.choice {
+  display: table-cell;
+  text-align: center;
+  font-size: 2.5em;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ynHolder
+{
+  float: bottom;
+  margin: auto;
+  width: 90%;
+  padding: 5%;
+  display: table;
+  table-layout: fixed;
+}
