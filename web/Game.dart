@@ -11,7 +11,7 @@ import 'Entity/Entity.dart';
 World world;
 Display display;
 Input input;
-bool allVisible = true;
+bool allVisible = false;
 Random RNG;
 Element playerStats;
 Element enemyStats;
