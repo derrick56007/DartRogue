@@ -8654,7 +8654,7 @@ var $$ = {};
     t2 = C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(t2.clientWidth));
     t3 = document.querySelector("#HUD");
     t3.toString;
-    J.set$width$x(t1, "" + (t2 + C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(t3.clientWidth)) + 10) + "px");
+    J.set$width$x(t1, "" + (t2 + C.JSNumber_methods.toInt$0(C.JSNumber_methods.roundToDouble$0(t3.clientWidth)) + 20) + "px");
     t3 = $.narrationHolderElement.style;
     t2 = $.holderElement;
     t2.toString;
