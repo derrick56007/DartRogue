@@ -22,7 +22,7 @@ startGame()
   narrationHolderElement = querySelector("#narrationHolder");
   narrationElement = querySelector("#narration");
   
-  holderElement.style.width = "${displayElement.clientWidth + querySelector("#HUD").clientWidth + 10}px";
+  holderElement.style.width = "${displayElement.clientWidth + querySelector("#HUD").clientWidth + 20}px";
   narrationHolderElement.style.width = "${holderElement.clientWidth}px";
   narrationElement.style.width = "${displayElement.clientWidth}px";
 }
