@@ -3,22 +3,22 @@ library TILEOBJECT;
 import '../../Game.dart';
 import 'TileType.dart';
 import '../../Items/Enum.dart';
+import 'dart:math';
 
 class TileObject
 {
   Enum type;
   bool isOpaque;
-  bool isVisible =  allVisible;
+  bool isVisible =  !shadowsOn;
   bool isSolid = false;
   bool isWalkable;
-  int x;
-  int y;
+  Point point;
   num g, h, f;
   bool opened, closed;
   TileObject parent;
   String toString() => "${type.toString()}";
   
-  TileObject(this.x, this.y, this.type)
+  TileObject(this.point, this.type)
   {
     if(this.type == TileType.WALL)
     {

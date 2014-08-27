@@ -17,7 +17,7 @@ class Monster extends Entity
   List pathToPlayer = [];
   Random rng;
   
-  Monster(int x, int y, MonsterType type) : super(x, y, type)
+  Monster(Point point, MonsterType type) : super(point, type)
   {
     this.isSolid = true;
     this.isWalkable = false;
@@ -65,11 +65,10 @@ class Monster extends Entity
   {
     if(world.grid.nodes[pathToPlayer[1][1]][pathToPlayer[1][0]].isWalkable)
     {
-      world.grid.nodes[this.tileObject.y][this.tileObject.x] = this.tileObject;
-      this.x = pathToPlayer[1][0];
-      this.y = pathToPlayer[1][1];
-      this.tileObject = world.grid.nodes[this.y][this.x];
-      world.grid.nodes[this.y][this.x] = this;
+      world.setAtPoint(this.tileObject.point, this.tileObject);
+      this.point = new Point(this.pathToPlayer[1][0], this.pathToPlayer[1][1]);
+      this.tileObject = world.getAtPoint(this.point);
+      world.setAtPoint(this.point, this);
       if(this.tileObject.type == TileType.SPIKE)
       {
         this.HP -= 1;
@@ -80,12 +79,12 @@ class Monster extends Entity
       Player player = world.player;
       int moveX = rng.nextInt(3) - 1;
       int moveY = rng.nextInt(3) - 1;
-      while(!world.grid.nodes[player.y + moveY][player.x + moveX].isWalkable)
+      while(!world.getAtPoint(new Point(player.point.x + moveX, player.point.y + moveY)).isWalkable)
       {
         moveX = rng.nextInt(3) - 1;
         moveY = rng.nextInt(3) - 1;
       }
-      this.pathToPlayer = new AStarFinder().findPath(this.x, this.y, player.x + moveX, player.y + moveY, world.grid.clone());
+      this.pathToPlayer = new AStarFinder().findPath(this.point, new Point(player.point.x + moveX, player.point.y + moveY), world.grid.clone());
       moveTowardsPlayer();
     }
   }
@@ -96,9 +95,9 @@ class Monster extends Entity
     {
       int moveX = rng.nextInt(3) - 1;
       int moveY = rng.nextInt(3) - 1;
-      if(!world.grid.nodes[this.y + moveY][this.x + moveX].isSolid)
+      if(!world.getAtPoint(new Point(this.point.x + moveX, this.point.y + moveY)).isSolid)
       {
-        moveTo(this.x + moveX, this.y + moveY);
+        moveTo(new Point(this.point.x + moveX, this.point.y + moveY));
       }
     }
   }
@@ -126,17 +125,17 @@ class Monster extends Entity
   {
     if(this.type == MonsterType.KEYHOLDER)
     {
-      world.setAtCoordinate(this.x, this.y, ItemType.KEY);
+      world.setTileTypeAtPoint(this.point, ItemType.KEY);
     }
     else
     {
       if(this.rng.nextInt(3) == 0 && this.items.length > 0)
       {
-        world.setAtCoordinate(this.x, this.y, this.items[this.rng.nextInt(this.items.length)]);
+        world.setTileTypeAtPoint(this.point, this.items[this.rng.nextInt(this.items.length)]);
       }
       else
       {
-        world.setAtCoordinate(this.x, this.y, tileObject.type);
+        world.setTileTypeAtPoint(this.point, tileObject.type);
       }
       world.monsters.remove(this);
       enemyStats.style.opacity = "0";

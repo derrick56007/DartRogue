@@ -11,10 +11,10 @@ num abs(num val) => val < 0 ? -val : val;
  * @return {Array.<Array.<number>>} the path
  */
 List backtrace(node) {
-    var path = [[node.x, node.y]];
+    var path = [[node.point.x, node.point.y]];
     while (node.parent != null) {
         node = node.parent;
-        path.add([node.x, node.y]);
+        path.add([node.point.x, node.point.y]);
     }
     return path.reversed.toList();
 }

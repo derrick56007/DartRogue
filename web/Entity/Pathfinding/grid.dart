@@ -12,6 +12,7 @@ import '../../Items/Weapon/WeaponType.dart';
 import '../../Items/Weapon/Weapon.dart';
 import '../../Items/Armor/ArmorType.dart';
 import '../../Items/Armor/Armor.dart';
+import 'dart:math';
 
 /**
  * The Grid class, which serves as the encapsulation of the layout of the nodes.
@@ -91,8 +92,8 @@ class Grid {
    * @param {boolean} dontCrossCorners
    */
   getNeighbors(node, allowDiagonal, [dontCrossCorners = false]) {
-    var x = node.x,
-        y = node.y,
+    var x = node.point.x,
+        y = node.point.y,
         neighbors = [],
         s0 = false, d0 = false,
         s1 = false, d1 = false,
@@ -176,7 +177,7 @@ class Grid {
     for (i = 0; i < height; ++i) {
       newNodes[i] = new List(width);
       for (j = 0; j < width; ++j) {
-        newNodes[i][j] = getAtCoordinate(j, i, thisNodes[i][j].type);
+        newNodes[i][j] = getAtCoordinate(new Point(j, i), thisNodes[i][j].type);
       }
     }
 
@@ -185,31 +186,31 @@ class Grid {
     return newGrid;
   }
   
-  dynamic getAtCoordinate(int x, int y, dynamic type)
+  dynamic getAtCoordinate(Point point, dynamic type)
   {
     if(type is TileType)
     {
-      return new TileObject(x, y, type);
+      return new TileObject(point, type);
     }
     else if(type is MonsterType)
     {
-      return new Monster(x, y, type);
+      return new Monster(point, type);
     }
     else if(type is PlayerType)
     {
-      return new Player(x, y, type);
+      return new Player(point, type);
     }
     else if(type is ItemType)
     {
-      return new Item(x, y, type);
+      return new Item(point, type);
     }
     else if(type is WeaponType)
     {
-      return new Weapon(x, y, type);
+      return new Weapon(point, type);
     }
     else if(type is ArmorType)
     {
-      return new Armor(x, y, type);
+      return new Armor(point, type);
     }
     return "error at grid.dart class, getAtCoordinate()";
   }

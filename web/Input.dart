@@ -139,7 +139,7 @@ class Input
       default:
         break;
     }
-    world.player.movePlayer(moveX, moveY);
+    world.player.movePlayer(new Point(moveX, moveY));
     display.displayWorld();
     //print(new DateTime.now());
   }

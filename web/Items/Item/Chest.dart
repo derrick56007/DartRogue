@@ -8,11 +8,12 @@ import '../Weapon/WeaponType.dart';
 import '../../World/TileObject/TileType.dart';
 import '../../Entity/Monster/MonsterType.dart';
 import '../Enum.dart';
+import 'dart:math';
 
 class Chest extends Item
 {
   Enum treasureType;
-  Chest(int x, int y) : super(x, y, ItemType.TREASURECHEST)
+  Chest(Point point) : super(point, ItemType.TREASURECHEST)
   {
     if(RNG.nextInt(4) != 0)
     {

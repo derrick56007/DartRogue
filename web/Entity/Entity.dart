@@ -7,6 +7,7 @@ import '../Items/Weapon/WeaponType.dart';
 import '../World/TileObject/TileType.dart';
 import '../Items/Armor/ArmorType.dart';
 import 'Player/Player.dart';
+import 'dart:math';
 
 class Entity extends TileObject
 {
@@ -43,11 +44,11 @@ class Entity extends TileObject
     return string;
   }
   
-  Entity(int x, int y, var type) : super(x, y, type)
+  Entity(Point point, var type) : super(point, type)
   {
     this.isOpaque = true;
     this.isSolid = true;
-    this.tileObject = new TileObject(x, y, TileType.GROUND);
+    this.tileObject = new TileObject(point, TileType.GROUND);
   }
   
   int takeDmg(Entity entity)
@@ -61,13 +62,12 @@ class Entity extends TileObject
     return damage;
   }
   
-  void moveTo(x, y)
+  void moveTo(Point point)
   {
-    world.grid.nodes[this.tileObject.y][this.tileObject.x] = this.tileObject;
-    this.x = x;
-    this.y = y;
-    this.tileObject = world.grid.nodes[this.y][this.x];
-    world.grid.nodes[this.y][this.x]= this; 
+    world.setAtPoint(this.tileObject.point, this.tileObject);
+    this.point = new Point(point.x, point.y);
+    this.tileObject = world.getAtPoint(this.point);
+    world.setAtPoint(this.point, this);
     if(this.tileObject.type == TileType.SPIKE)
     {
       this.HP -= 1;
