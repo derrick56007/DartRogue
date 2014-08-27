@@ -38,10 +38,10 @@ class World
     this.grid = new Grid(this.width, this.height);
     clearGrid();
     
-    roomTypes.add(RoomType.MONSTERROOM, 25);
+    roomTypes.add(RoomType.MONSTERROOM, 20);
     roomTypes.add(RoomType.NORMAL,  50);
     roomTypes.add(RoomType.SPIKEROOM, 25);
-    //roomTypes.add("TreasureRoom", obj : RoomType.TREASUREROOM, weight : 5);
+    roomTypes.add(RoomType.TREASUREROOM, 5);
     
     roomSizes.add("large", 20);
     roomSizes.add("small", 80);
@@ -52,10 +52,10 @@ class World
   void generateContent()
   {
     generateRooms(getPosOrNeg((this.width*this.height)~/350, (this.width *this.height)~/900));
-    //loopDigCorridors();
+    loopDigCorridors();
     setRoom();
-    //refreshStats(player);
-    //loopTiles();
+    refreshStats(player);
+    loopTiles();
   }
   
   void timeStep()
@@ -180,27 +180,26 @@ class World
   
   void generateRooms(int numOfRooms)
   {
-    List<RoomType> defaultRooms = [RoomType.STARTROOM];//, RoomType.TREASUREROOM]; 
+    List<RoomType> defaultRooms = [RoomType.STARTROOM, RoomType.TREASUREROOM]; 
     
     for(int i = 0; i < numOfRooms; i++)
     {
       int roomWidth;
       int roomHeight;
-      
       if(roomSizes.pick() == "small")
       {
         roomWidth = getPosOrNeg(10, 4);
         roomHeight = getPosOrNeg(10 , 4);
+      }
+      else
       {
         roomWidth = RNG.nextInt(10) + 14;
         roomHeight = RNG.nextInt(10) + 14;
-      }
       }
       
       int x = this.width - roomWidth - RNG.nextInt(width - roomWidth);
       int y = this.height - roomHeight  - RNG.nextInt(height - roomHeight);
       Room room;
-      
       if(i < defaultRooms.length)
       {
         room = new Room(x, y, roomWidth, roomHeight, defaultRooms[i]);
