@@ -81,11 +81,11 @@ class JumpPointFinder {
     var grid = this.grid,
         heuristic = this.heuristic,
         openList = this.openList,
-        endX = this.endNode.x,
-        endY = this.endNode.y,
+        endX = this.endNode.point.x,
+        endY = this.endNode.point.y,
         neighbors, neighbor,
         jumpPoint, i, l,
-        x = node.x, y = node.y,
+        x = node.point.x, y = node.point.y,
         jx, jy, dx, dy, d, ng, jumpNode;
 
     neighbors = this._findNeighbors(node);
@@ -198,12 +198,12 @@ class JumpPointFinder {
     TileObject parent = node.parent;
     Grid grid = this.grid;
     var neighbors = [], neighborNodes, neighborNode, i, l;
-    int x = node.x, y = node.y, dx, dy, px, py, nx, ny;
+    int x = node.point.x, y = node.point.y, dx, dy, px, py, nx, ny;
 
     // directed pruning: can ignore most neighbors, unless forced.
     if (parent != null) {
-        px = parent.x;
-        py = parent.y;
+        px = parent.point.x;
+        py = parent.point.y;
         // get the normalized direction of travel
         dx = ((x - px) / max(abs(x - px), 1)).floor();
         dy = ((y - py) / max(abs(y - py), 1)).floor();
@@ -262,7 +262,7 @@ class JumpPointFinder {
         i = 0;
         for (l = neighborNodes.length; i < l; ++i) {
             neighborNode = neighborNodes[i];
-            neighbors.add([neighborNode.x, neighborNode.y]);
+            neighbors.add([neighborNode.point.x, neighborNode.point.y]);
         }
     }
 

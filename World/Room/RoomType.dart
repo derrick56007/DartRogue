@@ -2,8 +2,6 @@ library ROOMTYPE;
 
 import '../../Items/Enum.dart';
 
-final List roomChance = [[50, RoomType.NORMAL], [20, RoomType.SPIKEROOM], [25, RoomType.MONSTERROOM], [5, RoomType.TREASUREROOM]];
-
 class RoomType<String> extends Enum<String, String>
 {
   const RoomType(String val, String name) : super(val, name);

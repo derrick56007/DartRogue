@@ -276,7 +276,7 @@ var $$ = {};
 ["ARMOR", "Items/Armor/Armor.dart", , Z, {
   "^": "",
   Armor: {
-    "^": "Item;def,decription,type,isOpaque,isVisible,isSolid,isWalkable,x,y,g,h,f,opened,closed,parent",
+    "^": "Item;def,decription,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
     $isArmor: true
   }
 }],
@@ -291,50 +291,93 @@ var $$ = {};
 ["CHEST", "Items/Item/Chest.dart", , N, {
   "^": "",
   Chest: {
-    "^": "Item;treasureType<,decription,type,isOpaque,isVisible,isSolid,isWalkable,x,y,g,h,f,opened,closed,parent",
-    Chest$2: function(x, y) {
+    "^": "Item;treasureType<,decription,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
+    Chest$1: function(point) {
       if ($.RNG.nextInt$1(4) !== 0)
         switch ($.difficulty) {
           case 0:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_oZA], [15, C.ArmorType_GQO], [35, C.WeaponType_yYD], [15, C.WeaponType_ydF]]);
+            this.treasureType = $.get$level0().pick$0();
             break;
           case 1:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_0], [15, C.ArmorType_kFs], [35, C.WeaponType_OCd], [15, C.WeaponType_86y]]);
+            this.treasureType = $.get$level1().pick$0();
             break;
           case 2:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_8Gl], [15, C.ArmorType_jhf], [35, C.WeaponType_GRA], [15, C.WeaponType_sje]]);
+            this.treasureType = $.get$level2().pick$0();
             break;
           case 3:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_yyz], [15, C.ArmorType_GDb], [35, C.WeaponType_ekJ], [15, C.WeaponType_LhI]]);
+            this.treasureType = $.get$level3().pick$0();
             break;
           case 4:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_Ual], [15, C.ArmorType_Jsm], [35, C.WeaponType_Lx4], [15, C.WeaponType_A8J]]);
+            this.treasureType = $.get$level4().pick$0();
             break;
           case 5:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_Cu4], [15, C.ArmorType_i5H], [35, C.WeaponType_oyn], [15, C.WeaponType_1iR]]);
+            this.treasureType = $.get$level5().pick$0();
             break;
           case 6:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_00], [15, C.ArmorType_GIS], [35, C.WeaponType_QHU], [15, C.WeaponType_YfA]]);
+            this.treasureType = $.get$level6().pick$0();
             break;
           case 7:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_GzW], [15, C.ArmorType_mVm], [35, C.WeaponType_O50], [15, C.WeaponType_yHF]]);
+            this.treasureType = $.get$level7().pick$0();
             break;
           case 8:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_S7B], [15, C.ArmorType_Tn6], [35, C.WeaponType_Fh9], [15, C.WeaponType_kwb]]);
+            this.treasureType = $.get$level8().pick$0();
             break;
           case 9:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_2Vk], [15, C.ArmorType_86y], [35, C.WeaponType_iTd], [15, C.WeaponType_MYE]]);
+            this.treasureType = $.get$level9().pick$0();
             break;
           case 10:
-            this.treasureType = A.getRandomWeighted([[35, C.ArmorType_dSs], [15, C.ArmorType_wrR], [35, C.WeaponType_QKc], [15, C.WeaponType_OCd0]]);
+            this.treasureType = $.get$level10().pick$0();
             break;
           default:
             break;
         }
       else
-        this.treasureType = A.getRandomWeighted([[75, C.TileType_CF3], [25, C.MonsterType_tkU]]);
+        this.treasureType = $.get$troll().pick$0();
       this.isWalkable = false;
     }
+  }
+}],
+["CHOOSERANDOM", "ChooseRandom/ChooseRandom.dart", , S, {
+  "^": "",
+  ChooseRandom: {
+    "^": "Object;list,weightSum",
+    pick$0: function() {
+      var randomNum, t1, $length, i, t2, t3;
+      randomNum = $.RNG.nextInt$1(this.weightSum);
+      for (t1 = this.list, $length = t1.length, i = 0; i < $length; ++i) {
+        t2 = t1[i];
+        t3 = t2[1];
+        if (typeof t3 !== "number")
+          return H.iae(t3);
+        if (randomNum < t3)
+          return t2[0];
+        randomNum -= t3;
+      }
+      return "derp, check class ChooseRandom";
+    },
+    ChooseRandom$1$loopList: function(loopList) {
+      var $length, t1, i, t2, t3, t4, t5;
+      if (loopList != null)
+        for ($length = loopList.length, t1 = this.list, i = 0; i < $length; ++i) {
+          t2 = this.weightSum;
+          t3 = loopList.length;
+          if (i >= t3)
+            return H.ioore(loopList, i);
+          t4 = loopList[i];
+          t5 = t4[0];
+          if (typeof t5 !== "number")
+            return H.iae(t5);
+          this.weightSum = t2 + t5;
+          if (i >= t3)
+            return H.ioore(loopList, i);
+          t1.push([t4[1], t5]);
+        }
+    },
+    static: {ChooseRandom$: function(loopList) {
+        var t1 = new S.ChooseRandom([], 0);
+        t1.ChooseRandom$1$loopList(loopList);
+        return t1;
+      }}
   }
 }],
 ["DISPLAY", "Display.dart", , X, {
@@ -413,34 +456,40 @@ var $$ = {};
       this.HP -= damage;
       return damage;
     },
-    moveTo$2: function(_, x, y) {
-      var t1, t2;
-      t1 = $.world.grid.nodes;
-      t2 = J.get$y$x(this.tileObject);
-      if (t2 >>> 0 !== t2 || t2 >= t1.length)
-        return H.ioore(t1, t2);
-      J.$indexSet$ax(t1[t2], J.get$x$x(this.tileObject), this.tileObject);
-      this.x = x;
-      this.y = y;
+    moveTo$1: function(_, point) {
+      var t1, t2, t3, t4;
+      t1 = $.world;
+      t2 = this.tileObject.get$point();
+      t3 = this.tileObject;
+      t1 = t1.grid.nodes;
+      t4 = t2.y;
+      if (t4 >>> 0 !== t4 || t4 >= t1.length)
+        return H.ioore(t1, t4);
+      J.$indexSet$ax(t1[t4], t2.x, t3);
+      t3 = H.setRuntimeTypeInfo(new P.Point(point.x, point.y), [null]);
+      this.point = t3;
       t2 = $.world.grid.nodes;
-      if (y >>> 0 !== y || y >= t2.length)
-        return H.ioore(t2, y);
-      this.tileObject = J.$index$asx(t2[y], x);
-      t2 = $.world.grid.nodes;
-      t1 = this.y;
-      if (t1 >>> 0 !== t1 || t1 >= t2.length)
-        return H.ioore(t2, t1);
-      J.$indexSet$ax(t2[t1], this.x, this);
+      t4 = t3.y;
+      if (t4 >>> 0 !== t4 || t4 >= t2.length)
+        return H.ioore(t2, t4);
+      this.tileObject = J.$index$asx(t2[t4], t3.x);
+      t3 = $.world;
+      t4 = this.point;
+      t3 = t3.grid.nodes;
+      t2 = t4.y;
+      if (t2 >>> 0 !== t2 || t2 >= t3.length)
+        return H.ioore(t3, t2);
+      J.$indexSet$ax(t3[t2], t4.x, this);
       if (J.get$type$x(this.tileObject) === C.TileType_apl) {
         --this.HP;
         if (!!this.$isPlayer)
           A.addToNarration("You stepped on spikes", "red");
       }
     },
-    Entity$3: function(x, y, type) {
+    Entity$2: function(point, type) {
       this.isOpaque = true;
       this.isSolid = true;
-      this.tileObject = V.TileObject$(x, y, C.TileType_CF3);
+      this.tileObject = V.TileObject$(point, C.TileType_CF3);
     }
   }
 }],
@@ -455,20 +504,6 @@ var $$ = {};
 }],
 ["GAME", "Game.dart", , A, {
   "^": "",
-  getRandomWeighted: function(chanceList) {
-    var rndNum, t1, chanceAdd, i, t2, t3;
-    rndNum = $.RNG.nextInt$1(100) + 1;
-    for (t1 = chanceList.length, chanceAdd = 0, i = 0; i < t1; ++i) {
-      t2 = chanceList[i];
-      t3 = t2[0];
-      if (typeof t3 !== "number")
-        return H.iae(t3);
-      chanceAdd += t3;
-      if (rndNum <= chanceAdd)
-        return t2[1];
-    }
-    return "getRandomWeighted in class game.dart";
-  },
   getPosOrNeg: function(number, range) {
     var t1, t2;
     t1 = $.RNG.nextBool$0();
@@ -612,7 +647,7 @@ var $$ = {};
       P.print("Seed: " + H.S(this.seed));
       t1 = this.seed;
       $.RNG = t1 == null ? C.C__JSRandom : P._Random$(t1);
-      t1 = new R.World(null, 100, 50, [], [], null);
+      t1 = new R.World(null, 100, 50, [], [], null, S.ChooseRandom$(null), S.ChooseRandom$(null));
       t1.World$2(100, 50);
       $.world = t1;
       $.display = new X.Display(document.querySelector("#display"));
@@ -729,7 +764,7 @@ var $$ = {};
           moveX = 0;
           break;
       }
-      $.world.player.movePlayer$2(moveX, moveY);
+      $.world.player.movePlayer$1(H.setRuntimeTypeInfo(new P.Point(moveX, moveY), [null]));
       $.display.displayWorld$0();
     },
     Input$0: function() {
@@ -789,7 +824,7 @@ var $$ = {};
 ["ITEM", "Items/Item/Item.dart", , E, {
   "^": "",
   Item: {
-    "^": "TileObject;decription,type,isOpaque,isVisible,isSolid,isWalkable,x,y,g,h,f,opened,closed,parent",
+    "^": "TileObject;decription,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
     $isItem: true
   }
 }],
@@ -804,9 +839,9 @@ var $$ = {};
 ["MONSTER", "Entity/Monster/Monster.dart", , Z, {
   "^": "",
   Monster: {
-    "^": "Entity;COUNTMAX,followingCountdown<,followX,followY,pathToPlayer<,rng,atk,def,MAXHP,HP,items,armor,weapon,tileObject,type,isOpaque,isVisible,isSolid,isWalkable,x,y,g,h,f,opened,closed,parent",
+    "^": "Entity;COUNTMAX,followingCountdown<,followX,followY,pathToPlayer<,rng,atk,def,MAXHP,HP,items,armor,weapon,tileObject,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
     timeStep$0: function() {
-      var t1, moveX, moveY, t2;
+      var t1, moveX, moveY, t2, t3;
       t1 = this.followingCountdown;
       if (t1 > 0) {
         this.followingCountdown = t1 - 1;
@@ -817,16 +852,18 @@ var $$ = {};
       } else if (this.rng.nextInt$1(5) === 0) {
         moveX = this.rng.nextInt$1(3) - 1;
         moveY = this.rng.nextInt$1(3) - 1;
-        t1 = $.world.grid.nodes;
-        t2 = J.$add$ns(this.y, moveY);
-        if (t2 >>> 0 !== t2 || t2 >= t1.length)
-          return H.ioore(t1, t2);
-        if (!J.$index$asx(t1[t2], J.$add$ns(this.x, moveX)).get$isSolid())
-          this.moveTo$2(0, J.$add$ns(this.x, moveX), J.$add$ns(this.y, moveY));
+        t1 = $.world;
+        t2 = H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]);
+        t1 = t1.grid.nodes;
+        t3 = t2.y;
+        if (t3 >>> 0 !== t3 || t3 >= t1.length)
+          return H.ioore(t1, t3);
+        if (!J.$index$asx(t1[t3], t2.x).get$isSolid())
+          this.moveTo$1(0, H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]));
       }
     },
     moveTowardsPlayer$0: function() {
-      var t1, t2, player, moveX, moveY, t3;
+      var t1, t2, t3, t4, player, moveX, moveY;
       t1 = $.world.grid.nodes;
       t2 = this.pathToPlayer;
       if (1 >= t2.length)
@@ -841,54 +878,61 @@ var $$ = {};
       t1 = J.$index$asx(t2, J.$index$asx(t1[1], 0)).get$isWalkable();
       t2 = $.world;
       if (t1 === true) {
-        t1 = t2.grid.nodes;
-        t2 = J.get$y$x(this.tileObject);
-        if (t2 >>> 0 !== t2 || t2 >= t1.length)
-          return H.ioore(t1, t2);
-        J.$indexSet$ax(t1[t2], J.get$x$x(this.tileObject), this.tileObject);
-        t2 = this.pathToPlayer;
-        if (1 >= t2.length)
-          return H.ioore(t2, 1);
-        this.x = J.$index$asx(t2[1], 0);
-        t2 = this.pathToPlayer;
-        if (1 >= t2.length)
-          return H.ioore(t2, 1);
-        t2 = J.$index$asx(t2[1], 1);
-        this.y = t2;
-        t1 = $.world.grid.nodes;
-        if (t2 >>> 0 !== t2 || t2 >= t1.length)
-          return H.ioore(t1, t2);
-        this.tileObject = J.$index$asx(t1[t2], this.x);
-        t2 = $.world.grid.nodes;
-        t1 = this.y;
-        if (t1 >>> 0 !== t1 || t1 >= t2.length)
-          return H.ioore(t2, t1);
-        J.$indexSet$ax(t2[t1], this.x, this);
+        t1 = this.tileObject.get$point();
+        t3 = this.tileObject;
+        t2 = t2.grid.nodes;
+        t4 = t1.y;
+        if (t4 >>> 0 !== t4 || t4 >= t2.length)
+          return H.ioore(t2, t4);
+        J.$indexSet$ax(t2[t4], t1.x, t3);
+        t3 = this.pathToPlayer;
+        if (1 >= t3.length)
+          return H.ioore(t3, 1);
+        t3 = J.$index$asx(t3[1], 0);
+        t1 = this.pathToPlayer;
+        if (1 >= t1.length)
+          return H.ioore(t1, 1);
+        t1 = H.setRuntimeTypeInfo(new P.Point(t3, J.$index$asx(t1[1], 1)), [null]);
+        this.point = t1;
+        t3 = $.world.grid.nodes;
+        t4 = t1.y;
+        if (t4 >>> 0 !== t4 || t4 >= t3.length)
+          return H.ioore(t3, t4);
+        this.tileObject = J.$index$asx(t3[t4], t1.x);
+        t1 = $.world;
+        t4 = this.point;
+        t1 = t1.grid.nodes;
+        t3 = t4.y;
+        if (t3 >>> 0 !== t3 || t3 >= t1.length)
+          return H.ioore(t1, t3);
+        J.$indexSet$ax(t1[t3], t4.x, this);
         if (J.get$type$x(this.tileObject) === C.TileType_apl)
           --this.HP;
       } else {
         player = t2.player;
         moveX = this.rng.nextInt$1(3) - 1;
         moveY = this.rng.nextInt$1(3) - 1;
-        t1 = J.getInterceptor$x(player);
         while (true) {
-          t2 = $.world.grid.nodes;
-          t3 = J.$add$ns(t1.get$y(player), moveY);
-          if (t3 >>> 0 !== t3 || t3 >= t2.length)
-            return H.ioore(t2, t3);
-          if (!(J.$index$asx(t2[t3], J.$add$ns(t1.get$x(player), moveX)).get$isWalkable() !== true))
+          t1 = $.world;
+          t2 = J.$add$ns(player.get$point().x, moveX);
+          t3 = J.$add$ns(player.get$point().y, moveY);
+          new P.Point(t2, t3).$builtinTypeInfo = [null];
+          t1 = t1.grid.nodes;
+          if (t3 >>> 0 !== t3 || t3 >= t1.length)
+            return H.ioore(t1, t3);
+          if (!(J.$index$asx(t1[t3], t2).get$isWalkable() !== true))
             break;
           moveX = this.rng.nextInt$1(3) - 1;
           moveY = this.rng.nextInt$1(3) - 1;
         }
-        t2 = new N.AStarFinder(true, false, null, 1);
-        t2.heuristic = O.Heuristic_manhattan$closure();
-        this.pathToPlayer = t2.findPath$5(this.x, this.y, J.$add$ns(t1.get$x(player), moveX), J.$add$ns(t1.get$y(player), moveY), $.world.grid.clone$0(0));
+        t1 = new N.AStarFinder(true, false, null, 1, H.setRuntimeTypeInfo(new P.Point(1, 2), [null]));
+        t1.heuristic = O.Heuristic_manhattan$closure();
+        this.pathToPlayer = t1.findPath$3(this.point, H.setRuntimeTypeInfo(new P.Point(J.$add$ns(player.get$point().x, moveX), J.$add$ns(player.get$point().y, moveY)), [null]), $.world.grid.clone$0(0));
         this.moveTowardsPlayer$0();
       }
     },
     getAttackedWithDmg$1: function(player) {
-      var t1, t2, t3, t4, t5, t6;
+      var t1, t2, t3, t4, t5;
       this.takeDmg$1(player);
       t1 = this.type;
       t2 = t1.NAME;
@@ -897,27 +941,26 @@ var $$ = {};
         A.refreshStats(this);
       else {
         if (t1 === C.MonsterType_iL9)
-          $.world.setAtCoordinate$3(this.x, this.y, C.ItemType_K_key);
+          $.world.setTileTypeAtPoint$2(this.point, C.ItemType_K_key);
         else {
           t1 = this.rng.nextInt$1(3) === 0 && this.items.length > 0;
           t3 = $.world;
-          t4 = this.x;
-          t5 = this.y;
+          t4 = this.point;
           if (t1) {
             t1 = this.items;
-            t6 = this.rng.nextInt$1(t1.length);
-            if (t6 >>> 0 !== t6 || t6 >= t1.length)
-              return H.ioore(t1, t6);
-            t3.setAtCoordinate$3(t4, t5, t1[t6]);
+            t5 = this.rng.nextInt$1(t1.length);
+            if (t5 >>> 0 !== t5 || t5 >= t1.length)
+              return H.ioore(t1, t5);
+            t3.setTileTypeAtPoint$2(t4, t1[t5]);
           } else
-            t3.setAtCoordinate$3(t4, t5, J.get$type$x(this.tileObject));
+            t3.setTileTypeAtPoint$2(t4, J.get$type$x(this.tileObject));
           C.JSArray_methods.remove$1($.world.monsters, this);
           J.set$opacity$x($.enemyStats.style, "0");
         }
         A.addToNarration("You killed a " + t2 + "!", "green");
       }
     },
-    Monster$3: function(x, y, type) {
+    Monster$2: function(point, type) {
       var t1;
       this.isSolid = true;
       this.isWalkable = false;
@@ -937,11 +980,11 @@ var $$ = {};
       this.rng = P._Random$(t1);
     },
     $isMonster: true,
-    static: {Monster$: function(x, y, type) {
-        var t1 = new Z.Monster(0, 0, null, null, [], null, 0, 0, 0, 0, [], C.ArmorType_0_A_clothes, C.WeaponType_0_W_knuckles, null, type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t1.TileObject$3(x, y, type);
-        t1.Entity$3(x, y, type);
-        t1.Monster$3(x, y, type);
+    static: {Monster$: function(point, type) {
+        var t1 = new Z.Monster(0, 0, null, null, [], null, 0, 0, 0, 0, [], C.ArmorType_0_A_clothes, C.WeaponType_0_W_knuckles, null, type, null, !$.shadowsOn, false, null, point, null, null, null, null, null, null);
+        t1.TileObject$2(point, type);
+        t1.Entity$2(point, type);
+        t1.Monster$2(point, type);
         return t1;
       }}
   }
@@ -957,7 +1000,7 @@ var $$ = {};
 ["PLAYER", "Entity/Player/Player.dart", , E, {
   "^": "",
   Player: {
-    "^": "Entity;atk,def,MAXHP,HP,items,armor,weapon,tileObject,type,isOpaque,isVisible,isSolid,isWalkable,x,y,g,h,f,opened,closed,parent",
+    "^": "Entity;atk,def,MAXHP,HP,items,armor,weapon,tileObject,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
     getAttackedWithDmg$1: function(monster) {
       var damage, t1;
       monster.getAttackedWithDmg$1(this);
@@ -973,32 +1016,38 @@ var $$ = {};
         }
       }
     },
-    movePlayer$2: function(x, y) {
-      var t1, t2, tileToMoveTo, chest, t3, t4;
-      if (x !== 0 || y !== 0) {
+    movePlayer$1: function(move) {
+      var moveY, moveX, t1, t2, t3, tileToMoveTo, chest;
+      moveY = move.y;
+      moveX = move.x;
+      if (!J.$eq(moveX, 0) || !J.$eq(moveY, 0)) {
         J.set$opacity$x($.enemyStats.style, "0");
-        t1 = $.world.grid.nodes;
-        t2 = J.$add$ns(this.y, y);
-        if (t2 >>> 0 !== t2 || t2 >= t1.length)
-          return H.ioore(t1, t2);
-        tileToMoveTo = J.$index$asx(t1[t2], J.$add$ns(this.x, x));
+        t1 = $.world;
+        t2 = H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]);
+        t1 = t1.grid.nodes;
+        t3 = t2.y;
+        if (t3 >>> 0 !== t3 || t3 >= t1.length)
+          return H.ioore(t1, t3);
+        tileToMoveTo = J.$index$asx(t1[t3], t2.x);
         if (!J.getInterceptor(tileToMoveTo).$isItem)
           if (!tileToMoveTo.get$isSolid())
-            this.moveTo$2(0, J.$add$ns(this.x, x), J.$add$ns(this.y, y));
+            this.moveTo$1(0, H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]));
           else
             A.addToNarration("You ran into a " + tileToMoveTo.type.NAME, "black");
         else {
-          t1 = $.world.grid.nodes;
-          t2 = J.$add$ns(this.y, y);
-          if (t2 >>> 0 !== t2 || t2 >= t1.length)
-            return H.ioore(t1, t2);
-          chest = J.$index$asx(t1[t2], J.$add$ns(this.x, x));
+          t1 = $.world;
+          t2 = H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]);
+          t1 = t1.grid.nodes;
+          t3 = t2.y;
+          if (t3 >>> 0 !== t3 || t3 >= t1.length)
+            return H.ioore(t1, t3);
+          chest = J.$index$asx(t1[t3], t2.x);
           t1 = J.getInterceptor$x(chest);
           if (t1.get$type(chest) === C.ItemType_8aB) {
-            t2 = this.items;
-            if (C.JSArray_methods.contains$1(t2, C.ItemType_K_key)) {
-              C.JSArray_methods.remove$1(t2, C.ItemType_K_key);
-              $.world.setAtCoordinate$3(t1.get$x(chest), t1.get$y(chest), chest.get$treasureType());
+            t1 = this.items;
+            if (C.JSArray_methods.contains$1(t1, C.ItemType_K_key)) {
+              C.JSArray_methods.remove$1(t1, C.ItemType_K_key);
+              $.world.setTileTypeAtPoint$2(chest.get$point(), chest.get$treasureType());
               A.addToNarration("You used a key to open a chest (-1 key)", "green");
               t1 = chest.treasureType;
               t2 = J.getInterceptor(t1);
@@ -1009,27 +1058,25 @@ var $$ = {};
           } else if (!!t1.$isItem) {
             if (!!t1.$isArmor) {
               t1 = this.armor;
-              t2 = chest.x;
-              t3 = $.world;
-              t4 = chest.y;
+              t2 = $.world;
+              t3 = chest.point;
               if (t1 !== C.ArmorType_0_A_clothes)
-                t3.setAtCoordinate$3(t2, t4, t1);
+                t2.setTileTypeAtPoint$2(t3, t1);
               else
-                t3.setAtCoordinate$3(t2, t4, C.TileType_CF3);
+                t2.setTileTypeAtPoint$2(t3, C.TileType_CF3);
               this.armor = chest.type;
             } else if (!!t1.$isWeapon) {
               t1 = this.weapon;
-              t2 = chest.x;
-              t3 = $.world;
-              t4 = chest.y;
+              t2 = $.world;
+              t3 = chest.point;
               if (t1 !== C.WeaponType_0_W_knuckles)
-                t3.setAtCoordinate$3(t2, t4, t1);
+                t2.setTileTypeAtPoint$2(t3, t1);
               else
-                t3.setAtCoordinate$3(t2, t4, C.TileType_CF3);
+                t2.setTileTypeAtPoint$2(t3, C.TileType_CF3);
               this.weapon = chest.type;
             } else {
               this.items.push(chest.type);
-              $.world.setAtCoordinate$3(chest.x, chest.y, C.TileType_CF3);
+              $.world.setTileTypeAtPoint$2(chest.point, C.TileType_CF3);
             }
             A.addToNarration("You picked up " + chest.type.NAME, "green");
           }
@@ -1064,20 +1111,20 @@ var $$ = {};
       return H.S(this.roomType);
     },
     clearRoom$0: function() {
-      var t1, t2, y, row, t3, x;
-      for (t1 = this.height - 2, t2 = this.contents, y = 0; y < t1; ++y) {
+      var height, t1, y, row, width, x;
+      for (height = this.height, t1 = this.contents, y = 0; y < height; ++y) {
         row = [];
-        for (t3 = this.width - 2, x = 0; x < t3; ++x)
+        for (width = this.width, x = 0; x < width; ++x)
           row.push(C.TileType_CF3);
-        t2.push(row);
+        t1.push(row);
       }
     },
     addContents$0: function() {
       var x, y, t1, i, t2, t3;
       switch (this.roomType) {
         case C.RoomType_hYN:
-          x = $.RNG.nextInt$1(this.width - 2);
-          y = $.RNG.nextInt$1(this.height - 2);
+          x = $.RNG.nextInt$1(this.width);
+          y = $.RNG.nextInt$1(this.height);
           t1 = this.contents;
           if (y >>> 0 !== y || y >= t1.length)
             return H.ioore(t1, y);
@@ -1088,8 +1135,8 @@ var $$ = {};
           break;
         case C.RoomType_2bL:
           for (t1 = this.contents, i = 0; t2 = $.RNG.nextInt$1(3), t3 = this.width, i < t2 + C.JSNumber_methods._tdivFast$1(t3, 3); ++i) {
-            x = $.RNG.nextInt$1(t3 - 2);
-            y = $.RNG.nextInt$1(this.height - 2);
+            x = $.RNG.nextInt$1(t3);
+            y = $.RNG.nextInt$1(this.height);
             if (y >>> 0 !== y || y >= t1.length)
               return H.ioore(t1, y);
             t2 = t1[y];
@@ -1099,8 +1146,8 @@ var $$ = {};
           }
           break;
         case C.RoomType_Drw:
-          x = $.RNG.nextInt$1(this.width - 2);
-          y = $.RNG.nextInt$1(this.height - 2);
+          x = $.RNG.nextInt$1(this.width);
+          y = $.RNG.nextInt$1(this.height);
           t1 = this.contents;
           if (y >>> 0 !== y || y >= t1.length)
             return H.ioore(t1, y);
@@ -1111,8 +1158,8 @@ var $$ = {};
           break;
         case C.RoomType_AqM:
           for (t1 = this.contents, i = 0; t2 = $.RNG.nextInt$1(3), t3 = this.width, i < t2 + C.JSNumber_methods._tdivFast$1(t3, 3); ++i) {
-            x = $.RNG.nextInt$1(t3 - 2);
-            y = $.RNG.nextInt$1(this.height - 2);
+            x = $.RNG.nextInt$1(t3);
+            y = $.RNG.nextInt$1(this.height);
             if (y >>> 0 !== y || y >= t1.length)
               return H.ioore(t1, y);
             t2 = t1[y];
@@ -1160,11 +1207,11 @@ var $$ = {};
 ["TILEOBJECT", "World/TileObject/TileObject.dart", , V, {
   "^": "",
   TileObject: {
-    "^": "Object;type>,isOpaque<,isVisible@,isSolid<,isWalkable<,x>,y>,g?,h,f<,opened,closed*,parent>",
+    "^": "Object;type>,isOpaque<,isVisible@,isSolid<,isWalkable<,point<,g?,h,f<,opened,closed*,parent>",
     toString$0: function(_) {
       return J.toString$0(this.type);
     },
-    TileObject$3: function(x, y, type) {
+    TileObject$2: function(point, type) {
       var t1 = this.type;
       if (t1 === C.TileType_SgB) {
         this.isSolid = true;
@@ -1188,9 +1235,9 @@ var $$ = {};
         this.isWalkable = true;
       }
     },
-    static: {TileObject$: function(x, y, type) {
-        var t1 = new V.TileObject(type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t1.TileObject$3(x, y, type);
+    static: {TileObject$: function(point, type) {
+        var t1 = new V.TileObject(type, null, !$.shadowsOn, false, null, point, null, null, null, null, null, null);
+        t1.TileObject$2(point, type);
         return t1;
       }}
   }
@@ -1206,7 +1253,7 @@ var $$ = {};
 ["WEAPON", "Items/Weapon/Weapon.dart", , Z, {
   "^": "",
   Weapon: {
-    "^": "Item;atk,decription,type,isOpaque,isVisible,isSolid,isWalkable,x,y,g,h,f,opened,closed,parent",
+    "^": "Item;atk,decription,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
     $isWeapon: true
   }
 }],
@@ -1221,7 +1268,7 @@ var $$ = {};
 ["WORLD", "World/World.dart", , R, {
   "^": "",
   World: {
-    "^": "Object;grid,width,height,rooms,monsters,player",
+    "^": "Object;grid,width,height,rooms,monsters,player,roomTypes,roomSizes",
     timeStep$0: function() {
       this.timeStepMonsters$0();
       this.loopTiles$0();
@@ -1229,22 +1276,22 @@ var $$ = {};
     },
     timeStepMonsters$0: function() {
       var astar, t1, $length, i, monster;
-      astar = new N.AStarFinder(true, false, null, 1);
+      astar = new N.AStarFinder(true, false, null, 1, H.setRuntimeTypeInfo(new P.Point(1, 2), [null]));
       astar.heuristic = O.Heuristic_manhattan$closure();
       for (t1 = this.monsters, $length = t1.length, i = 0; i < $length; ++i) {
         if (i >= t1.length)
           return H.ioore(t1, i);
         monster = t1[i];
         if (monster.get$followingCountdown() > 0)
-          monster.pathToPlayer = astar.findPath$5(monster.x, monster.y, J.get$x$x(this.player), J.get$y$x(this.player), this.grid.clone$0(0));
+          monster.pathToPlayer = astar.findPath$3(monster.point, this.player.get$point(), this.grid.clone$0(0));
       }
       H.Sort__doSort(t1, 0, t1.length - 1, new R.World_timeStepMonsters_closure());
       for (i = 0; i < t1.length; ++i)
         t1[i].timeStep$0();
     },
     loopTiles$0: function() {
-      var i, j, t1;
-      if (!$.allVisible)
+      var i, j, t1, t2;
+      if ($.shadowsOn)
         for (i = 0; i < this.height; ++i)
           for (j = 0; j < this.width; ++j) {
             t1 = this.grid.nodes;
@@ -1253,37 +1300,38 @@ var $$ = {};
             J.$index$asx(t1[i], j).set$isVisible(false);
           }
       for (i = 0; i < this.height; ++i)
-        for (j = 0; j < this.width; ++j)
-          this.lineOfSight$4(J.get$x$x(this.player.get$tileObject()), J.get$y$x(this.player.get$tileObject()), j, i);
+        for (j = 0; j < this.width; ++j) {
+          t1 = new P.Point(this.player.get$tileObject().get$point().x, this.player.get$tileObject().get$point().y);
+          t1.$builtinTypeInfo = [null];
+          t2 = new P.Point(j, i);
+          t2.$builtinTypeInfo = [null];
+          this.lineOfSight$2(t1, t2);
+        }
     },
-    lineOfSight$4: function(x, y, x2, y2) {
-      var w, h, t1, dx1, t2, dy1, dx2, longest, shortest, dy2, numerator, i, tileObject;
-      if (typeof x !== "number")
-        return H.iae(x);
-      w = x2 - x;
-      if (typeof y !== "number")
-        return H.iae(y);
-      h = y2 - y;
-      t1 = w < 0;
-      if (t1)
+    lineOfSight$2: function(point, point2) {
+      var w, h, t1, dx1, t2, dy1, dx2, longest, shortest, dy2, numerator, i, t3, tileObject, t4;
+      w = J.$sub$n(point2.x, point.x);
+      h = J.$sub$n(point2.y, point.y);
+      t1 = J.getInterceptor$n(w);
+      if (t1.$lt(w, 0))
         dx1 = -1;
       else
-        dx1 = w > 0 ? 1 : 0;
-      t2 = h < 0;
-      if (t2)
+        dx1 = t1.$gt(w, 0) ? 1 : 0;
+      t2 = J.getInterceptor$n(h);
+      if (t2.$lt(h, 0))
         dy1 = -1;
       else
-        dy1 = h > 0 ? 1 : 0;
-      if (t1)
+        dy1 = t2.$gt(h, 0) ? 1 : 0;
+      if (t1.$lt(w, 0))
         dx2 = -1;
       else
-        dx2 = w > 0 ? 1 : 0;
-      longest = Math.abs(w);
-      shortest = Math.abs(h);
+        dx2 = t1.$gt(w, 0) ? 1 : 0;
+      longest = t1.abs$0(w);
+      shortest = t2.abs$0(h);
       if (!(longest > shortest)) {
         longest = Math.abs(h);
         shortest = Math.abs(w);
-        if (t2)
+        if (h < 0)
           dy2 = -1;
         else
           dy2 = h > 0 ? 1 : 0;
@@ -1293,72 +1341,80 @@ var $$ = {};
       numerator = C.JSNumber_methods._shrOtherPositive$1(longest, 1);
       for (i = 0; i <= longest; ++i) {
         t1 = this.grid.nodes;
-        if (y >>> 0 !== y || y >= t1.length)
-          return H.ioore(t1, y);
-        tileObject = J.$index$asx(t1[y], x);
+        t2 = point.y;
+        if (t2 >>> 0 !== t2 || t2 >= t1.length)
+          return H.ioore(t1, t2);
+        t3 = point.x;
+        tileObject = J.$index$asx(t1[t2], t3);
         tileObject.set$isVisible(true);
         if (!!tileObject.$isMonster) {
           t1 = tileObject.followingCountdown;
-          t2 = tileObject.COUNTMAX;
-          if (t1 < t2)
-            tileObject.followingCountdown = t2;
+          t4 = tileObject.COUNTMAX;
+          if (t1 < t4)
+            tileObject.followingCountdown = t4;
         }
         t1 = this.grid.nodes;
-        if (y >= t1.length)
-          return H.ioore(t1, y);
-        if (J.$index$asx(t1[y], x).get$isOpaque() !== true)
+        if (t2 >= t1.length)
+          return H.ioore(t1, t2);
+        if (J.$index$asx(t1[t2], t3).get$isOpaque() !== true)
           break;
         numerator += shortest;
+        t1 = J.getInterceptor$ns(t3);
         if (!(numerator < longest)) {
           numerator -= longest;
-          x += dx1;
-          y += dy1;
+          point = new P.Point(t1.$add(t3, dx1), t2 + dy1);
+          point.$builtinTypeInfo = [null];
         } else {
-          x += dx2;
-          y += dy2;
+          point = new P.Point(t1.$add(t3, dx2), t2 + dy2);
+          point.$builtinTypeInfo = [null];
         }
       }
     },
     clearGrid$0: function() {
-      var height, y, row, width, x;
+      var height, y, row, width, x, t1;
       for (height = this.height, y = 0; y < height; ++y) {
         row = [];
         for (width = this.width, x = 0; x < width; ++x)
-          if ($.allVisible)
-            row.push(V.TileObject$(x, y, C.TileType_woc));
-          else
-            row.push(V.TileObject$(x, y, C.TileType_SgB));
+          if (!$.shadowsOn) {
+            t1 = new P.Point(x, y);
+            t1.$builtinTypeInfo = [null];
+            row.push(V.TileObject$(t1, C.TileType_woc));
+          } else {
+            t1 = new P.Point(x, y);
+            t1.$builtinTypeInfo = [null];
+            row.push(V.TileObject$(t1, C.TileType_SgB));
+          }
         C.JSArray_methods.add$1(this.grid.nodes, row);
       }
     },
     generateRooms$1: function(numOfRooms) {
-      var defaultRooms, t1, i, t2, t3, roomWidth, roomHeight, x, y, room, $length, t4, t5, j, intersects, t6;
+      var defaultRooms, t1, t2, t3, i, t4, t5, roomWidth, roomHeight, x, y, room, $length, t6, t7, j, intersects, t8;
       defaultRooms = [C.RoomType_hYN, C.RoomType_Drw];
-      for (t1 = this.rooms, i = 0; i < numOfRooms; ++i) {
-        if (J.$eq(A.getRandomWeighted([[80, "small"], [20, "large"]]), "small")) {
-          t2 = $.RNG.nextBool$0();
-          t3 = $.RNG;
-          roomWidth = 10 + (t2 ? -t3.nextInt$1(4) : t3.nextInt$1(4));
-          t2 = $.RNG.nextBool$0();
-          t3 = $.RNG;
-          roomHeight = 10 + (t2 ? -t3.nextInt$1(4) : t3.nextInt$1(4));
+      for (t1 = this.rooms, t2 = this.roomTypes, t3 = this.roomSizes, i = 0; i < numOfRooms; ++i) {
+        if (J.$eq(t3.pick$0(), "small")) {
+          t4 = $.RNG.nextBool$0();
+          t5 = $.RNG;
+          roomWidth = 10 + (t4 ? -t5.nextInt$1(4) : t5.nextInt$1(4));
+          t4 = $.RNG.nextBool$0();
+          t5 = $.RNG;
+          roomHeight = 10 + (t4 ? -t5.nextInt$1(4) : t5.nextInt$1(4));
         } else {
           roomWidth = $.RNG.nextInt$1(10) + 14;
           roomHeight = $.RNG.nextInt$1(10) + 14;
         }
-        t2 = this.width - roomWidth;
-        x = t2 - $.RNG.nextInt$1(t2);
-        t2 = this.height - roomHeight;
-        y = t2 - $.RNG.nextInt$1(t2);
+        t4 = this.width - roomWidth;
+        x = t4 - $.RNG.nextInt$1(t4);
+        t4 = this.height - roomHeight;
+        y = t4 - $.RNG.nextInt$1(t4);
         if (i < 2) {
           if (i < 0)
             return H.ioore(defaultRooms, i);
           room = R.Room$(x, y, roomWidth, roomHeight, defaultRooms[i]);
         } else
-          room = R.Room$(x, y, roomWidth, roomHeight, A.getRandomWeighted($.get$roomChance()));
-        for ($length = t1.length, t2 = room.maxX, t3 = room.minX, t4 = room.maxY, t5 = room.minY, j = 0; intersects = false, j < $length; ++j) {
-          t6 = t1[j];
-          if (t2 >= t6.minX && t3 <= t6.maxX && t4 >= t6.minY && t5 <= t6.maxY) {
+          room = R.Room$(x, y, roomWidth, roomHeight, t2.pick$0());
+        for ($length = t1.length, t4 = room.maxX + 1, t5 = room.minX - 1, t6 = room.maxY + 1, t7 = room.minY - 1, j = 0; intersects = false, j < $length; ++j) {
+          t8 = t1[j];
+          if (t4 >= t8.minX && t5 <= t8.maxX && t6 >= t8.minY && t7 <= t8.maxY) {
             intersects = true;
             break;
           }
@@ -1369,36 +1425,13 @@ var $$ = {};
           --i;
       }
     },
-    setRooms$0: function() {
-      var t1, $length, i, room, height, width, t2, t3, t4, t5, j, k, t6;
+    setRoom$0: function() {
+      var t1, $length, i, room, t2, height, t3, t4, j, width, t5, k, t6, object;
       for (t1 = this.rooms, $length = t1.length, i = 0; i < $length; ++i) {
         if (i >= t1.length)
           return H.ioore(t1, i);
         room = t1[i];
-        height = room.height;
-        width = room.width;
-        for (t2 = width - 1, t3 = room.minY, t4 = room.minX, t5 = height - 1, j = 0; j < height; ++j)
-          if (j === 0)
-            for (k = 0; k < width; ++k)
-              this.setAtCoordinate$3(t4 + k, t3, C.TileType_SgB);
-          else if (j === t5)
-            for (k = 0; k < width; ++k)
-              this.setAtCoordinate$3(t4 + k, room.maxY, C.TileType_SgB);
-          else
-            for (t6 = t3 + j, k = 0; k < width; ++k)
-              if (k === 0)
-                this.setAtCoordinate$3(t4, t6, C.TileType_SgB);
-              else if (k === t2)
-                this.setAtCoordinate$3(room.maxX, t6, C.TileType_SgB);
-      }
-    },
-    setRoomContents$0: function() {
-      var t1, $length, i, room, t2, height, t3, t4, j, width, t5, k, t6;
-      for (t1 = this.rooms, $length = t1.length, i = 0; i < $length; ++i) {
-        if (i >= t1.length)
-          return H.ioore(t1, i);
-        room = t1[i];
-        for (t2 = room.contents, height = t2.length, t3 = room.minX + 1, t4 = room.minY + 1, j = 0; j < height; ++j) {
+        for (t2 = room.contents, height = t2.length, t3 = room.minX, t4 = room.minY, j = 0; j < height; ++j) {
           if (0 >= t2.length)
             return H.ioore(t2, 0);
           width = t2[0].length;
@@ -1410,7 +1443,10 @@ var $$ = {};
             t6 = t2[j];
             if (k >= t6.length)
               return H.ioore(t6, k);
-            this.setAtCoordinate$3(t3 + k, t5, t6[k]);
+            object = t6[k];
+            t6 = new P.Point(t3 + k, t5);
+            t6.$builtinTypeInfo = [null];
+            this.setTileTypeAtPoint$2(t6, object);
           }
         }
       }
@@ -1431,113 +1467,147 @@ var $$ = {};
       }
     },
     digCorridor$4: function(pos1, pos2, constantPos, dir) {
-      var i, t1, t2, t3;
+      var i, t1, t2, t3, t4;
       for (i = P.min(pos1, pos2), t1 = P.max(pos1, pos2) + 1 + dir, t2 = constantPos + 1, t3 = dir === 1; i < t1; ++i)
         if (t3) {
-          this.setAtCoordinate$3(i, t2, C.TileType_CF3);
-          this.setAtCoordinate$3(i, constantPos, C.TileType_CF3);
+          t4 = new P.Point(i, t2);
+          t4.$builtinTypeInfo = [null];
+          this.setTileTypeAtPoint$2(t4, C.TileType_CF3);
+          t4 = new P.Point(i, constantPos);
+          t4.$builtinTypeInfo = [null];
+          this.setTileTypeAtPoint$2(t4, C.TileType_CF3);
         } else {
-          this.setAtCoordinate$3(t2, i, C.TileType_CF3);
-          this.setAtCoordinate$3(constantPos, i, C.TileType_CF3);
+          t4 = new P.Point(t2, i);
+          t4.$builtinTypeInfo = [null];
+          this.setTileTypeAtPoint$2(t4, C.TileType_CF3);
+          t4 = new P.Point(constantPos, i);
+          t4.$builtinTypeInfo = [null];
+          this.setTileTypeAtPoint$2(t4, C.TileType_CF3);
         }
     },
-    setAtCoordinate$3: function(x, y, type) {
-      var t1, t2;
+    setTileTypeAtPoint$2: function(coord, type) {
+      var t1, t2, t3, t4;
       t1 = J.getInterceptor(type);
       if (!!t1.$isTileType) {
         t1 = this.grid.nodes;
-        if (y >>> 0 !== y || y >= t1.length)
-          return H.ioore(t1, y);
-        J.$indexSet$ax(t1[y], x, V.TileObject$(x, y, type));
+        t2 = coord.y;
+        if (t2 >>> 0 !== t2 || t2 >= t1.length)
+          return H.ioore(t1, t2);
+        J.$indexSet$ax(t1[t2], coord.x, V.TileObject$(coord, type));
       } else if (!!t1.$isMonsterType) {
         t1 = this.grid.nodes;
-        if (y >>> 0 !== y || y >= t1.length)
-          return H.ioore(t1, y);
-        J.$indexSet$ax(t1[y], x, Z.Monster$(x, y, type));
+        t2 = coord.y;
+        if (t2 >>> 0 !== t2 || t2 >= t1.length)
+          return H.ioore(t1, t2);
+        t3 = coord.x;
+        J.$indexSet$ax(t1[t2], t3, Z.Monster$(coord, type));
         t1 = this.grid.nodes;
-        if (y >= t1.length)
-          return H.ioore(t1, y);
-        this.monsters.push(J.$index$asx(t1[y], x));
+        if (t2 >= t1.length)
+          return H.ioore(t1, t2);
+        this.monsters.push(J.$index$asx(t1[t2], t3));
       } else if (!!t1.$isPlayerType) {
         t1 = this.grid.nodes;
-        if (y >>> 0 !== y || y >= t1.length)
-          return H.ioore(t1, y);
-        t1 = t1[y];
-        t2 = new E.Player(0, 0, 0, 0, [], C.ArmorType_0_A_clothes, C.WeaponType_0_W_knuckles, null, type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t2.TileObject$3(x, y, type);
-        t2.isOpaque = true;
-        t2.isSolid = true;
-        t2.tileObject = V.TileObject$(x, y, C.TileType_CF3);
-        t2.isWalkable = true;
+        t2 = coord.y;
+        if (t2 >>> 0 !== t2 || t2 >= t1.length)
+          return H.ioore(t1, t2);
+        t1 = t1[t2];
+        t3 = coord.x;
+        t4 = new E.Player(0, 0, 0, 0, [], C.ArmorType_0_A_clothes, C.WeaponType_0_W_knuckles, null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+        t4.TileObject$2(coord, type);
+        t4.isOpaque = true;
+        t4.isSolid = true;
+        t4.tileObject = V.TileObject$(coord, C.TileType_CF3);
+        t4.isWalkable = true;
         switch (type) {
           case C.PlayerType_8aB:
-            t2.MAXHP = 25;
-            t2.atk = 1;
+            t4.MAXHP = 25;
+            t4.atk = 1;
             break;
           default:
             break;
         }
-        t2.HP = t2.MAXHP;
-        J.$indexSet$ax(t1, x, t2);
+        t4.HP = t4.MAXHP;
+        J.$indexSet$ax(t1, t3, t4);
         t1 = this.grid.nodes;
-        if (y >= t1.length)
-          return H.ioore(t1, y);
-        this.player = J.$index$asx(t1[y], x);
+        if (t2 >= t1.length)
+          return H.ioore(t1, t2);
+        this.player = J.$index$asx(t1[t2], t3);
       } else if (t1.$eq(type, C.ItemType_8aB)) {
         t1 = this.grid.nodes;
-        if (y >>> 0 !== y || y >= t1.length)
-          return H.ioore(t1, y);
-        t1 = t1[y];
-        t2 = new N.Chest(null, null, C.ItemType_8aB, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t2.TileObject$3(x, y, C.ItemType_8aB);
-        t2.isSolid = false;
-        t2.isOpaque = true;
-        t2.isWalkable = true;
-        t2.Chest$2(x, y);
-        J.$indexSet$ax(t1, x, t2);
+        t2 = coord.y;
+        if (t2 >>> 0 !== t2 || t2 >= t1.length)
+          return H.ioore(t1, t2);
+        t2 = t1[t2];
+        t1 = new N.Chest(null, null, C.ItemType_8aB, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+        t1.TileObject$2(coord, C.ItemType_8aB);
+        t1.isSolid = false;
+        t1.isOpaque = true;
+        t1.isWalkable = true;
+        t1.Chest$1(coord);
+        J.$indexSet$ax(t2, coord.x, t1);
       } else if (!!t1.$isWeaponType) {
         t1 = this.grid.nodes;
-        if (y >>> 0 !== y || y >= t1.length)
-          return H.ioore(t1, y);
-        t1 = t1[y];
-        t2 = new Z.Weapon(null, null, type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t2.TileObject$3(x, y, type);
-        t2.isSolid = false;
-        t2.isOpaque = true;
-        t2.isWalkable = true;
-        J.$indexSet$ax(t1, x, t2);
+        t2 = coord.y;
+        if (t2 >>> 0 !== t2 || t2 >= t1.length)
+          return H.ioore(t1, t2);
+        t2 = t1[t2];
+        t1 = new Z.Weapon(null, null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+        t1.TileObject$2(coord, type);
+        t1.isSolid = false;
+        t1.isOpaque = true;
+        t1.isWalkable = true;
+        J.$indexSet$ax(t2, coord.x, t1);
       } else if (!!t1.$isArmorType) {
         t1 = this.grid.nodes;
-        if (y >>> 0 !== y || y >= t1.length)
-          return H.ioore(t1, y);
-        t1 = t1[y];
-        t2 = new Z.Armor(null, null, type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t2.TileObject$3(x, y, type);
-        t2.isSolid = false;
-        t2.isOpaque = true;
-        t2.isWalkable = true;
-        t2.def = type.def;
-        J.$indexSet$ax(t1, x, t2);
+        t2 = coord.y;
+        if (t2 >>> 0 !== t2 || t2 >= t1.length)
+          return H.ioore(t1, t2);
+        t2 = t1[t2];
+        t1 = new Z.Armor(null, null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+        t1.TileObject$2(coord, type);
+        t1.isSolid = false;
+        t1.isOpaque = true;
+        t1.isWalkable = true;
+        t1.def = type.def;
+        J.$indexSet$ax(t2, coord.x, t1);
       } else if (!!t1.$isItemType) {
         t1 = this.grid.nodes;
-        if (y >>> 0 !== y || y >= t1.length)
-          return H.ioore(t1, y);
-        t1 = t1[y];
-        t2 = new E.Item(null, type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t2.TileObject$3(x, y, type);
-        t2.isSolid = false;
-        t2.isOpaque = true;
-        t2.isWalkable = true;
-        J.$indexSet$ax(t1, x, t2);
+        t2 = coord.y;
+        if (t2 >>> 0 !== t2 || t2 >= t1.length)
+          return H.ioore(t1, t2);
+        t2 = t1[t2];
+        t1 = new E.Item(null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+        t1.TileObject$2(coord, type);
+        t1.isSolid = false;
+        t1.isOpaque = true;
+        t1.isWalkable = true;
+        J.$indexSet$ax(t2, coord.x, t1);
       }
     },
     World$2: function(width, height) {
+      var t1, t2;
       this.grid = new N.Grid(this.width, this.height, []);
       this.clearGrid$0();
-      this.generateRooms$1(A.getPosOrNeg(16, 5));
-      this.setRooms$0();
+      t1 = this.roomTypes;
+      t1.weightSum += 20;
+      t2 = t1.list;
+      t2.push([C.RoomType_2bL, 20]);
+      t1.weightSum += 50;
+      t2.push([C.RoomType_cKo, 50]);
+      t1.weightSum += 25;
+      t2.push([C.RoomType_AqM, 25]);
+      t1.weightSum += 5;
+      t2.push([C.RoomType_Drw, 5]);
+      t2 = this.roomSizes;
+      t2.weightSum += 20;
+      t1 = t2.list;
+      t1.push(["large", 20]);
+      t2.weightSum += 80;
+      t1.push(["small", 80]);
+      t1 = this.width * this.height;
+      this.generateRooms$1(A.getPosOrNeg(C.JSInt_methods._tdivFast$1(t1, 350), C.JSInt_methods._tdivFast$1(t1, 900)));
       this.loopDigCorridors$0();
-      this.setRoomContents$0();
+      this.setRoom$0();
       A.refreshStats(this.player);
       this.loopTiles$0();
     }
@@ -1762,6 +1832,9 @@ var $$ = {};
     },
     remainder$1: function(receiver, b) {
       return receiver % b;
+    },
+    abs$0: function(receiver) {
+      return Math.abs(receiver);
     },
     toInt$0: function(receiver) {
       var t1;
@@ -6233,9 +6306,6 @@ var $$ = {};
   },
   _RootZone: {
     "^": "_BaseZone;",
-    get$parent: function(_) {
-      return;
-    },
     $index: function(_, key) {
       return;
     },
@@ -7775,11 +7845,6 @@ var $$ = {};
   _ElementFactoryProvider_createElement_tag: function(tag, typeExtension) {
     return document.createElement(tag);
   },
-  _convertNativeToDart_Window: function(win) {
-    if (win == null)
-      return;
-    return W._DOMWindowCrossFrame__createSafe(win);
-  },
   _wrapZone: function(callback) {
     var t1 = $.Zone__current;
     if (t1 === C.C__RootZone)
@@ -7953,7 +8018,7 @@ var $$ = {};
     "%": "DragEvent|MSPointerEvent|MouseEvent|MouseScrollEvent|MouseWheelEvent|PointerEvent|WheelEvent"
   },
   Node: {
-    "^": "EventTarget;parent:parentElement=,text:textContent}",
+    "^": "EventTarget;text:textContent}",
     remove$0: function(receiver) {
       var t1 = receiver.parentNode;
       if (t1 != null)
@@ -8055,9 +8120,6 @@ var $$ = {};
   },
   Window: {
     "^": "EventTarget;closed=",
-    get$parent: function(receiver) {
-      return W._convertNativeToDart_Window(receiver.parent);
-    },
     toString$0: function(receiver) {
       return receiver.toString();
     },
@@ -8253,21 +8315,6 @@ var $$ = {};
     get$current: function() {
       return this._html$_current;
     }
-  },
-  _DOMWindowCrossFrame: {
-    "^": "Object;_window",
-    get$closed: function(_) {
-      return this._window.closed;
-    },
-    get$parent: function(_) {
-      return W._DOMWindowCrossFrame__createSafe(this._window.parent);
-    },
-    static: {_DOMWindowCrossFrame__createSafe: function(w) {
-        if (w === window)
-          return w;
-        else
-          return new W._DOMWindowCrossFrame(w);
-      }}
   }
 }],
 ["dart.dom.svg", "dart:svg", , P, {
@@ -8432,6 +8479,13 @@ var $$ = {};
 }],
 ["dart.math", "dart:math", , P, {
   "^": "",
+  _JenkinsSmiHash_combine: function(hash, value) {
+    if (typeof value !== "number")
+      return H.iae(value);
+    hash = 536870911 & hash + value;
+    hash = 536870911 & hash + ((524287 & hash) << 10 >>> 0);
+    return hash ^ hash >>> 6;
+  },
   min: function(a, b) {
     if (a > b)
       return b;
@@ -8555,6 +8609,41 @@ var $$ = {};
         t1._Random$1(seed);
         return t1;
       }}
+  },
+  Point: {
+    "^": "Object;x>,y>",
+    toString$0: function(_) {
+      return "Point(" + H.S(this.x) + ", " + H.S(this.y) + ")";
+    },
+    $eq: function(_, other) {
+      if (other == null)
+        return false;
+      if (!J.getInterceptor(other).$isPoint)
+        return false;
+      return J.$eq(this.x, other.x) && J.$eq(this.y, other.y);
+    },
+    get$hashCode: function(_) {
+      var t1, t2, hash;
+      t1 = J.get$hashCode$(this.x);
+      t2 = J.get$hashCode$(this.y);
+      t2 = P._JenkinsSmiHash_combine(P._JenkinsSmiHash_combine(0, t1), t2);
+      hash = 536870911 & t2 + ((67108863 & t2) << 3 >>> 0);
+      hash ^= hash >>> 11;
+      return 536870911 & hash + ((16383 & hash) << 15 >>> 0);
+    },
+    $add: function(_, other) {
+      var t1 = J.getInterceptor$x(other);
+      t1 = new P.Point(J.$add$ns(this.x, t1.get$x(other)), J.$add$ns(this.y, t1.get$y(other)));
+      t1.$builtinTypeInfo = this.$builtinTypeInfo;
+      return t1;
+    },
+    $sub: function(_, other) {
+      var t1 = J.getInterceptor$x(other);
+      t1 = new P.Point(J.$sub$n(this.x, t1.get$x(other)), J.$sub$n(this.y, t1.get$y(other)));
+      t1.$builtinTypeInfo = this.$builtinTypeInfo;
+      return t1;
+    },
+    $isPoint: true
   }
 }],
 ["dart.typed_data.implementation", "dart:_native_typed_data", , H, {
@@ -8748,9 +8837,10 @@ var $$ = {};
       return t1;
     },
     getNeighbors$3: function(node, allowDiagonal, dontCrossCorners) {
-      var x, y, neighbors, nodes, t1, t2, s0, s1, t3, s2, s3, d0, d1, d2, d3;
-      x = node.x;
-      y = node.y;
+      var t1, x, y, neighbors, nodes, t2, s0, s1, t3, s2, s3, d0, d1, d2, d3;
+      t1 = node.point;
+      x = t1.x;
+      y = t1.y;
       neighbors = [];
       nodes = this.nodes;
       t1 = J.getInterceptor$n(y);
@@ -8825,7 +8915,7 @@ var $$ = {};
       return neighbors;
     },
     clone$0: function(_) {
-      var width, height, thisNodes, newGrid, newNodes, i, t1, j;
+      var width, height, thisNodes, newGrid, newNodes, i, t1, j, t2;
       width = this.width;
       height = this.height;
       thisNodes = this.nodes;
@@ -8838,26 +8928,28 @@ var $$ = {};
         newNodes[i] = t1;
         for (j = 0; j < width; ++j) {
           t1 = newNodes[i];
+          t2 = new P.Point(j, i);
+          t2.$builtinTypeInfo = [null];
           if (i >= thisNodes.length)
             return H.ioore(thisNodes, i);
-          J.$indexSet$ax(t1, j, this.getAtCoordinate$3(j, i, J.get$type$x(J.$index$asx(thisNodes[i], j))));
+          J.$indexSet$ax(t1, j, this.getAtCoordinate$2(t2, J.get$type$x(J.$index$asx(thisNodes[i], j))));
         }
       }
       newGrid.nodes = newNodes;
       return newGrid;
     },
-    getAtCoordinate$3: function(x, y, type) {
+    getAtCoordinate$2: function(point, type) {
       var t1 = J.getInterceptor(type);
       if (!!t1.$isTileType)
-        return V.TileObject$(x, y, type);
+        return V.TileObject$(point, type);
       else if (!!t1.$isMonsterType)
-        return Z.Monster$(x, y, type);
+        return Z.Monster$(point, type);
       else if (!!t1.$isPlayerType) {
-        t1 = new E.Player(0, 0, 0, 0, [], C.ArmorType_0_A_clothes, C.WeaponType_0_W_knuckles, null, type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t1.TileObject$3(x, y, type);
+        t1 = new E.Player(0, 0, 0, 0, [], C.ArmorType_0_A_clothes, C.WeaponType_0_W_knuckles, null, type, null, !$.shadowsOn, false, null, point, null, null, null, null, null, null);
+        t1.TileObject$2(point, type);
         t1.isOpaque = true;
         t1.isSolid = true;
-        t1.tileObject = V.TileObject$(x, y, C.TileType_CF3);
+        t1.tileObject = V.TileObject$(point, C.TileType_CF3);
         t1.isWalkable = true;
         switch (type) {
           case C.PlayerType_8aB:
@@ -8870,22 +8962,22 @@ var $$ = {};
         t1.HP = t1.MAXHP;
         return t1;
       } else if (!!t1.$isItemType) {
-        t1 = new E.Item(null, type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t1.TileObject$3(x, y, type);
+        t1 = new E.Item(null, type, null, !$.shadowsOn, false, null, point, null, null, null, null, null, null);
+        t1.TileObject$2(point, type);
         t1.isSolid = false;
         t1.isOpaque = true;
         t1.isWalkable = true;
         return t1;
       } else if (!!t1.$isWeaponType) {
-        t1 = new Z.Weapon(null, null, type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t1.TileObject$3(x, y, type);
+        t1 = new Z.Weapon(null, null, type, null, !$.shadowsOn, false, null, point, null, null, null, null, null, null);
+        t1.TileObject$2(point, type);
         t1.isSolid = false;
         t1.isOpaque = true;
         t1.isWalkable = true;
         return t1;
       } else if (!!t1.$isArmorType) {
-        t1 = new Z.Armor(null, null, type, null, $.allVisible, false, null, x, y, null, null, null, null, null, null);
-        t1.TileObject$3(x, y, type);
+        t1 = new Z.Armor(null, null, type, null, !$.shadowsOn, false, null, point, null, null, null, null, null, null);
+        t1.TileObject$2(point, type);
         t1.isSolid = false;
         t1.isOpaque = true;
         t1.isWalkable = true;
@@ -9008,13 +9100,12 @@ var $$ = {};
 ["pathfinding.core.util", "Entity/Pathfinding/util.dart", , Y, {
   "^": "",
   backtrace: function(node) {
-    var t1, path;
-    t1 = J.getInterceptor$x(node);
-    path = [[t1.get$x(node), t1.get$y(node)]];
-    for (; t1 = J.getInterceptor$x(node), t1.get$parent(node) != null;) {
-      node = t1.get$parent(node);
-      t1 = J.getInterceptor$x(node);
-      path.push([t1.get$x(node), t1.get$y(node)]);
+    var path, t1;
+    path = [[node.get$point().x, node.get$point().y]];
+    for (; node.get$parent(node) != null;) {
+      node = node.parent;
+      t1 = node.point;
+      path.push([t1.x, t1.y]);
     }
     t1 = new H.ReversedListIterable(path);
     t1.$builtinTypeInfo = [null];
@@ -9024,18 +9115,21 @@ var $$ = {};
 ["pathfinding.finders.astar", "Entity/Pathfinding/astar.dart", , N, {
   "^": "",
   AStarFinder: {
-    "^": "Object;allowDiagonal,dontCrossCorners,heuristic,weight",
-    findPath$5: function(startX, startY, endX, endY, grid) {
-      var openList, t1, startNode, endNode, heuristic, allowDiagonal, dontCrossCorners, weight, neighbor, x, y, ng, node, neighbors, l, i, t2, t3, pos;
+    "^": "Object;allowDiagonal,dontCrossCorners,heuristic,weight,point<",
+    findPath$3: function(startPoint, endPoint, grid) {
+      var openList, t1, t2, startNode, t3, endNode, heuristic, allowDiagonal, dontCrossCorners, weight, neighbor, x, y, ng, node, neighbors, l, i, t4, t5, pos;
       openList = F.Heap$(new N.AStarFinder_findPath_closure());
-      t1 = grid.nodes;
-      if (startY >>> 0 !== startY || startY >= t1.length)
-        return H.ioore(t1, startY);
-      startNode = J.$index$asx(t1[startY], startX);
-      t1 = grid.nodes;
-      if (endY >>> 0 !== endY || endY >= t1.length)
-        return H.ioore(t1, endY);
-      endNode = J.$index$asx(t1[endY], endX);
+      t1 = startPoint.y;
+      t2 = grid.nodes;
+      if (t1 >>> 0 !== t1 || t1 >= t2.length)
+        return H.ioore(t2, t1);
+      startNode = J.$index$asx(t2[t1], startPoint.x);
+      t1 = endPoint.x;
+      t2 = endPoint.y;
+      t3 = grid.nodes;
+      if (t2 >>> 0 !== t2 || t2 >= t3.length)
+        return H.ioore(t3, t2);
+      endNode = J.$index$asx(t3[t2], t1);
       heuristic = this.heuristic;
       allowDiagonal = this.allowDiagonal;
       dontCrossCorners = this.dontCrossCorners;
@@ -9044,8 +9138,8 @@ var $$ = {};
       startNode.f = 0;
       F._heappush(openList.nodes, startNode, openList.cmp);
       startNode.opened = true;
-      for (neighbor = null, x = null, y = null, ng = null; t1 = openList.nodes, t1.length !== 0;) {
-        node = F._heappop(t1, openList.cmp);
+      for (neighbor = null, x = null, y = null, ng = null; t3 = openList.nodes, t3.length !== 0;) {
+        node = F._heappop(t3, openList.cmp);
         J.set$closed$x(node, true);
         if (node === endNode)
           return Y.backtrace(endNode);
@@ -9054,67 +9148,66 @@ var $$ = {};
           if (i >= neighbors.length)
             return H.ioore(neighbors, i);
           neighbor = neighbors[i];
-          t1 = J.getInterceptor$x(neighbor);
-          if (t1.get$closed(neighbor) === true)
+          if (J.get$closed$x(neighbor) === true)
             continue;
-          x = t1.get$x(neighbor);
-          y = neighbor.y;
-          t1 = node.g;
-          t2 = J.getInterceptor$n(x);
-          t3 = J.$eq(t2.$sub(x, node.x), 0) || J.$eq(J.$sub$n(y, node.y), 0) ? 1 : 1.4142135623730951;
-          if (typeof t1 !== "number")
-            return t1.$add();
-          ng = t1 + t3;
+          x = neighbor.get$point().x;
+          y = neighbor.point.y;
+          t3 = node.g;
+          t4 = J.getInterceptor$n(x);
+          t5 = J.$eq(t4.$sub(x, node.point.x), 0) || J.$eq(J.$sub$n(y, node.point.y), 0) ? 1 : 1.4142135623730951;
+          if (typeof t3 !== "number")
+            return t3.$add();
+          ng = t3 + t5;
           if (neighbor.opened === true) {
-            t1 = neighbor.g;
-            if (typeof t1 !== "number")
-              return H.iae(t1);
-            t1 = ng < t1;
+            t3 = neighbor.g;
+            if (typeof t3 !== "number")
+              return H.iae(t3);
+            t3 = ng < t3;
           } else
-            t1 = true;
-          if (t1) {
+            t3 = true;
+          if (t3) {
             neighbor.g = ng;
-            t1 = neighbor.h;
-            if (t1 != null)
+            t3 = neighbor.h;
+            if (t3 != null)
               ;
             else {
-              t1 = t2.$sub(x, endX);
-              if (J.$lt$n(t1, 0)) {
-                if (typeof t1 !== "number")
-                  return t1.$negate();
-                t1 = -t1;
+              t3 = t4.$sub(x, t1);
+              if (J.$lt$n(t3, 0)) {
+                if (typeof t3 !== "number")
+                  return t3.$negate();
+                t3 = -t3;
               }
-              t2 = J.$sub$n(y, endY);
-              if (J.$lt$n(t2, 0)) {
-                if (typeof t2 !== "number")
-                  return t2.$negate();
-                t2 = -t2;
+              t4 = J.$sub$n(y, t2);
+              if (J.$lt$n(t4, 0)) {
+                if (typeof t4 !== "number")
+                  return t4.$negate();
+                t4 = -t4;
               }
-              t2 = heuristic.call$2(t1, t2);
-              if (typeof t2 !== "number")
-                return H.iae(t2);
-              t2 = weight * t2;
-              t1 = t2;
+              t4 = heuristic.call$2(t3, t4);
+              if (typeof t4 !== "number")
+                return H.iae(t4);
+              t4 = weight * t4;
+              t3 = t4;
             }
-            neighbor.h = t1;
-            t2 = neighbor.g;
-            if (typeof t2 !== "number")
-              return t2.$add();
-            if (typeof t1 !== "number")
-              return H.iae(t1);
-            neighbor.f = t2 + t1;
+            neighbor.h = t3;
+            t4 = neighbor.g;
+            if (typeof t4 !== "number")
+              return t4.$add();
+            if (typeof t3 !== "number")
+              return H.iae(t3);
+            neighbor.f = t4 + t3;
             neighbor.parent = node;
-            t1 = neighbor.opened;
-            t2 = openList.nodes;
-            t3 = openList.cmp;
-            if (t1 !== true) {
-              t2.push(neighbor);
-              F._siftdown(t2, 0, t2.length - 1, t3);
+            t3 = neighbor.opened;
+            t4 = openList.nodes;
+            t5 = openList.cmp;
+            if (t3 !== true) {
+              t4.push(neighbor);
+              F._siftdown(t4, 0, t4.length - 1, t5);
               neighbor.opened = true;
             } else {
-              pos = H.Lists_indexOf(t2, neighbor, 0, t2.length);
-              F._siftdown(t2, 0, pos, t3);
-              F._siftup(t2, pos, t3);
+              pos = H.Lists_indexOf(t4, neighbor, 0, t4.length);
+              F._siftdown(t4, 0, pos, t5);
+              F._siftup(t4, pos, t5);
             }
           }
         }
@@ -9332,6 +9425,9 @@ J.forEach$1$ax = function(receiver, a0) {
 J.get$children$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$children(receiver);
 };
+J.get$closed$x = function(receiver) {
+  return J.getInterceptor$x(receiver).get$closed(receiver);
+};
 J.get$error$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$error(receiver);
 };
@@ -9352,12 +9448,6 @@ J.get$style$x = function(receiver) {
 };
 J.get$type$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$type(receiver);
-};
-J.get$x$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$x(receiver);
-};
-J.get$y$x = function(receiver) {
-  return J.getInterceptor$x(receiver).get$y(receiver);
 };
 J.remove$0$ax = function(receiver) {
   return J.getInterceptor$ax(receiver).remove$0(receiver);
@@ -9402,8 +9492,8 @@ C.JSString_methods = J.JSString.prototype;
 C.NodeList_methods = W.NodeList.prototype;
 C.PlainJavaScriptObject_methods = J.PlainJavaScriptObject.prototype;
 C.UnknownJavaScriptObject_methods = J.UnknownJavaScriptObject.prototype;
-C.ArmorType_0 = new O.ArmorType(3, "A", "zinc armor");
-C.ArmorType_00 = new O.ArmorType(13, "A", "iron armor");
+C.ArmorType_0 = new O.ArmorType(13, "A", "iron armor");
+C.ArmorType_00 = new O.ArmorType(3, "A", "zinc armor");
 C.ArmorType_0_A_clothes = new O.ArmorType(0, "A", "clothes");
 C.ArmorType_2Vk = new O.ArmorType(19, "A", "tungsten carbide armor");
 C.ArmorType_86y = new O.ArmorType(20, "A", "diamond armor");
@@ -9594,8 +9684,8 @@ C.WeaponType_LhI = new L.WeaponType(8, "W", "a brass shortsword");
 C.WeaponType_Lx4 = new L.WeaponType(9, "W", "a bronze cutlass");
 C.WeaponType_MYE = new L.WeaponType(20, "W", "Hiro's sword");
 C.WeaponType_O50 = new L.WeaponType(15, "W", "the daywalker");
-C.WeaponType_OCd = new L.WeaponType(3, "W", "a zinc club");
-C.WeaponType_OCd0 = new L.WeaponType(22, "W", "a saber of light");
+C.WeaponType_OCd = new L.WeaponType(22, "W", "a saber of light");
+C.WeaponType_OCd0 = new L.WeaponType(3, "W", "a zinc club");
 C.WeaponType_QHU = new L.WeaponType(13, "W", "a iron viking sword");
 C.WeaponType_QKc = new L.WeaponType(21, "W", "adamantium claws");
 C.WeaponType_YfA = new L.WeaponType(14, "W", "the rhindon");
@@ -9611,7 +9701,7 @@ $.libraries_to_load = {};
 $.world = null;
 $.display = null;
 $.input = null;
-$.allVisible = false;
+$.shadowsOn = true;
 $.RNG = null;
 $.playerStats = null;
 $.enemyStats = null;
@@ -9643,8 +9733,41 @@ $.narrationHolderElement = null;
 $.narrationElement = null;
 $.Device__isOpera = null;
 $.Device__isWebKit = null;
-Isolate.$lazy($, "roomChance", "roomChance", "get$roomChance", function() {
-  return [[50, C.RoomType_cKo], [20, C.RoomType_AqM], [25, C.RoomType_2bL], [5, C.RoomType_Drw]];
+Isolate.$lazy($, "level0", "level0", "get$level0", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_oZA], [15, C.ArmorType_GQO], [35, C.WeaponType_yYD], [15, C.WeaponType_ydF]]);
+});
+Isolate.$lazy($, "level1", "level1", "get$level1", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_00], [15, C.ArmorType_kFs], [35, C.WeaponType_OCd0], [15, C.WeaponType_86y]]);
+});
+Isolate.$lazy($, "level2", "level2", "get$level2", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_8Gl], [15, C.ArmorType_jhf], [35, C.WeaponType_GRA], [15, C.WeaponType_sje]]);
+});
+Isolate.$lazy($, "level3", "level3", "get$level3", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_yyz], [15, C.ArmorType_GDb], [35, C.WeaponType_ekJ], [15, C.WeaponType_LhI]]);
+});
+Isolate.$lazy($, "level4", "level4", "get$level4", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_Ual], [15, C.ArmorType_Jsm], [35, C.WeaponType_Lx4], [15, C.WeaponType_A8J]]);
+});
+Isolate.$lazy($, "level5", "level5", "get$level5", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_Cu4], [15, C.ArmorType_i5H], [35, C.WeaponType_oyn], [15, C.WeaponType_1iR]]);
+});
+Isolate.$lazy($, "level6", "level6", "get$level6", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_0], [15, C.ArmorType_GIS], [35, C.WeaponType_QHU], [15, C.WeaponType_YfA]]);
+});
+Isolate.$lazy($, "level7", "level7", "get$level7", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_GzW], [15, C.ArmorType_mVm], [35, C.WeaponType_O50], [15, C.WeaponType_yHF]]);
+});
+Isolate.$lazy($, "level8", "level8", "get$level8", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_S7B], [15, C.ArmorType_Tn6], [35, C.WeaponType_Fh9], [15, C.WeaponType_kwb]]);
+});
+Isolate.$lazy($, "level9", "level9", "get$level9", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_2Vk], [15, C.ArmorType_86y], [35, C.WeaponType_iTd], [15, C.WeaponType_MYE]]);
+});
+Isolate.$lazy($, "level10", "level10", "get$level10", function() {
+  return S.ChooseRandom$([[35, C.ArmorType_dSs], [15, C.ArmorType_wrR], [35, C.WeaponType_QKc], [15, C.WeaponType_OCd]]);
+});
+Isolate.$lazy($, "troll", "troll", "get$troll", function() {
+  return S.ChooseRandom$([[75, C.TileType_CF3], [25, C.MonsterType_tkU]]);
 });
 Isolate.$lazy($, "globalThis", "globalThis", "get$globalThis", function() {
   return function() {
@@ -10936,9 +11059,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   Node.prototype = $desc;
-  Node.prototype.get$parent = function(receiver) {
-    return receiver.parentElement;
-  };
   Node.prototype.set$text = function(receiver, v) {
     return receiver.textContent = v;
   };
@@ -12661,7 +12781,7 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   NativeUint8List.prototype = $desc;
-  function Armor(def, decription, type, isOpaque, isVisible, isSolid, isWalkable, x, y, g, h, f, opened, closed, parent) {
+  function Armor(def, decription, type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
     this.def = def;
     this.decription = decription;
     this.type = type;
@@ -12669,8 +12789,7 @@ function dart_precompiled($collectedClasses) {
     this.isVisible = isVisible;
     this.isSolid = isSolid;
     this.isWalkable = isWalkable;
-    this.x = x;
-    this.y = y;
+    this.point = point;
     this.g = g;
     this.h = h;
     this.f = f;
@@ -12700,7 +12819,7 @@ function dart_precompiled($collectedClasses) {
   ArmorType.prototype.get$def = function() {
     return this.def;
   };
-  function Chest(treasureType, decription, type, isOpaque, isVisible, isSolid, isWalkable, x, y, g, h, f, opened, closed, parent) {
+  function Chest(treasureType, decription, type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
     this.treasureType = treasureType;
     this.decription = decription;
     this.type = type;
@@ -12708,8 +12827,7 @@ function dart_precompiled($collectedClasses) {
     this.isVisible = isVisible;
     this.isSolid = isSolid;
     this.isWalkable = isWalkable;
-    this.x = x;
-    this.y = y;
+    this.point = point;
     this.g = g;
     this.h = h;
     this.f = f;
@@ -12727,6 +12845,17 @@ function dart_precompiled($collectedClasses) {
   Chest.prototype.get$treasureType = function() {
     return this.treasureType;
   };
+  function ChooseRandom(list, weightSum) {
+    this.list = list;
+    this.weightSum = weightSum;
+  }
+  ChooseRandom.builtin$cls = "ChooseRandom";
+  if (!"name" in ChooseRandom)
+    ChooseRandom.name = "ChooseRandom";
+  $desc = $collectedClasses.ChooseRandom;
+  if ($desc instanceof Array)
+    $desc = $desc[1];
+  ChooseRandom.prototype = $desc;
   function Display(display) {
     this.display = display;
   }
@@ -12840,15 +12969,14 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   Input_keyDownHandler_closure.prototype = $desc;
-  function Item(decription, type, isOpaque, isVisible, isSolid, isWalkable, x, y, g, h, f, opened, closed, parent) {
+  function Item(decription, type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
     this.decription = decription;
     this.type = type;
     this.isOpaque = isOpaque;
     this.isVisible = isVisible;
     this.isSolid = isSolid;
     this.isWalkable = isWalkable;
-    this.x = x;
-    this.y = y;
+    this.point = point;
     this.g = g;
     this.h = h;
     this.f = f;
@@ -12874,7 +13002,7 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   ItemType.prototype = $desc;
-  function Monster(COUNTMAX, followingCountdown, followX, followY, pathToPlayer, rng, atk, def, MAXHP, HP, items, armor, weapon, tileObject, type, isOpaque, isVisible, isSolid, isWalkable, x, y, g, h, f, opened, closed, parent) {
+  function Monster(COUNTMAX, followingCountdown, followX, followY, pathToPlayer, rng, atk, def, MAXHP, HP, items, armor, weapon, tileObject, type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
     this.COUNTMAX = COUNTMAX;
     this.followingCountdown = followingCountdown;
     this.followX = followX;
@@ -12894,8 +13022,7 @@ function dart_precompiled($collectedClasses) {
     this.isVisible = isVisible;
     this.isSolid = isSolid;
     this.isWalkable = isWalkable;
-    this.x = x;
-    this.y = y;
+    this.point = point;
     this.g = g;
     this.h = h;
     this.f = f;
@@ -12927,7 +13054,7 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   MonsterType.prototype = $desc;
-  function Player(atk, def, MAXHP, HP, items, armor, weapon, tileObject, type, isOpaque, isVisible, isSolid, isWalkable, x, y, g, h, f, opened, closed, parent) {
+  function Player(atk, def, MAXHP, HP, items, armor, weapon, tileObject, type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
     this.atk = atk;
     this.def = def;
     this.MAXHP = MAXHP;
@@ -12941,8 +13068,7 @@ function dart_precompiled($collectedClasses) {
     this.isVisible = isVisible;
     this.isSolid = isSolid;
     this.isWalkable = isWalkable;
-    this.x = x;
-    this.y = y;
+    this.point = point;
     this.g = g;
     this.h = h;
     this.f = f;
@@ -12998,14 +13124,13 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   RoomType.prototype = $desc;
-  function TileObject(type, isOpaque, isVisible, isSolid, isWalkable, x, y, g, h, f, opened, closed, parent) {
+  function TileObject(type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
     this.type = type;
     this.isOpaque = isOpaque;
     this.isVisible = isVisible;
     this.isSolid = isSolid;
     this.isWalkable = isWalkable;
-    this.x = x;
-    this.y = y;
+    this.point = point;
     this.g = g;
     this.h = h;
     this.f = f;
@@ -13038,11 +13163,8 @@ function dart_precompiled($collectedClasses) {
   TileObject.prototype.get$isWalkable = function() {
     return this.isWalkable;
   };
-  TileObject.prototype.get$x = function(receiver) {
-    return this.x;
-  };
-  TileObject.prototype.get$y = function(receiver) {
-    return this.y;
+  TileObject.prototype.get$point = function() {
+    return this.point;
   };
   TileObject.prototype.set$g = function(v) {
     return this.g = v;
@@ -13070,7 +13192,7 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   TileType.prototype = $desc;
-  function Weapon(atk, decription, type, isOpaque, isVisible, isSolid, isWalkable, x, y, g, h, f, opened, closed, parent) {
+  function Weapon(atk, decription, type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
     this.atk = atk;
     this.decription = decription;
     this.type = type;
@@ -13078,8 +13200,7 @@ function dart_precompiled($collectedClasses) {
     this.isVisible = isVisible;
     this.isSolid = isSolid;
     this.isWalkable = isWalkable;
-    this.x = x;
-    this.y = y;
+    this.point = point;
     this.g = g;
     this.h = h;
     this.f = f;
@@ -13109,13 +13230,15 @@ function dart_precompiled($collectedClasses) {
   WeaponType.prototype.get$atk = function() {
     return this.atk;
   };
-  function World(grid, width, height, rooms, monsters, player) {
+  function World(grid, width, height, rooms, monsters, player, roomTypes, roomSizes) {
     this.grid = grid;
     this.width = width;
     this.height = height;
     this.rooms = rooms;
     this.monsters = monsters;
     this.player = player;
+    this.roomTypes = roomTypes;
+    this.roomSizes = roomSizes;
   }
   World.builtin$cls = "World";
   if (!"name" in World)
@@ -15446,16 +15569,6 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   FixedSizeListIterator.prototype = $desc;
-  function _DOMWindowCrossFrame(_window) {
-    this._window = _window;
-  }
-  _DOMWindowCrossFrame.builtin$cls = "_DOMWindowCrossFrame";
-  if (!"name" in _DOMWindowCrossFrame)
-    _DOMWindowCrossFrame.name = "_DOMWindowCrossFrame";
-  $desc = $collectedClasses._DOMWindowCrossFrame;
-  if ($desc instanceof Array)
-    $desc = $desc[1];
-  _DOMWindowCrossFrame.prototype = $desc;
   function Capability() {
   }
   Capability.builtin$cls = "Capability";
@@ -15485,6 +15598,23 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   _Random.prototype = $desc;
+  function Point(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+  Point.builtin$cls = "Point";
+  if (!"name" in Point)
+    Point.name = "Point";
+  $desc = $collectedClasses.Point;
+  if ($desc instanceof Array)
+    $desc = $desc[1];
+  Point.prototype = $desc;
+  Point.prototype.get$x = function(receiver) {
+    return this.x;
+  };
+  Point.prototype.get$y = function(receiver) {
+    return this.y;
+  };
   function NativeTypedArray() {
   }
   NativeTypedArray.builtin$cls = "NativeTypedArray";
@@ -15573,11 +15703,12 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   Heap.prototype = $desc;
-  function AStarFinder(allowDiagonal, dontCrossCorners, heuristic, weight) {
+  function AStarFinder(allowDiagonal, dontCrossCorners, heuristic, weight, point) {
     this.allowDiagonal = allowDiagonal;
     this.dontCrossCorners = dontCrossCorners;
     this.heuristic = heuristic;
     this.weight = weight;
+    this.point = point;
   }
   AStarFinder.builtin$cls = "AStarFinder";
   if (!"name" in AStarFinder)
@@ -15586,6 +15717,9 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   AStarFinder.prototype = $desc;
+  AStarFinder.prototype.get$point = function() {
+    return this.point;
+  };
   function AStarFinder_findPath_closure() {
   }
   AStarFinder_findPath_closure.builtin$cls = "AStarFinder_findPath_closure";
@@ -15595,5 +15729,5 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   AStarFinder_findPath_closure.prototype = $desc;
-  return [HtmlElement, AnchorElement, AnimationEvent, AreaElement, AudioElement, AutocompleteErrorEvent, BRElement, BaseElement, BeforeLoadEvent, BeforeUnloadEvent, BodyElement, ButtonElement, CDataSection, CanvasElement, CharacterData, CloseEvent, Comment, CompositionEvent, ContentElement, CssFontFaceLoadEvent, CssStyleDeclaration, CustomEvent, DListElement, DataListElement, DetailsElement, DeviceMotionEvent, DeviceOrientationEvent, DialogElement, DivElement, Document, DocumentFragment, DomError, DomException, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, FileError, FocusEvent, FormElement, HRElement, HashChangeEvent, HeadElement, HeadingElement, HtmlCollection, HtmlDocument, HtmlFormControlsCollection, HtmlHtmlElement, HtmlOptionsCollection, IFrameElement, ImageElement, InputElement, InstallEvent, InstallPhaseEvent, KeyboardEvent, KeygenElement, LIElement, LabelElement, LegendElement, LinkElement, Location, MapElement, MediaElement, MediaError, MediaKeyError, MediaKeyEvent, MediaKeyMessageEvent, MediaKeyNeededEvent, MediaStream, MediaStreamEvent, MediaStreamTrackEvent, MenuElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, ModElement, MouseEvent, Navigator, NavigatorUserMediaError, Node, NodeList, OListElement, ObjectElement, OptGroupElement, OptionElement, OutputElement, OverflowEvent, PageTransitionEvent, ParagraphElement, ParamElement, PopStateEvent, PositionError, PreElement, ProcessingInstruction, ProgressElement, ProgressEvent, QuoteElement, ResourceProgressEvent, RtcDataChannelEvent, RtcDtmfToneChangeEvent, RtcIceCandidateEvent, ScriptElement, SecurityPolicyViolationEvent, SelectElement, ShadowElement, ShadowRoot, SourceElement, SpanElement, SpeechInputEvent, SpeechRecognitionError, SpeechRecognitionEvent, SpeechSynthesisEvent, StorageEvent, StyleElement, TableCaptionElement, TableCellElement, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, Text, TextAreaElement, TextEvent, TitleElement, TouchEvent, TrackElement, TrackEvent, TransitionEvent, UIEvent, UListElement, UnknownElement, VideoElement, WheelEvent, Window, XmlDocument, _Attr, _DocumentType, _HTMLAppletElement, _HTMLDirectoryElement, _HTMLFontElement, _HTMLFrameElement, _HTMLFrameSetElement, _HTMLMarqueeElement, _MutationEvent, _Notation, _XMLHttpRequestProgressEvent, VersionChangeEvent, AElement, AltGlyphElement, AnimateElement, AnimateMotionElement, AnimateTransformElement, AnimatedEnumeration, AnimatedLength, AnimatedLengthList, AnimatedNumber, AnimatedNumberList, AnimatedString, AnimationElement, CircleElement, ClipPathElement, DefsElement, DescElement, DiscardElement, EllipseElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEDistantLightElement, FEFloodElement, FEFuncAElement, FEFuncBElement, FEFuncGElement, FEFuncRElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMergeNodeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GElement, GeometryElement, GraphicsElement, ImageElement0, LineElement, LinearGradientElement, MarkerElement, MaskElement, MetadataElement, PathElement, PatternElement, PolygonElement, PolylineElement, RadialGradientElement, RectElement, ScriptElement0, SetElement, StopElement, StyleElement0, SvgElement, SvgSvgElement, SwitchElement, SymbolElement, TSpanElement, TextContentElement, TextElement, TextPathElement, TextPositioningElement, TitleElement0, UseElement, ViewElement, ZoomEvent, _GradientElement, _SVGAltGlyphDefElement, _SVGAltGlyphItemElement, _SVGComponentTransferFunctionElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGFontElement, _SVGFontFaceElement, _SVGFontFaceFormatElement, _SVGFontFaceNameElement, _SVGFontFaceSrcElement, _SVGFontFaceUriElement, _SVGGlyphElement, _SVGGlyphRefElement, _SVGHKernElement, _SVGMPathElement, _SVGMissingGlyphElement, _SVGVKernElement, AudioProcessingEvent, OfflineAudioCompletionEvent, ContextEvent, SqlError, NativeTypedData, NativeUint8List, Armor, ArmorType, Chest, Display, Entity, Enum, Game, Input, Input_closure, Input_closure0, Input_closure1, Input_keyUpHandler_closure, Input_keyDownHandler_closure, Item, ItemType, Monster, MonsterType, Player, PlayerType, Room, RoomType, TileObject, TileType, Weapon, WeaponType, World, World_timeStepMonsters_closure, JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__processWorkerMessage_closure0, IsolateNatives__processWorkerMessage_closure1, IsolateNatives_spawn_closure, IsolateNatives_spawn_closure0, IsolateNatives__startNonWorker_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, ReceivePortImpl, _JsSerializer, _JsCopier, _JsDeserializer, _JsVisitedMap, _MessageTraverserVisitedMap, _MessageTraverser, _Copier, _Copier_visitMap_closure, _Serializer, _Deserializer, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, ReflectionInfo, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, initHooks_closure, initHooks_closure0, initHooks_closure1, ListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, WhereIterable, WhereIterator, FixedLengthListMixin, ReversedListIterable, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncError, Future, _Completer, _AsyncCompleter, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_first_closure, Stream_first_closure0, StreamSubscription, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _StreamController__AsyncStreamControllerDispatch, _SyncStreamController, _StreamController__SyncStreamControllerDispatch, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _BaseZone, _BaseZone_bindCallback_closure, _BaseZone_bindCallback_closure0, _BaseZone_bindUnaryCallback_closure, _BaseZone_bindUnaryCallback_closure0, _rootHandleUncaughtError_closure, _rootHandleUncaughtError__closure, _RootZone, _HashMap, _HashMap_values_closure, HashMapKeyIterable, HashMapKeyIterator, _LinkedHashMap, _LinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, NoSuchMethodError_toString_closure, bool, Comparable, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, Expando, $int, Iterator, List, Null, num, Object, StackTrace, String, StringBuffer, Symbol, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, _ChildrenElementList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, _ChildNodeListLazy, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, EventStreamProvider, _EventStream, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, _DOMWindowCrossFrame, Capability, _JSRandom, _Random, NativeTypedArray, NativeTypedArrayOfInt, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, Grid, Heap, AStarFinder, AStarFinder_findPath_closure];
+  return [HtmlElement, AnchorElement, AnimationEvent, AreaElement, AudioElement, AutocompleteErrorEvent, BRElement, BaseElement, BeforeLoadEvent, BeforeUnloadEvent, BodyElement, ButtonElement, CDataSection, CanvasElement, CharacterData, CloseEvent, Comment, CompositionEvent, ContentElement, CssFontFaceLoadEvent, CssStyleDeclaration, CustomEvent, DListElement, DataListElement, DetailsElement, DeviceMotionEvent, DeviceOrientationEvent, DialogElement, DivElement, Document, DocumentFragment, DomError, DomException, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, FileError, FocusEvent, FormElement, HRElement, HashChangeEvent, HeadElement, HeadingElement, HtmlCollection, HtmlDocument, HtmlFormControlsCollection, HtmlHtmlElement, HtmlOptionsCollection, IFrameElement, ImageElement, InputElement, InstallEvent, InstallPhaseEvent, KeyboardEvent, KeygenElement, LIElement, LabelElement, LegendElement, LinkElement, Location, MapElement, MediaElement, MediaError, MediaKeyError, MediaKeyEvent, MediaKeyMessageEvent, MediaKeyNeededEvent, MediaStream, MediaStreamEvent, MediaStreamTrackEvent, MenuElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, ModElement, MouseEvent, Navigator, NavigatorUserMediaError, Node, NodeList, OListElement, ObjectElement, OptGroupElement, OptionElement, OutputElement, OverflowEvent, PageTransitionEvent, ParagraphElement, ParamElement, PopStateEvent, PositionError, PreElement, ProcessingInstruction, ProgressElement, ProgressEvent, QuoteElement, ResourceProgressEvent, RtcDataChannelEvent, RtcDtmfToneChangeEvent, RtcIceCandidateEvent, ScriptElement, SecurityPolicyViolationEvent, SelectElement, ShadowElement, ShadowRoot, SourceElement, SpanElement, SpeechInputEvent, SpeechRecognitionError, SpeechRecognitionEvent, SpeechSynthesisEvent, StorageEvent, StyleElement, TableCaptionElement, TableCellElement, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, Text, TextAreaElement, TextEvent, TitleElement, TouchEvent, TrackElement, TrackEvent, TransitionEvent, UIEvent, UListElement, UnknownElement, VideoElement, WheelEvent, Window, XmlDocument, _Attr, _DocumentType, _HTMLAppletElement, _HTMLDirectoryElement, _HTMLFontElement, _HTMLFrameElement, _HTMLFrameSetElement, _HTMLMarqueeElement, _MutationEvent, _Notation, _XMLHttpRequestProgressEvent, VersionChangeEvent, AElement, AltGlyphElement, AnimateElement, AnimateMotionElement, AnimateTransformElement, AnimatedEnumeration, AnimatedLength, AnimatedLengthList, AnimatedNumber, AnimatedNumberList, AnimatedString, AnimationElement, CircleElement, ClipPathElement, DefsElement, DescElement, DiscardElement, EllipseElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEDistantLightElement, FEFloodElement, FEFuncAElement, FEFuncBElement, FEFuncGElement, FEFuncRElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMergeNodeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GElement, GeometryElement, GraphicsElement, ImageElement0, LineElement, LinearGradientElement, MarkerElement, MaskElement, MetadataElement, PathElement, PatternElement, PolygonElement, PolylineElement, RadialGradientElement, RectElement, ScriptElement0, SetElement, StopElement, StyleElement0, SvgElement, SvgSvgElement, SwitchElement, SymbolElement, TSpanElement, TextContentElement, TextElement, TextPathElement, TextPositioningElement, TitleElement0, UseElement, ViewElement, ZoomEvent, _GradientElement, _SVGAltGlyphDefElement, _SVGAltGlyphItemElement, _SVGComponentTransferFunctionElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGFontElement, _SVGFontFaceElement, _SVGFontFaceFormatElement, _SVGFontFaceNameElement, _SVGFontFaceSrcElement, _SVGFontFaceUriElement, _SVGGlyphElement, _SVGGlyphRefElement, _SVGHKernElement, _SVGMPathElement, _SVGMissingGlyphElement, _SVGVKernElement, AudioProcessingEvent, OfflineAudioCompletionEvent, ContextEvent, SqlError, NativeTypedData, NativeUint8List, Armor, ArmorType, Chest, ChooseRandom, Display, Entity, Enum, Game, Input, Input_closure, Input_closure0, Input_closure1, Input_keyUpHandler_closure, Input_keyDownHandler_closure, Item, ItemType, Monster, MonsterType, Player, PlayerType, Room, RoomType, TileObject, TileType, Weapon, WeaponType, World, World_timeStepMonsters_closure, JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__processWorkerMessage_closure0, IsolateNatives__processWorkerMessage_closure1, IsolateNatives_spawn_closure, IsolateNatives_spawn_closure0, IsolateNatives__startNonWorker_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, ReceivePortImpl, _JsSerializer, _JsCopier, _JsDeserializer, _JsVisitedMap, _MessageTraverserVisitedMap, _MessageTraverser, _Copier, _Copier_visitMap_closure, _Serializer, _Deserializer, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, ReflectionInfo, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, initHooks_closure, initHooks_closure0, initHooks_closure1, ListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, WhereIterable, WhereIterator, FixedLengthListMixin, ReversedListIterable, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncError, Future, _Completer, _AsyncCompleter, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_first_closure, Stream_first_closure0, StreamSubscription, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _StreamController__AsyncStreamControllerDispatch, _SyncStreamController, _StreamController__SyncStreamControllerDispatch, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _BaseZone, _BaseZone_bindCallback_closure, _BaseZone_bindCallback_closure0, _BaseZone_bindUnaryCallback_closure, _BaseZone_bindUnaryCallback_closure0, _rootHandleUncaughtError_closure, _rootHandleUncaughtError__closure, _RootZone, _HashMap, _HashMap_values_closure, HashMapKeyIterable, HashMapKeyIterator, _LinkedHashMap, _LinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, NoSuchMethodError_toString_closure, bool, Comparable, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, Expando, $int, Iterator, List, Null, num, Object, StackTrace, String, StringBuffer, Symbol, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, _ChildrenElementList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, _ChildNodeListLazy, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, EventStreamProvider, _EventStream, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, Capability, _JSRandom, _Random, Point, NativeTypedArray, NativeTypedArrayOfInt, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, Grid, Heap, AStarFinder, AStarFinder_findPath_closure];
 }

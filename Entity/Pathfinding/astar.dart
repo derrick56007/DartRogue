@@ -36,12 +36,13 @@ class AStarFinder {
    * @return {Array.<[number, number]>} The path, including both start and
    *     end positions.
    */
-  findPath(startX, startY, endX, endY, Grid grid) {
+  Point point = new Point(1, 2);
+  findPath(Point startPoint, Point endPoint, Grid grid) {
     var openList = new Heap((nodeA, nodeB) {
       return nodeA.f - nodeB.f;
     }),
-    startNode = grid.getTileObjectAt(startX, startY),
-    endNode = grid.getTileObjectAt(endX, endY),
+    startNode = grid.getTileObjectAt(startPoint.x, startPoint.y),
+    endNode = grid.getTileObjectAt(endPoint.x, endPoint.y),
     heuristic = this.heuristic,
     allowDiagonal = this.allowDiagonal,
     dontCrossCorners = this.dontCrossCorners,
@@ -77,19 +78,19 @@ class AStarFinder {
           continue;
         }
 
-        x = neighbor.x;
-        y = neighbor.y;
+        x = neighbor.point.x;
+        y = neighbor.point.y;
 
         // get the distance between current node and the neighbor
         // and calculate the next g score
-        ng = node.g + ((x - node.x == 0 || y - node.y == 0) ? 1 : SQRT2);
+        ng = node.g + ((x - node.point.x == 0 || y - node.point.y == 0) ? 1 : SQRT2);
 
         // check if the neighbor has not been inspected yet, or
         // can be reached with smaller cost from the current node
         if (neighbor.opened != true || ng < neighbor.g) {
           neighbor.g = ng;
           neighbor.h = neighbor.h != null ?
-              neighbor.h : weight * heuristic(abs(x - endX), abs(y - endY));
+              neighbor.h : weight * heuristic(abs(x - endPoint.x), abs(y - endPoint.y));
           neighbor.f = neighbor.g + neighbor.h;
           neighbor.parent = node;
 

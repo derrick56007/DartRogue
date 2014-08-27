@@ -20,6 +20,7 @@ import '../Items/Item/Item.dart';
 import '../Items/Item/Chest.dart';
 import '../Items/Armor/Armor.dart';
 import '../Items/Weapon/Weapon.dart';
+import '../ChooseRandom/ChooseRandom.dart';
 
 class World
 {
@@ -29,20 +30,30 @@ class World
   List<Room> rooms = [];
   List<Monster> monsters = [];
   Player player;
+  ChooseRandom roomTypes = new ChooseRandom();
+  ChooseRandom roomSizes = new ChooseRandom();
   
   World(this.width, this.height)
   {
     this.grid = new Grid(this.width, this.height);
     clearGrid();
+    
+    roomTypes.add(RoomType.MONSTERROOM, 20);
+    roomTypes.add(RoomType.NORMAL,  50);
+    roomTypes.add(RoomType.SPIKEROOM, 25);
+    roomTypes.add(RoomType.TREASUREROOM, 5);
+    
+    roomSizes.add("large", 20);
+    roomSizes.add("small", 80);
+    
     generateContent();
   }
   
   void generateContent()
   {
-    generateRooms(getPosOrNeg(16, 5));
-    setRooms();
+    generateRooms(getPosOrNeg((this.width*this.height)~/350, (this.width *this.height)~/900));
     loopDigCorridors();
-    setRoomContents();
+    setRoom();
     refreshStats(player);
     loopTiles();
   }
@@ -63,7 +74,7 @@ class World
       var monster = monsters[i];
       if(monster.followingCountdown > 0)
       { 
-        monster.pathToPlayer = astar.findPath(monster.x, monster.y, this.player.x, this.player.y, grid.clone());
+        monster.pathToPlayer = astar.findPath(monster.point, this.player.point, grid.clone());
       }
     }
     
@@ -76,7 +87,7 @@ class World
   
   void loopTiles()
   {
-    if(!allVisible)
+    if(shadowsOn)
     {
       for(int i = 0; i < this.height; i++)
       {
@@ -91,15 +102,15 @@ class World
     {
       for(int j = 0; j < this.width; j++)
       {
-        lineOfSight(player.tileObject.x, player.tileObject.y, j, i);
+        lineOfSight(new Point(player.tileObject.point.x, player.tileObject.point.y), new Point(j, i));
       }
     }
   }
   
-  void lineOfSight(int x,int y,int x2, int y2)
+  void lineOfSight(Point point,Point point2)
   {
-      int w = x2 - x ;
-      int h = y2 - y ;
+      int w = point2.x - point.x ;
+      int h = point2.y - point.y ;
       int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0 ;
       
       if (w<0) dx1 = -1 ; else if (w>0) dx1 = 1 ;
@@ -118,7 +129,7 @@ class World
       int numerator = longest >> 1 ;
       for (int i=0;i<=longest;i++) 
       {
-        var tileObject = grid.nodes[y][x];
+        var tileObject = grid.nodes[point.y][point.x];
         tileObject.isVisible = true;
         
         if(tileObject is Monster)
@@ -130,19 +141,17 @@ class World
           }
         }
         
-        if (!grid.nodes[y][x].isOpaque) break;
+        if (!grid.nodes[point.y][point.x].isOpaque) break;
         
         numerator += shortest ;
         if (!(numerator < longest)) 
         {
             numerator -= longest ;
-            x += dx1;
-            y += dy1;
+            point = new Point(point.x + dx1, point.y + dy1);
         }
         else 
         {
-            x += dx2;
-            y += dy2;
+            point = new Point(point.x + dx2, point.y + dy2);
         }
       }
   }
@@ -156,13 +165,13 @@ class World
       row = [];
       for(int x = 0, width = this.width; x < width; x++)
       {
-        if(allVisible)
+        if(!shadowsOn)
         {
-          row.add(new TileObject(x, y, TileType.STONE));
+          row.add(new TileObject(new Point( x, y), TileType.STONE));
         }
         else
         {
-          row.add(new TileObject(x, y, TileType.WALL));
+          row.add(new TileObject(new Point( x, y), TileType.WALL));
         }
       }      
       grid.nodes.add(row);
@@ -172,12 +181,12 @@ class World
   void generateRooms(int numOfRooms)
   {
     List<RoomType> defaultRooms = [RoomType.STARTROOM, RoomType.TREASUREROOM]; 
+    
     for(int i = 0; i < numOfRooms; i++)
     {
-      String roomSize = getRandomWeighted([[80, "small"], [20, "large"]]);
       int roomWidth;
       int roomHeight;
-      if(roomSize == "small")
+      if(roomSizes.pick() == "small")
       {
         roomWidth = getPosOrNeg(10, 4);
         roomHeight = getPosOrNeg(10 , 4);
@@ -197,12 +206,12 @@ class World
       }
       else
       {
-        room = new Room(x, y, roomWidth, roomHeight, getRandomWeighted(roomChance));
+        room = new Room(x, y, roomWidth, roomHeight, roomTypes.pick());
       }
       bool intersects = false;
       for(int j = 0, length = rooms.length; j < length; j++)
       {
-        if(room.Intersects(rooms[j]))
+        if(room.intersects(rooms[j]))
         {
           intersects = true;
           break;
@@ -219,48 +228,7 @@ class World
     }
   }
   
-  void setRooms()
-  {
-    for(int i = 0, length = rooms.length; i < length; i++) //number of rooms to iterate through
-    {
-      Room room = rooms[i];
-      int height = room.height;
-      int width = room.width;
-      for(int j = 0; j < height; j++) // height of the room
-      {
-        if(j == 0) // do for top wall
-        {
-          for(int k = 0; k < width; k++)
-          {
-            setAtCoordinate(room.minX + k, room.minY, TileType.WALL);
-          }
-        }
-        else if(j == height - 1) // do for bottom wall
-        {
-          for(int k = 0; k < width; k++)
-          {
-            setAtCoordinate(room.minX + k, room.maxY, TileType.WALL);
-          }
-        }
-        else //do for side walls
-        {
-          for(int k = 0; k < width; k++)
-          {
-            if(k == 0)
-            {
-              setAtCoordinate(room.minX, room.minY + j, TileType.WALL);
-            }
-            else if(k == width - 1)
-            {
-              setAtCoordinate(room.maxX, room.minY + j, TileType.WALL);
-            }
-          }
-        }
-      }
-    }
-  }
-  
-  void setRoomContents()
+  void setRoom()
   {
     for(int i = 0, length = rooms.length; i < length; i++) //number of rooms to iterate through
     {
@@ -270,7 +238,7 @@ class World
         for(int k = 0, width = room.contents[0].length; k < width; k++)
         {
           Enum object = room.contents[j][k];
-          setAtCoordinate( room.minX + 1 + k, room.minY + 1 + j, object);
+          setTileTypeAtPoint(new Point( room.minX + k, room.minY + j), object);
         }
       }
     }
@@ -294,48 +262,58 @@ class World
     {
       if(dir == 1)
       {
-        setAtCoordinate(i, constantPos + 1, TileType.GROUND);
-        setAtCoordinate(i, constantPos, TileType.GROUND);
+        setTileTypeAtPoint(new Point(i, constantPos + 1), TileType.GROUND);
+        setTileTypeAtPoint(new Point(i, constantPos), TileType.GROUND);
       }
       else
       {
-        setAtCoordinate(constantPos + 1, i, TileType.GROUND);
-        setAtCoordinate(constantPos, i, TileType.GROUND);
+        setTileTypeAtPoint(new Point(constantPos + 1, i), TileType.GROUND);
+        setTileTypeAtPoint(new Point(constantPos, i), TileType.GROUND);
       }
     }
   }
   
-  void setAtCoordinate(int x, int y, Enum type)
+  void setTileTypeAtPoint(Point coord, Enum type)
   {
     if(type is TileType)
     {
-      grid.nodes[y][x] = new TileObject(x, y, type);
+      grid.nodes[coord.y][coord.x] = new TileObject(coord, type);
     }
     else if(type is MonsterType)
     {
-      grid.nodes[y][x] = new Monster(x, y, type);
-      monsters.add(grid.nodes[y][x]);
+      grid.nodes[coord.y][coord.x] = new Monster(coord, type);
+      monsters.add(grid.nodes[coord.y][coord.x]);
     }
     else if(type is PlayerType)
     {
-      grid.nodes[y][x] = new Player(x, y, type);
-      player = grid.nodes[y][x];
+      grid.nodes[coord.y][coord.x] = new Player(coord, type);
+      player = getAtPoint(coord);
     }
     else if(type == ItemType.TREASURECHEST)
     {
-      grid.nodes[y][x] = new Chest(x, y);
+      grid.nodes[coord.y][coord.x] = new Chest(coord);
     }
     else if(type is WeaponType)
     {
-      grid.nodes[y][x] = new Weapon(x, y, type);
+      grid.nodes[coord.y][coord.x] = new Weapon(coord, type);
     }
     else if(type is ArmorType)
     {
-      grid.nodes[y][x] = new Armor(x, y, type);
+      grid.nodes[coord.y][coord.x] = new Armor(coord, type);
     }
     else if(type is ItemType)
     {
-      grid.nodes[y][x] = new Item(x, y, type);
+      grid.nodes[coord.y][coord.x] = new Item(coord, type);
     }
+  }
+  
+  void setAtPoint(Point coord, dynamic thing)
+  {
+    this.grid.nodes[coord.y][coord.x] = thing;
+  }
+  
+  TileObject getAtPoint(Point atPoint)
+  {
+    return grid.nodes[atPoint.y][atPoint.x];
   }
 }

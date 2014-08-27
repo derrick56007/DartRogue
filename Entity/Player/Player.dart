@@ -13,10 +13,11 @@ import '../../Items/Armor/Armor.dart';
 import '../../Items/Weapon/Weapon.dart';
 import '../../Items/Armor/ArmorType.dart';
 import '../../Items/Weapon/WeaponType.dart';
+import 'dart:math';
 
 class Player extends Entity
 {
-  Player(int x, int y, PlayerType type) : super(x, y, type)
+  Player(Point point, PlayerType type) : super(point, type)
   {
     this.isWalkable = true;
     setAttributes();
@@ -55,20 +56,20 @@ class Player extends Entity
     }
   }
   
-  void movePlayer(int x, int y)
+  void movePlayer(Point move)
   {
-    int moveY = y;
-    int moveX = x;
+    int moveY = move.y;
+    int moveX = move.x;
 
     if(moveX != 0 || moveY != 0)
     {
       enemyStats.style.opacity = "0";
-      TileObject tileToMoveTo = world.grid.nodes[this.y + moveY][this.x + moveX];
+      TileObject tileToMoveTo = world.getAtPoint(new Point(this.point.x + moveX, this.point.y + moveY));
       if(!(tileToMoveTo is Item))
       {
         if(!tileToMoveTo.isSolid)
         {
-          moveTo(this.x + moveX, this.y + moveY);
+          moveTo(new Point(this.point.x + moveX, this.point.y + moveY));
         }
         else
         {
@@ -77,7 +78,7 @@ class Player extends Entity
       }
       else
       {
-        touchedItem(world.grid.nodes[this.y + moveY][this.x + moveX]);
+        touchedItem(world.getAtPoint(new Point(this.point.x + moveX, this.point.y + moveY)));
       }
       world.timeStep();
     }
@@ -95,7 +96,7 @@ class Player extends Entity
       {
         this.items.remove(ItemType.KEY);
         Chest chest = item;
-        world.setAtCoordinate(chest.x, chest.y, chest.treasureType);
+        world.setTileTypeAtPoint(chest.point, chest.treasureType);
         addToNarration("You used a key to open a chest (-1 key)", "green");
         if(!(chest.treasureType is ItemType) && !(chest.treasureType is ArmorType) && !(chest.treasureType is WeaponType))
         {
@@ -120,11 +121,11 @@ class Player extends Entity
     {
       if(this.armor != ArmorType.NONE)
       {
-        world.setAtCoordinate(item.x, item.y, this.armor);
+        world.setTileTypeAtPoint(item.point, this.armor);
       }
       else
       {
-        world.setAtCoordinate(item.x, item.y, TileType.GROUND);
+        world.setTileTypeAtPoint(item.point, TileType.GROUND);
       }
       this.armor = item.type;
     }
@@ -132,18 +133,18 @@ class Player extends Entity
     {
       if(this.weapon != WeaponType.NONE)
       {
-        world.setAtCoordinate(item.x, item.y, this.weapon);
+        world.setTileTypeAtPoint(item.point, this.weapon);
       }
       else
       {
-        world.setAtCoordinate(item.x, item.y, TileType.GROUND);
+        world.setTileTypeAtPoint(item.point, TileType.GROUND);
       }
       this.weapon = item.type;
     }
     else if(item is Item)
     {
       this.items.add(item.type);
-      world.setAtCoordinate(item.x, item.y, TileType.GROUND);
+      world.setTileTypeAtPoint(item.point, TileType.GROUND);
     }
   }
   

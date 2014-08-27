@@ -15,6 +15,7 @@ body {
   display:inline-block;
   font-size: 1em;
   font-weight: bold;
+  float: left;
 }
 
 h1 {
@@ -45,6 +46,7 @@ h1 {
   display:table;
   margin-bottom: 20px;
   font-family: Roboto-Regular;
+  float: right;
 }
 
 .stats, #narration, #display, #decision, .choice
@@ -68,6 +70,7 @@ h1 {
   height: 210px;
   width: 1010px;
   margin: auto;
+  margin-top: 15px;
 }
 
 #narration

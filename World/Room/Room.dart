@@ -36,19 +36,19 @@ class Room
     this.addContents();
   }
   
-  bool Intersects(Room room)
+  bool intersects(Room room)
   {
-    return this.maxX >= room.minX && this.minX <= room.maxX && this.maxY >= room.minY && this.minY <= room.maxY;   
+    return this.maxX+1 >= room.minX && this.minX-1 <= room.maxX && this.maxY+1 >= room.minY && this.minY-1 <= room.maxY;   
   }
   
   void clearRoom()
   {
     var row = [];
        
-    for(int y = 0, height = this.height; y < height - 2; y++)
+    for(int y = 0, height = this.height; y < height; y++)
     {
       row = [];
-      for(int x = 0, width = this.width; x < width - 2; x++)
+      for(int x = 0, width = this.width; x < width; x++)
       {
         row.add(TileType.GROUND);
       }      
@@ -61,28 +61,28 @@ class Room
     switch(roomType)
     {
       case RoomType.STARTROOM:
-        int x = RNG.nextInt(this.width - 2);
-        int y = RNG.nextInt(this.height - 2);
+        int x = RNG.nextInt(this.width);
+        int y = RNG.nextInt(this.height);
         contents[y][x] = PlayerType.GENERIC;
         break;
       case RoomType.MONSTERROOM:
         for(int i = 0; i < RNG.nextInt(3) + this.width ~/ 3; i++)
         {
-          int x = RNG.nextInt(this.width - 2);
-          int y = RNG.nextInt(this.height - 2);
+          int x = RNG.nextInt(this.width);
+          int y = RNG.nextInt(this.height);
           contents[y][x] = MonsterType.GOBLIN;
         }
         break;
       case RoomType.TREASUREROOM:
-        int x = RNG.nextInt(this.width - 2);
-        int y = RNG.nextInt(this.height - 2);
+        int x = RNG.nextInt(this.width);
+        int y = RNG.nextInt(this.height);
         contents[y][x] = ItemType.TREASURECHEST;
         break;
       case RoomType.SPIKEROOM:
         for(int i = 0; i < RNG.nextInt(3) + this.width ~/ 3; i++)
         {
-          int x = RNG.nextInt(this.width - 2);
-          int y = RNG.nextInt(this.height - 2);
+          int x = RNG.nextInt(this.width);
+          int y = RNG.nextInt(this.height);
           contents[y][x] = TileType.SPIKE;
         }
         break;

@@ -1,9 +1,10 @@
 library WEAPON;
 
 import '../Item/Item.dart';
+import 'dart:math';
 
 class Weapon extends Item
 {
   int atk;
-  Weapon(int x, int y, var type) : super(x, y, type);
+  Weapon(Point point, var type) : super(point, type);
 }
