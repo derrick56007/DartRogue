@@ -8,6 +8,7 @@ import '../../World/TileObject/TileType.dart';
 import 'dart:math';
 import '../../Items/Item/ItemType.dart';
 import '../Pathfinding/astar.dart';
+import '../../World/World.dart';
 
 class Monster extends Entity
 {
@@ -36,12 +37,17 @@ class Monster extends Entity
         this.atk = 1;
         this.COUNTMAX = 6;
         break;
+      case MonsterType.LIZARD:
+        this.MAXHP = 5;
+        this.atk = 1;
+        this.COUNTMAX = 4;
+        break;
       default:
         break;
     }
   }
   
-  void timeStep()
+  void timeStep(World world)
   {
     if(this.followingCountdown > 0)
     {
@@ -52,7 +58,7 @@ class Monster extends Entity
       }
       else
       {
-        world.player.getAttackedWithDmg(this);
+        world.player.getAttackedWithDmg(this, true);
       }
     }
     else
@@ -95,9 +101,12 @@ class Monster extends Entity
     {
       int moveX = rng.nextInt(3) - 1;
       int moveY = rng.nextInt(3) - 1;
-      if(!world.getAtPoint(new Point(this.point.x + moveX, this.point.y + moveY)).isSolid)
+      if(this.point.y + moveY < world.grid.nodes.length && this.point.x + moveX < world.grid.nodes[0].length)
       {
-        moveTo(new Point(this.point.x + moveX, this.point.y + moveY));
+        if(!world.getAtPoint(new Point(this.point.x + moveX, this.point.y + moveY)).isSolid)
+        {
+          moveTo(new Point(this.point.x + moveX, this.point.y + moveY));
+        }
       }
     }
   }

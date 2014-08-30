@@ -276,7 +276,7 @@ var $$ = {};
 ["ARMOR", "Items/Armor/Armor.dart", , Z, {
   "^": "",
   Armor: {
-    "^": "Item;def,decription,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
+    "^": "Item;decription,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
     $isArmor: true
   }
 }],
@@ -490,7 +490,8 @@ var $$ = {};
       this.isOpaque = true;
       this.isSolid = true;
       this.tileObject = V.TileObject$(point, C.TileType_CF3);
-    }
+    },
+    $isEntity: true
   }
 }],
 ["ENUM", "Items/Enum.dart", , X, {
@@ -840,27 +841,32 @@ var $$ = {};
   "^": "",
   Monster: {
     "^": "Entity;COUNTMAX,followingCountdown<,followX,followY,pathToPlayer<,rng,atk,def,MAXHP,HP,items,armor,weapon,tileObject,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
-    timeStep$0: function() {
-      var t1, moveX, moveY, t2, t3;
-      t1 = this.followingCountdown;
+    setAttributes$0: function() {
+      switch (this.type) {
+        case C.MonsterType_tkU:
+          this.MAXHP = 5;
+          this.atk = 1;
+          this.COUNTMAX = 6;
+          break;
+        case C.MonsterType_yrN:
+          this.MAXHP = 5;
+          this.atk = 1;
+          this.COUNTMAX = 4;
+          break;
+        default:
+          break;
+      }
+    },
+    timeStep$1: function(world) {
+      var t1 = this.followingCountdown;
       if (t1 > 0) {
         this.followingCountdown = t1 - 1;
         if (this.pathToPlayer.length > 2)
           this.moveTowardsPlayer$0();
         else
-          $.world.player.getAttackedWithDmg$1(this);
-      } else if (this.rng.nextInt$1(5) === 0) {
-        moveX = this.rng.nextInt$1(3) - 1;
-        moveY = this.rng.nextInt$1(3) - 1;
-        t1 = $.world;
-        t2 = H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]);
-        t1 = t1.grid.nodes;
-        t3 = t2.y;
-        if (t3 >>> 0 !== t3 || t3 >= t1.length)
-          return H.ioore(t1, t3);
-        if (!J.$index$asx(t1[t3], t2.x).get$isSolid())
-          this.moveTo$1(0, H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]));
-      }
+          world.player.getAttackedWithDmg$2(this, true);
+      } else
+        this.moveIdle$0();
     },
     moveTowardsPlayer$0: function() {
       var t1, t2, t3, t4, player, moveX, moveY;
@@ -931,6 +937,32 @@ var $$ = {};
         this.moveTowardsPlayer$0();
       }
     },
+    moveIdle$0: function() {
+      var moveX, moveY, t1, t2, t3;
+      if (this.rng.nextInt$1(5) === 0) {
+        moveX = this.rng.nextInt$1(3) - 1;
+        moveY = this.rng.nextInt$1(3) - 1;
+        if (J.$lt$n(J.$add$ns(this.point.y, moveY), $.world.grid.nodes.length)) {
+          t1 = J.$add$ns(this.point.x, moveX);
+          t2 = $.world.grid.nodes;
+          if (0 >= t2.length)
+            return H.ioore(t2, 0);
+          t2 = J.$lt$n(t1, J.get$length$asx(t2[0]));
+          t1 = t2;
+        } else
+          t1 = false;
+        if (t1) {
+          t1 = $.world;
+          t2 = H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]);
+          t1 = t1.grid.nodes;
+          t3 = t2.y;
+          if (t3 >>> 0 !== t3 || t3 >= t1.length)
+            return H.ioore(t1, t3);
+          if (!J.$index$asx(t1[t3], t2.x).get$isSolid())
+            this.moveTo$1(0, H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]));
+        }
+      }
+    },
     getAttackedWithDmg$1: function(player) {
       var t1, t2, t3, t4, t5;
       this.takeDmg$1(player);
@@ -964,15 +996,7 @@ var $$ = {};
       var t1;
       this.isSolid = true;
       this.isWalkable = false;
-      switch (this.type) {
-        case C.MonsterType_tkU:
-          this.MAXHP = 5;
-          this.atk = 1;
-          this.COUNTMAX = 6;
-          break;
-        default:
-          break;
-      }
+      this.setAttributes$0();
       this.HP = this.MAXHP;
       this.items.push(C.ItemType_K_key);
       t1 = $.RNG;
@@ -1001,9 +1025,10 @@ var $$ = {};
   "^": "",
   Player: {
     "^": "Entity;atk,def,MAXHP,HP,items,armor,weapon,tileObject,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
-    getAttackedWithDmg$1: function(monster) {
+    getAttackedWithDmg$2: function(monster, counter) {
       var damage, t1;
-      monster.getAttackedWithDmg$1(this);
+      if (counter)
+        monster.getAttackedWithDmg$1(this);
       if (monster.HP > 0) {
         damage = this.takeDmg$1(monster);
         t1 = monster.type.NAME;
@@ -1029,9 +1054,12 @@ var $$ = {};
         if (t3 >>> 0 !== t3 || t3 >= t1.length)
           return H.ioore(t1, t3);
         tileToMoveTo = J.$index$asx(t1[t3], t2.x);
-        if (!J.getInterceptor(tileToMoveTo).$isItem)
+        t1 = J.getInterceptor(tileToMoveTo);
+        if (!t1.$isItem)
           if (!tileToMoveTo.get$isSolid())
             this.moveTo$1(0, H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]));
+          else if (!!t1.$isRangedMonster)
+            tileToMoveTo.getAttackedWithDmg$1(this);
           else
             A.addToNarration("You ran into a " + tileToMoveTo.type.NAME, "black");
         else {
@@ -1103,6 +1131,140 @@ var $$ = {};
     static: {"^": "PlayerType_GENERIC"}
   }
 }],
+["RANGEDMONSTER", "Entity/Monster/RangedMonster.dart", , Y, {
+  "^": "",
+  RangedMonster: {
+    "^": "Monster;MAXSHOTDELAY,delayCount,projectile,projectilePath,COUNTMAX,followingCountdown,followX,followY,pathToPlayer,rng,atk,def,MAXHP,HP,items,armor,weapon,tileObject,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
+    timeStep$1: function(world) {
+      var t1, t2, t3, tileToMoveTo;
+      t1 = this.projectilePath;
+      if (t1 != null) {
+        t2 = t1.length;
+        if (t2 > 0) {
+          if (t2 > 1) {
+            t1.toString;
+            if (typeof t1 !== "object" || t1 === null || !!t1.fixed$length)
+              H.throwExpression(P.UnsupportedError$("removeAt"));
+            t1.splice(0, 1)[0];
+          }
+          t1 = J.get$first$ax(this.projectilePath);
+          t2 = world.grid.nodes;
+          t3 = t1.y;
+          if (t3 >>> 0 !== t3 || t3 >= t2.length)
+            return H.ioore(t2, t3);
+          tileToMoveTo = J.$index$asx(t2[t3], t1.x);
+          t1 = J.getInterceptor$x(tileToMoveTo);
+          if (t1.get$type(tileToMoveTo) === C.TileType_CF3) {
+            this.removeProjectile$1(world);
+            t1 = J.get$first$ax(this.projectilePath);
+            this.projectile = t1;
+            world.setTileTypeAtPoint$2(t1, C.TileType_8eb);
+          } else if (!!t1.$isEntity) {
+            if (!!t1.$isPlayer)
+              world.player.getAttackedWithDmg$2(this, false);
+            else if (!t1.$isRangedMonster)
+              tileToMoveTo.takeDmg$1(this);
+            this.removeProjectile$1(world);
+            this.projectilePath = null;
+          } else {
+            this.removeProjectile$1(world);
+            this.projectilePath = null;
+          }
+        }
+      } else {
+        t1 = this.followingCountdown;
+        if (t1 > 0) {
+          this.followingCountdown = t1 - 1;
+          if (this.pathToPlayer.length > 4)
+            this.moveTowardsPlayer$0();
+          else
+            this.moveIdle$0();
+        } else
+          this.moveIdle$0();
+      }
+      --this.delayCount;
+    },
+    setProjectilePath$1: function(world) {
+      var point, point2, w, h, t1, dx1, t2, dy1, dx2, longest, shortest, dy2, numerator, i;
+      if (this.projectilePath == null && this.delayCount <= 0) {
+        this.projectilePath = [];
+        point = this.point;
+        point2 = world.player.get$point();
+        w = J.$sub$n(point2.x, point.x);
+        h = J.$sub$n(point2.y, point.y);
+        t1 = J.getInterceptor$n(w);
+        if (t1.$lt(w, 0))
+          dx1 = -1;
+        else
+          dx1 = t1.$gt(w, 0) ? 1 : 0;
+        t2 = J.getInterceptor$n(h);
+        if (t2.$lt(h, 0))
+          dy1 = -1;
+        else
+          dy1 = t2.$gt(h, 0) ? 1 : 0;
+        if (t1.$lt(w, 0))
+          dx2 = -1;
+        else
+          dx2 = t1.$gt(w, 0) ? 1 : 0;
+        longest = t1.abs$0(w);
+        shortest = t2.abs$0(h);
+        if (!(longest > shortest)) {
+          longest = Math.abs(h);
+          shortest = Math.abs(w);
+          if (h < 0)
+            dy2 = -1;
+          else
+            dy2 = h > 0 ? 1 : 0;
+          dx2 = 0;
+        } else
+          dy2 = 0;
+        numerator = C.JSNumber_methods._shrOtherPositive$1(longest, 1);
+        for (i = 0; i <= longest; ++i) {
+          this.projectilePath.push(point);
+          numerator += shortest;
+          t1 = point.x;
+          t2 = point.y;
+          if (!(numerator < longest)) {
+            numerator -= longest;
+            point = new P.Point(J.$add$ns(t1, dx1), J.$add$ns(t2, dy1));
+            point.$builtinTypeInfo = [null];
+          } else {
+            point = new P.Point(J.$add$ns(t1, dx2), J.$add$ns(t2, dy2));
+            point.$builtinTypeInfo = [null];
+          }
+        }
+        this.delayCount = this.MAXSHOTDELAY;
+        t1 = this.projectilePath;
+        if (1 >= t1.length)
+          return H.ioore(t1, 1);
+        this.projectile = t1[1];
+      }
+    },
+    removeProjectile$1: function(world) {
+      var t1, t2, t3;
+      t1 = this.projectile;
+      t2 = world.grid.nodes;
+      t3 = t1.y;
+      if (t3 >>> 0 !== t3 || t3 >= t2.length)
+        return H.ioore(t2, t3);
+      if (J.get$type$x(J.$index$asx(t2[t3], t1.x)) === C.TileType_8eb)
+        world.setTileTypeAtPoint$2(this.projectile, C.TileType_CF3);
+    },
+    RangedMonster$2: function(point, type) {
+      var t1;
+      this.isSolid = true;
+      this.isWalkable = false;
+      this.setAttributes$0();
+      this.HP = this.MAXHP;
+      this.items.push(C.ItemType_K_key);
+      t1 = $.RNG;
+      t1 = t1.nextInt$1(Math.pow(2, 32));
+      this.rng = P._Random$(t1);
+      this.isVisible = !$.shadowsOn;
+    },
+    $isRangedMonster: true
+  }
+}],
 ["ROOM", "World/Room/Room.dart", , R, {
   "^": "",
   Room: {
@@ -1140,9 +1302,10 @@ var $$ = {};
             if (y >>> 0 !== y || y >= t1.length)
               return H.ioore(t1, y);
             t2 = t1[y];
+            t3 = $.get$monsterList().pick$0();
             if (x >>> 0 !== x || x >= t2.length)
               return H.ioore(t2, x);
-            t2[x] = C.MonsterType_tkU;
+            t2[x] = t3;
           }
           break;
         case C.RoomType_Drw:
@@ -1233,6 +1396,10 @@ var $$ = {};
         this.isSolid = false;
         this.isOpaque = true;
         this.isWalkable = true;
+      } else if (t1 === C.TileType_8eb) {
+        this.isSolid = true;
+        this.isOpaque = true;
+        this.isWalkable = false;
       }
     },
     static: {TileObject$: function(point, type) {
@@ -1247,7 +1414,7 @@ var $$ = {};
   TileType: {
     "^": "Enum;value,NAME",
     $isTileType: true,
-    static: {"^": "TileType_GROUND,TileType_WALL,TileType_STONE,TileType_SPIKE,TileType_BONES"}
+    static: {"^": "TileType_GROUND,TileType_WALL,TileType_STONE,TileType_SPIKE,TileType_BONES,TileType_PROJECTILE"}
   }
 }],
 ["WEAPON", "Items/Weapon/Weapon.dart", , Z, {
@@ -1269,11 +1436,6 @@ var $$ = {};
   "^": "",
   World: {
     "^": "Object;grid,width,height,rooms,monsters,player,roomTypes,roomSizes",
-    timeStep$0: function() {
-      this.timeStepMonsters$0();
-      this.loopTiles$0();
-      A.refreshStats(this.player);
-    },
     timeStepMonsters$0: function() {
       var astar, t1, $length, i, monster;
       astar = new N.AStarFinder(true, false, null, 1, H.setRuntimeTypeInfo(new P.Point(1, 2), [null]));
@@ -1287,7 +1449,7 @@ var $$ = {};
       }
       H.Sort__doSort(t1, 0, t1.length - 1, new R.World_timeStepMonsters_closure());
       for (i = 0; i < t1.length; ++i)
-        t1[i].timeStep$0();
+        t1[i].timeStep$1(this);
     },
     loopTiles$0: function() {
       var i, j, t1, t2;
@@ -1347,7 +1509,13 @@ var $$ = {};
         t3 = point.x;
         tileObject = J.$index$asx(t1[t2], t3);
         tileObject.set$isVisible(true);
-        if (!!tileObject.$isMonster) {
+        if (tileObject.type === C.MonsterType_yrN) {
+          tileObject.setProjectilePath$1(this);
+          t1 = tileObject.followingCountdown;
+          t4 = tileObject.COUNTMAX;
+          if (t1 < t4)
+            tileObject.followingCountdown = t4;
+        } else if (!!tileObject.$isMonster) {
           t1 = tileObject.followingCountdown;
           t4 = tileObject.COUNTMAX;
           if (t1 < t4)
@@ -1495,16 +1663,39 @@ var $$ = {};
           return H.ioore(t1, t2);
         J.$indexSet$ax(t1[t2], coord.x, V.TileObject$(coord, type));
       } else if (!!t1.$isMonsterType) {
-        t1 = this.grid.nodes;
-        t2 = coord.y;
-        if (t2 >>> 0 !== t2 || t2 >= t1.length)
-          return H.ioore(t1, t2);
-        t3 = coord.x;
-        J.$indexSet$ax(t1[t2], t3, Z.Monster$(coord, type));
-        t1 = this.grid.nodes;
-        if (t2 >= t1.length)
-          return H.ioore(t1, t2);
-        this.monsters.push(J.$index$asx(t1[t2], t3));
+        t1 = this.grid;
+        if (type !== C.MonsterType_yrN) {
+          t1 = t1.nodes;
+          t2 = coord.y;
+          if (t2 >>> 0 !== t2 || t2 >= t1.length)
+            return H.ioore(t1, t2);
+          t1 = t1[t2];
+          t3 = coord.x;
+          J.$indexSet$ax(t1, t3, Z.Monster$(coord, type));
+          t1 = t2;
+          t2 = t3;
+        } else {
+          t1 = t1.nodes;
+          t2 = coord.y;
+          if (t2 >>> 0 !== t2 || t2 >= t1.length)
+            return H.ioore(t1, t2);
+          t1 = t1[t2];
+          t3 = coord.x;
+          t4 = new Y.RangedMonster(8, 0, null, null, 0, 0, null, null, [], null, 0, 0, 0, 0, [], C.ArmorType_0_A_clothes, C.WeaponType_0_W_knuckles, null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+          t4.TileObject$2(coord, type);
+          t4.isOpaque = true;
+          t4.isSolid = true;
+          t4.tileObject = V.TileObject$(coord, C.TileType_CF3);
+          t4.Monster$2(coord, type);
+          t4.RangedMonster$2(coord, type);
+          J.$indexSet$ax(t1, t3, t4);
+          t1 = t2;
+          t2 = t3;
+        }
+        t3 = this.grid.nodes;
+        if (t1 >>> 0 !== t1 || t1 >= t3.length)
+          return H.ioore(t3, t1);
+        this.monsters.push(J.$index$asx(t3[t1], t2));
       } else if (!!t1.$isPlayerType) {
         t1 = this.grid.nodes;
         t2 = coord.y;
@@ -1538,50 +1729,53 @@ var $$ = {};
         if (t2 >>> 0 !== t2 || t2 >= t1.length)
           return H.ioore(t1, t2);
         t2 = t1[t2];
-        t1 = new N.Chest(null, null, C.ItemType_8aB, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
-        t1.TileObject$2(coord, C.ItemType_8aB);
-        t1.isSolid = false;
-        t1.isOpaque = true;
-        t1.isWalkable = true;
-        t1.Chest$1(coord);
-        J.$indexSet$ax(t2, coord.x, t1);
+        t1 = coord.x;
+        t3 = new N.Chest(null, null, C.ItemType_8aB, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+        t3.TileObject$2(coord, C.ItemType_8aB);
+        t3.isSolid = false;
+        t3.isOpaque = true;
+        t3.isWalkable = true;
+        t3.Chest$1(coord);
+        J.$indexSet$ax(t2, t1, t3);
       } else if (!!t1.$isWeaponType) {
         t1 = this.grid.nodes;
         t2 = coord.y;
         if (t2 >>> 0 !== t2 || t2 >= t1.length)
           return H.ioore(t1, t2);
         t2 = t1[t2];
-        t1 = new Z.Weapon(null, null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
-        t1.TileObject$2(coord, type);
-        t1.isSolid = false;
-        t1.isOpaque = true;
-        t1.isWalkable = true;
-        J.$indexSet$ax(t2, coord.x, t1);
+        t1 = coord.x;
+        t3 = new Z.Weapon(null, null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+        t3.TileObject$2(coord, type);
+        t3.isSolid = false;
+        t3.isOpaque = true;
+        t3.isWalkable = true;
+        J.$indexSet$ax(t2, t1, t3);
       } else if (!!t1.$isArmorType) {
         t1 = this.grid.nodes;
         t2 = coord.y;
         if (t2 >>> 0 !== t2 || t2 >= t1.length)
           return H.ioore(t1, t2);
         t2 = t1[t2];
-        t1 = new Z.Armor(null, null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
-        t1.TileObject$2(coord, type);
-        t1.isSolid = false;
-        t1.isOpaque = true;
-        t1.isWalkable = true;
-        t1.def = type.def;
-        J.$indexSet$ax(t2, coord.x, t1);
+        t1 = coord.x;
+        t3 = new Z.Armor(null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+        t3.TileObject$2(coord, type);
+        t3.isSolid = false;
+        t3.isOpaque = true;
+        t3.isWalkable = true;
+        J.$indexSet$ax(t2, t1, t3);
       } else if (!!t1.$isItemType) {
         t1 = this.grid.nodes;
         t2 = coord.y;
         if (t2 >>> 0 !== t2 || t2 >= t1.length)
           return H.ioore(t1, t2);
         t2 = t1[t2];
-        t1 = new E.Item(null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
-        t1.TileObject$2(coord, type);
-        t1.isSolid = false;
-        t1.isOpaque = true;
-        t1.isWalkable = true;
-        J.$indexSet$ax(t2, coord.x, t1);
+        t1 = coord.x;
+        t3 = new E.Item(null, type, null, !$.shadowsOn, false, null, coord, null, null, null, null, null, null);
+        t3.TileObject$2(coord, type);
+        t3.isSolid = false;
+        t3.isOpaque = true;
+        t3.isWalkable = true;
+        J.$indexSet$ax(t2, t1, t3);
       }
     },
     World$2: function(width, height) {
@@ -1744,6 +1938,11 @@ var $$ = {};
       if (start === end)
         return H.setRuntimeTypeInfo([], [H.getTypeArgumentByIndex(receiver, 0)]);
       return H.setRuntimeTypeInfo(receiver.slice(start, end), [H.getTypeArgumentByIndex(receiver, 0)]);
+    },
+    get$first: function(receiver) {
+      if (receiver.length > 0)
+        return receiver[0];
+      throw H.wrapException(P.StateError$("No elements"));
     },
     get$last: function(receiver) {
       var t1 = receiver.length;
@@ -8976,12 +9175,11 @@ var $$ = {};
         t1.isWalkable = true;
         return t1;
       } else if (!!t1.$isArmorType) {
-        t1 = new Z.Armor(null, null, type, null, !$.shadowsOn, false, null, point, null, null, null, null, null, null);
+        t1 = new Z.Armor(null, type, null, !$.shadowsOn, false, null, point, null, null, null, null, null, null);
         t1.TileObject$2(point, type);
         t1.isSolid = false;
         t1.isOpaque = true;
         t1.isWalkable = true;
-        t1.def = type.def;
         return t1;
       }
       return "error at grid.dart class, getAtCoordinate()";
@@ -9431,6 +9629,9 @@ J.get$closed$x = function(receiver) {
 J.get$error$x = function(receiver) {
   return J.getInterceptor$x(receiver).get$error(receiver);
 };
+J.get$first$ax = function(receiver) {
+  return J.getInterceptor$ax(receiver).get$first(receiver);
+};
 J.get$hashCode$ = function(receiver) {
   return J.getInterceptor(receiver).get$hashCode(receiver);
 };
@@ -9659,12 +9860,14 @@ C.JS_CONST_rr7 = function(hooks) {
 };
 C.MonsterType_iL9 = new Y.MonsterType("G", "a keyholder");
 C.MonsterType_tkU = new Y.MonsterType("G", "a goblin");
+C.MonsterType_yrN = new Y.MonsterType("L", "a lizard");
 C.PlayerType_8aB = new L.PlayerType("@", "generic player");
 C.RoomType_2bL = new M.RoomType("MONSTORROOM", "monster room");
 C.RoomType_AqM = new M.RoomType("SPIKEROOM", "spike room");
 C.RoomType_Drw = new M.RoomType("TREASUREROOM", " treasure room");
 C.RoomType_cKo = new M.RoomType("NORMAL", "normal room");
 C.RoomType_hYN = new M.RoomType("STARTROOM", "start room");
+C.TileType_8eb = new Y.TileType("*", "projectile");
 C.TileType_Au4 = new Y.TileType("%", "bones");
 C.TileType_CF3 = new Y.TileType(".", "ground");
 C.TileType_SgB = new Y.TileType("\u25a1", "wall");
@@ -9768,6 +9971,9 @@ Isolate.$lazy($, "level10", "level10", "get$level10", function() {
 });
 Isolate.$lazy($, "troll", "troll", "get$troll", function() {
   return S.ChooseRandom$([[75, C.TileType_CF3], [25, C.MonsterType_tkU]]);
+});
+Isolate.$lazy($, "monsterList", "monsterList", "get$monsterList", function() {
+  return S.ChooseRandom$([[80, C.MonsterType_tkU], [20, C.MonsterType_yrN]]);
 });
 Isolate.$lazy($, "globalThis", "globalThis", "get$globalThis", function() {
   return function() {
@@ -12781,8 +12987,7 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   NativeUint8List.prototype = $desc;
-  function Armor(def, decription, type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
-    this.def = def;
+  function Armor(decription, type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
     this.decription = decription;
     this.type = type;
     this.isOpaque = isOpaque;
@@ -13094,6 +13299,45 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   PlayerType.prototype = $desc;
+  function RangedMonster(MAXSHOTDELAY, delayCount, projectile, projectilePath, COUNTMAX, followingCountdown, followX, followY, pathToPlayer, rng, atk, def, MAXHP, HP, items, armor, weapon, tileObject, type, isOpaque, isVisible, isSolid, isWalkable, point, g, h, f, opened, closed, parent) {
+    this.MAXSHOTDELAY = MAXSHOTDELAY;
+    this.delayCount = delayCount;
+    this.projectile = projectile;
+    this.projectilePath = projectilePath;
+    this.COUNTMAX = COUNTMAX;
+    this.followingCountdown = followingCountdown;
+    this.followX = followX;
+    this.followY = followY;
+    this.pathToPlayer = pathToPlayer;
+    this.rng = rng;
+    this.atk = atk;
+    this.def = def;
+    this.MAXHP = MAXHP;
+    this.HP = HP;
+    this.items = items;
+    this.armor = armor;
+    this.weapon = weapon;
+    this.tileObject = tileObject;
+    this.type = type;
+    this.isOpaque = isOpaque;
+    this.isVisible = isVisible;
+    this.isSolid = isSolid;
+    this.isWalkable = isWalkable;
+    this.point = point;
+    this.g = g;
+    this.h = h;
+    this.f = f;
+    this.opened = opened;
+    this.closed = closed;
+    this.parent = parent;
+  }
+  RangedMonster.builtin$cls = "RangedMonster";
+  if (!"name" in RangedMonster)
+    RangedMonster.name = "RangedMonster";
+  $desc = $collectedClasses.RangedMonster;
+  if ($desc instanceof Array)
+    $desc = $desc[1];
+  RangedMonster.prototype = $desc;
   function Room(roomType, width, height, minX, minY, maxX, maxY, midX, midY, contents) {
     this.roomType = roomType;
     this.width = width;
@@ -15729,5 +15973,5 @@ function dart_precompiled($collectedClasses) {
   if ($desc instanceof Array)
     $desc = $desc[1];
   AStarFinder_findPath_closure.prototype = $desc;
-  return [HtmlElement, AnchorElement, AnimationEvent, AreaElement, AudioElement, AutocompleteErrorEvent, BRElement, BaseElement, BeforeLoadEvent, BeforeUnloadEvent, BodyElement, ButtonElement, CDataSection, CanvasElement, CharacterData, CloseEvent, Comment, CompositionEvent, ContentElement, CssFontFaceLoadEvent, CssStyleDeclaration, CustomEvent, DListElement, DataListElement, DetailsElement, DeviceMotionEvent, DeviceOrientationEvent, DialogElement, DivElement, Document, DocumentFragment, DomError, DomException, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, FileError, FocusEvent, FormElement, HRElement, HashChangeEvent, HeadElement, HeadingElement, HtmlCollection, HtmlDocument, HtmlFormControlsCollection, HtmlHtmlElement, HtmlOptionsCollection, IFrameElement, ImageElement, InputElement, InstallEvent, InstallPhaseEvent, KeyboardEvent, KeygenElement, LIElement, LabelElement, LegendElement, LinkElement, Location, MapElement, MediaElement, MediaError, MediaKeyError, MediaKeyEvent, MediaKeyMessageEvent, MediaKeyNeededEvent, MediaStream, MediaStreamEvent, MediaStreamTrackEvent, MenuElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, ModElement, MouseEvent, Navigator, NavigatorUserMediaError, Node, NodeList, OListElement, ObjectElement, OptGroupElement, OptionElement, OutputElement, OverflowEvent, PageTransitionEvent, ParagraphElement, ParamElement, PopStateEvent, PositionError, PreElement, ProcessingInstruction, ProgressElement, ProgressEvent, QuoteElement, ResourceProgressEvent, RtcDataChannelEvent, RtcDtmfToneChangeEvent, RtcIceCandidateEvent, ScriptElement, SecurityPolicyViolationEvent, SelectElement, ShadowElement, ShadowRoot, SourceElement, SpanElement, SpeechInputEvent, SpeechRecognitionError, SpeechRecognitionEvent, SpeechSynthesisEvent, StorageEvent, StyleElement, TableCaptionElement, TableCellElement, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, Text, TextAreaElement, TextEvent, TitleElement, TouchEvent, TrackElement, TrackEvent, TransitionEvent, UIEvent, UListElement, UnknownElement, VideoElement, WheelEvent, Window, XmlDocument, _Attr, _DocumentType, _HTMLAppletElement, _HTMLDirectoryElement, _HTMLFontElement, _HTMLFrameElement, _HTMLFrameSetElement, _HTMLMarqueeElement, _MutationEvent, _Notation, _XMLHttpRequestProgressEvent, VersionChangeEvent, AElement, AltGlyphElement, AnimateElement, AnimateMotionElement, AnimateTransformElement, AnimatedEnumeration, AnimatedLength, AnimatedLengthList, AnimatedNumber, AnimatedNumberList, AnimatedString, AnimationElement, CircleElement, ClipPathElement, DefsElement, DescElement, DiscardElement, EllipseElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEDistantLightElement, FEFloodElement, FEFuncAElement, FEFuncBElement, FEFuncGElement, FEFuncRElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMergeNodeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GElement, GeometryElement, GraphicsElement, ImageElement0, LineElement, LinearGradientElement, MarkerElement, MaskElement, MetadataElement, PathElement, PatternElement, PolygonElement, PolylineElement, RadialGradientElement, RectElement, ScriptElement0, SetElement, StopElement, StyleElement0, SvgElement, SvgSvgElement, SwitchElement, SymbolElement, TSpanElement, TextContentElement, TextElement, TextPathElement, TextPositioningElement, TitleElement0, UseElement, ViewElement, ZoomEvent, _GradientElement, _SVGAltGlyphDefElement, _SVGAltGlyphItemElement, _SVGComponentTransferFunctionElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGFontElement, _SVGFontFaceElement, _SVGFontFaceFormatElement, _SVGFontFaceNameElement, _SVGFontFaceSrcElement, _SVGFontFaceUriElement, _SVGGlyphElement, _SVGGlyphRefElement, _SVGHKernElement, _SVGMPathElement, _SVGMissingGlyphElement, _SVGVKernElement, AudioProcessingEvent, OfflineAudioCompletionEvent, ContextEvent, SqlError, NativeTypedData, NativeUint8List, Armor, ArmorType, Chest, ChooseRandom, Display, Entity, Enum, Game, Input, Input_closure, Input_closure0, Input_closure1, Input_keyUpHandler_closure, Input_keyDownHandler_closure, Item, ItemType, Monster, MonsterType, Player, PlayerType, Room, RoomType, TileObject, TileType, Weapon, WeaponType, World, World_timeStepMonsters_closure, JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__processWorkerMessage_closure0, IsolateNatives__processWorkerMessage_closure1, IsolateNatives_spawn_closure, IsolateNatives_spawn_closure0, IsolateNatives__startNonWorker_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, ReceivePortImpl, _JsSerializer, _JsCopier, _JsDeserializer, _JsVisitedMap, _MessageTraverserVisitedMap, _MessageTraverser, _Copier, _Copier_visitMap_closure, _Serializer, _Deserializer, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, ReflectionInfo, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, initHooks_closure, initHooks_closure0, initHooks_closure1, ListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, WhereIterable, WhereIterator, FixedLengthListMixin, ReversedListIterable, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncError, Future, _Completer, _AsyncCompleter, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_first_closure, Stream_first_closure0, StreamSubscription, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _StreamController__AsyncStreamControllerDispatch, _SyncStreamController, _StreamController__SyncStreamControllerDispatch, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _BaseZone, _BaseZone_bindCallback_closure, _BaseZone_bindCallback_closure0, _BaseZone_bindUnaryCallback_closure, _BaseZone_bindUnaryCallback_closure0, _rootHandleUncaughtError_closure, _rootHandleUncaughtError__closure, _RootZone, _HashMap, _HashMap_values_closure, HashMapKeyIterable, HashMapKeyIterator, _LinkedHashMap, _LinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, NoSuchMethodError_toString_closure, bool, Comparable, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, Expando, $int, Iterator, List, Null, num, Object, StackTrace, String, StringBuffer, Symbol, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, _ChildrenElementList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, _ChildNodeListLazy, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, EventStreamProvider, _EventStream, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, Capability, _JSRandom, _Random, Point, NativeTypedArray, NativeTypedArrayOfInt, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, Grid, Heap, AStarFinder, AStarFinder_findPath_closure];
+  return [HtmlElement, AnchorElement, AnimationEvent, AreaElement, AudioElement, AutocompleteErrorEvent, BRElement, BaseElement, BeforeLoadEvent, BeforeUnloadEvent, BodyElement, ButtonElement, CDataSection, CanvasElement, CharacterData, CloseEvent, Comment, CompositionEvent, ContentElement, CssFontFaceLoadEvent, CssStyleDeclaration, CustomEvent, DListElement, DataListElement, DetailsElement, DeviceMotionEvent, DeviceOrientationEvent, DialogElement, DivElement, Document, DocumentFragment, DomError, DomException, Element, EmbedElement, ErrorEvent, Event, EventTarget, FieldSetElement, FileError, FocusEvent, FormElement, HRElement, HashChangeEvent, HeadElement, HeadingElement, HtmlCollection, HtmlDocument, HtmlFormControlsCollection, HtmlHtmlElement, HtmlOptionsCollection, IFrameElement, ImageElement, InputElement, InstallEvent, InstallPhaseEvent, KeyboardEvent, KeygenElement, LIElement, LabelElement, LegendElement, LinkElement, Location, MapElement, MediaElement, MediaError, MediaKeyError, MediaKeyEvent, MediaKeyMessageEvent, MediaKeyNeededEvent, MediaStream, MediaStreamEvent, MediaStreamTrackEvent, MenuElement, MessageEvent, MetaElement, MeterElement, MidiConnectionEvent, MidiMessageEvent, ModElement, MouseEvent, Navigator, NavigatorUserMediaError, Node, NodeList, OListElement, ObjectElement, OptGroupElement, OptionElement, OutputElement, OverflowEvent, PageTransitionEvent, ParagraphElement, ParamElement, PopStateEvent, PositionError, PreElement, ProcessingInstruction, ProgressElement, ProgressEvent, QuoteElement, ResourceProgressEvent, RtcDataChannelEvent, RtcDtmfToneChangeEvent, RtcIceCandidateEvent, ScriptElement, SecurityPolicyViolationEvent, SelectElement, ShadowElement, ShadowRoot, SourceElement, SpanElement, SpeechInputEvent, SpeechRecognitionError, SpeechRecognitionEvent, SpeechSynthesisEvent, StorageEvent, StyleElement, TableCaptionElement, TableCellElement, TableColElement, TableElement, TableRowElement, TableSectionElement, TemplateElement, Text, TextAreaElement, TextEvent, TitleElement, TouchEvent, TrackElement, TrackEvent, TransitionEvent, UIEvent, UListElement, UnknownElement, VideoElement, WheelEvent, Window, XmlDocument, _Attr, _DocumentType, _HTMLAppletElement, _HTMLDirectoryElement, _HTMLFontElement, _HTMLFrameElement, _HTMLFrameSetElement, _HTMLMarqueeElement, _MutationEvent, _Notation, _XMLHttpRequestProgressEvent, VersionChangeEvent, AElement, AltGlyphElement, AnimateElement, AnimateMotionElement, AnimateTransformElement, AnimatedEnumeration, AnimatedLength, AnimatedLengthList, AnimatedNumber, AnimatedNumberList, AnimatedString, AnimationElement, CircleElement, ClipPathElement, DefsElement, DescElement, DiscardElement, EllipseElement, FEBlendElement, FEColorMatrixElement, FEComponentTransferElement, FECompositeElement, FEConvolveMatrixElement, FEDiffuseLightingElement, FEDisplacementMapElement, FEDistantLightElement, FEFloodElement, FEFuncAElement, FEFuncBElement, FEFuncGElement, FEFuncRElement, FEGaussianBlurElement, FEImageElement, FEMergeElement, FEMergeNodeElement, FEMorphologyElement, FEOffsetElement, FEPointLightElement, FESpecularLightingElement, FESpotLightElement, FETileElement, FETurbulenceElement, FilterElement, ForeignObjectElement, GElement, GeometryElement, GraphicsElement, ImageElement0, LineElement, LinearGradientElement, MarkerElement, MaskElement, MetadataElement, PathElement, PatternElement, PolygonElement, PolylineElement, RadialGradientElement, RectElement, ScriptElement0, SetElement, StopElement, StyleElement0, SvgElement, SvgSvgElement, SwitchElement, SymbolElement, TSpanElement, TextContentElement, TextElement, TextPathElement, TextPositioningElement, TitleElement0, UseElement, ViewElement, ZoomEvent, _GradientElement, _SVGAltGlyphDefElement, _SVGAltGlyphItemElement, _SVGComponentTransferFunctionElement, _SVGCursorElement, _SVGFEDropShadowElement, _SVGFontElement, _SVGFontFaceElement, _SVGFontFaceFormatElement, _SVGFontFaceNameElement, _SVGFontFaceSrcElement, _SVGFontFaceUriElement, _SVGGlyphElement, _SVGGlyphRefElement, _SVGHKernElement, _SVGMPathElement, _SVGMissingGlyphElement, _SVGVKernElement, AudioProcessingEvent, OfflineAudioCompletionEvent, ContextEvent, SqlError, NativeTypedData, NativeUint8List, Armor, ArmorType, Chest, ChooseRandom, Display, Entity, Enum, Game, Input, Input_closure, Input_closure0, Input_closure1, Input_keyUpHandler_closure, Input_keyDownHandler_closure, Item, ItemType, Monster, MonsterType, Player, PlayerType, RangedMonster, Room, RoomType, TileObject, TileType, Weapon, WeaponType, World, World_timeStepMonsters_closure, JS_CONST, Interceptor, JSBool, JSNull, JavaScriptObject, PlainJavaScriptObject, UnknownJavaScriptObject, JSArray, JSNumber, JSInt, JSDouble, JSString, startRootIsolate_closure, startRootIsolate_closure0, _Manager, _IsolateContext, _IsolateContext_handlePing_respond, _EventLoop, _EventLoop__runHelper_next, _IsolateEvent, _MainManagerStub, IsolateNatives__processWorkerMessage_closure, IsolateNatives__processWorkerMessage_closure0, IsolateNatives__processWorkerMessage_closure1, IsolateNatives_spawn_closure, IsolateNatives_spawn_closure0, IsolateNatives__startNonWorker_closure, IsolateNatives__startIsolate_runStartFunction, _BaseSendPort, _NativeJsSendPort, _NativeJsSendPort_send_closure, _WorkerSendPort, RawReceivePortImpl, ReceivePortImpl, _JsSerializer, _JsCopier, _JsDeserializer, _JsVisitedMap, _MessageTraverserVisitedMap, _MessageTraverser, _Copier, _Copier_visitMap_closure, _Serializer, _Deserializer, TimerImpl, TimerImpl_internalCallback, TimerImpl_internalCallback0, TimerImpl$periodic_closure, CapabilityImpl, ReflectionInfo, TypeErrorDecoder, NullError, JsNoSuchMethodError, UnknownJsTypeError, unwrapException_saveStackTrace, _StackTrace, invokeClosure_closure, invokeClosure_closure0, invokeClosure_closure1, invokeClosure_closure2, invokeClosure_closure3, Closure, TearOffClosure, BoundClosure, RuntimeError, RuntimeType, RuntimeFunctionType, DynamicRuntimeType, TypeImpl, initHooks_closure, initHooks_closure0, initHooks_closure1, ListIterable, ListIterator, MappedIterable, EfficientLengthMappedIterable, MappedIterator, WhereIterable, WhereIterator, FixedLengthListMixin, ReversedListIterable, _AsyncRun__scheduleImmediateJsOverride_internalCallback, _AsyncError, Future, _Completer, _AsyncCompleter, _Future, _Future__addListener_closure, _Future__chainForeignFuture_closure, _Future__chainForeignFuture_closure0, _Future__asyncComplete_closure, _Future__asyncComplete_closure0, _Future__asyncCompleteError_closure, _Future__propagateToListeners_handleValueCallback, _Future__propagateToListeners_handleError, _Future__propagateToListeners_handleWhenCompleteCallback, _Future__propagateToListeners_handleWhenCompleteCallback_closure, _Future__propagateToListeners_handleWhenCompleteCallback_closure0, _AsyncCallbackEntry, Stream, Stream_forEach_closure, Stream_forEach__closure, Stream_forEach__closure0, Stream_forEach_closure0, Stream_length_closure, Stream_length_closure0, Stream_first_closure, Stream_first_closure0, StreamSubscription, _StreamController, _StreamController__subscribe_closure, _StreamController__recordCancel_complete, _SyncStreamControllerDispatch, _AsyncStreamControllerDispatch, _AsyncStreamController, _StreamController__AsyncStreamControllerDispatch, _SyncStreamController, _StreamController__SyncStreamControllerDispatch, _ControllerStream, _ControllerSubscription, _EventSink, _BufferingStreamSubscription, _BufferingStreamSubscription__sendDone_sendDone, _StreamImpl, _DelayedEvent, _DelayedData, _DelayedDone, _PendingEvents, _PendingEvents_schedule_closure, _StreamImplEvents, _cancelAndError_closure, _cancelAndErrorClosure_closure, _cancelAndValue_closure, _BaseZone, _BaseZone_bindCallback_closure, _BaseZone_bindCallback_closure0, _BaseZone_bindUnaryCallback_closure, _BaseZone_bindUnaryCallback_closure0, _rootHandleUncaughtError_closure, _rootHandleUncaughtError__closure, _RootZone, _HashMap, _HashMap_values_closure, HashMapKeyIterable, HashMapKeyIterator, _LinkedHashMap, _LinkedHashMap_values_closure, LinkedHashMapCell, LinkedHashMapKeyIterable, LinkedHashMapKeyIterator, _LinkedHashSet, LinkedHashSetCell, LinkedHashSetIterator, _HashSetBase, IterableBase, ListBase, Object_ListMixin, ListMixin, Maps_mapToString_closure, ListQueue, _ListQueueIterator, SetMixin, SetBase, NoSuchMethodError_toString_closure, bool, Comparable, $double, Duration, Duration_toString_sixDigits, Duration_toString_twoDigits, Error, NullThrownError, ArgumentError, RangeError, UnsupportedError, UnimplementedError, StateError, ConcurrentModificationError, StackOverflowError, CyclicInitializationError, _ExceptionImplementation, FormatException, Expando, $int, Iterator, List, Null, num, Object, StackTrace, String, StringBuffer, Symbol, Interceptor_CssStyleDeclarationBase, CssStyleDeclarationBase, _ChildrenElementList, Interceptor_ListMixin, Interceptor_ListMixin_ImmutableListMixin, _ChildNodeListLazy, Interceptor_ListMixin0, Interceptor_ListMixin_ImmutableListMixin0, EventStreamProvider, _EventStream, _EventStreamSubscription, ImmutableListMixin, FixedSizeListIterator, Capability, _JSRandom, _Random, Point, NativeTypedArray, NativeTypedArrayOfInt, NativeTypedArray_ListMixin, NativeTypedArray_ListMixin_FixedLengthListMixin, FilteredElementList, FilteredElementList__filtered_closure, FilteredElementList_removeRange_closure, Grid, Heap, AStarFinder, AStarFinder_findPath_closure];
 }
