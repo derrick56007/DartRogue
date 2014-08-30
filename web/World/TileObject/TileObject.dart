@@ -51,5 +51,11 @@ class TileObject
       this.isOpaque = true;
       this.isWalkable = true;
     }
+    else if(this.type == TileType.PROJECTILE)
+    {
+      this.isSolid = true;
+      this.isOpaque = true;
+      this.isWalkable = false;
+    }
   }
 }

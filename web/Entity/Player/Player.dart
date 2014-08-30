@@ -13,6 +13,7 @@ import '../../Items/Armor/Armor.dart';
 import '../../Items/Weapon/Weapon.dart';
 import '../../Items/Armor/ArmorType.dart';
 import '../../Items/Weapon/WeaponType.dart';
+import '../Monster/RangedMonster.dart';
 import 'dart:math';
 
 class Player extends Entity
@@ -37,9 +38,12 @@ class Player extends Entity
     }
   }
   
-  void getAttackedWithDmg(Monster monster)
+  void getAttackedWithDmg(Monster monster, bool counter)
   {
-    monster.getAttackedWithDmg(this);
+    if(counter)
+    {
+      monster.getAttackedWithDmg(this);
+    }
     if(monster.HP > 0)
     {
       int damage = takeDmg(monster);
@@ -70,6 +74,11 @@ class Player extends Entity
         if(!tileToMoveTo.isSolid)
         {
           moveTo(new Point(this.point.x + moveX, this.point.y + moveY));
+        }
+        else if(tileToMoveTo is RangedMonster)
+        {
+          RangedMonster rangedMonster = tileToMoveTo;
+          rangedMonster.getAttackedWithDmg(this);
         }
         else
         {

@@ -21,6 +21,7 @@ import '../Items/Item/Chest.dart';
 import '../Items/Armor/Armor.dart';
 import '../Items/Weapon/Weapon.dart';
 import '../ChooseRandom/ChooseRandom.dart';
+import '../Entity/Monster/RangedMonster.dart';
 
 class World
 {
@@ -81,7 +82,7 @@ class World
     monsters.sort((a,b) => a.pathToPlayer.length.compareTo(b.pathToPlayer.length));
     for(int i = 0; i < monsters.length; i++)
     {
-      monsters[i].timeStep();
+      monsters[i].timeStep(this);
     }
   }
   
@@ -132,7 +133,16 @@ class World
         var tileObject = grid.nodes[point.y][point.x];
         tileObject.isVisible = true;
         
-        if(tileObject is Monster)
+        if(tileObject.type == MonsterType.LIZARD)
+        {
+          RangedMonster monster = tileObject;
+          monster.setProjectilePath(this);
+          if(monster.followingCountdown < monster.COUNTMAX)
+          {
+            monster.followCountSetMax();
+          }
+        }
+        else if(tileObject is Monster)
         {
           Monster monster = tileObject;
           if(monster.followingCountdown < monster.COUNTMAX)
@@ -281,7 +291,14 @@ class World
     }
     else if(type is MonsterType)
     {
-      grid.nodes[coord.y][coord.x] = new Monster(coord, type);
+      if(type != MonsterType.LIZARD)
+      {
+        grid.nodes[coord.y][coord.x] = new Monster(coord, type);
+      }
+      else
+      {
+        grid.nodes[coord.y][coord.x] = new RangedMonster(coord, type);
+      }
       monsters.add(grid.nodes[coord.y][coord.x]);
     }
     else if(type is PlayerType)

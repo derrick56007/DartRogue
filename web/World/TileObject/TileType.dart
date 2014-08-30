@@ -11,4 +11,5 @@ class TileType<String> extends Enum<String, String>
   static const TileType STONE = const TileType("8", "stone");
   static const TileType SPIKE = const TileType("^", "spike");
   static const TileType BONES = const TileType("%", "bones");
+  static const TileType PROJECTILE = const TileType("*", "projectile");
 }

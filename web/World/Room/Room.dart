@@ -7,6 +7,7 @@ import '../../Entity/Monster/MonsterType.dart';
 import '../../Entity/Player/PlayerType.dart';
 import '../../Items/Enum.dart';
 import '../../Items/Item/ItemType.dart';
+import '../../ChooseRandom/ChooseRandom.dart';
 
 class Room
 {
@@ -70,7 +71,7 @@ class Room
         {
           int x = RNG.nextInt(this.width);
           int y = RNG.nextInt(this.height);
-          contents[y][x] = MonsterType.GOBLIN;
+          contents[y][x] = monsterList.pick();
         }
         break;
       case RoomType.TREASUREROOM:
@@ -91,3 +92,5 @@ class Room
     }
   }
 }
+
+final ChooseRandom monsterList = new ChooseRandom(loopList : [[80, MonsterType.GOBLIN], [20, MonsterType.LIZARD]]);
