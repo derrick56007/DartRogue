@@ -6,7 +6,6 @@ import '../Game.dart';
 import '../Items/Weapon/WeaponType.dart';
 import '../World/TileObject/TileType.dart';
 import '../Items/Armor/ArmorType.dart';
-import 'Player/Player.dart';
 import 'dart:math';
 
 class Entity extends TileObject
@@ -71,10 +70,6 @@ class Entity extends TileObject
     if(this.tileObject.type == TileType.SPIKE)
     {
       this.HP -= 1;
-      if(this is Player)
-      {
-        addToNarration("You stepped on spikes", "red");
-      }
     }
   }
   

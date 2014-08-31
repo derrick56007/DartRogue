@@ -5,7 +5,6 @@ import 'ItemType.dart';
 import '../../Game.dart';
 import '../Armor/ArmorType.dart';
 import '../Weapon/WeaponType.dart';
-import '../../World/TileObject/TileType.dart';
 import '../../Entity/Monster/MonsterType.dart';
 import '../Enum.dart';
 import 'dart:math';
@@ -16,7 +15,7 @@ class Chest extends Item
   Enum treasureType;
   Chest(Point point) : super(point, ItemType.TREASURECHEST)
   {
-    if(RNG.nextInt(4) != 0)
+    if(RNG.nextInt(8) != 0)
     {
       switch (difficulty) //TODO whats chests contains based on level of difficulty
       {
@@ -77,7 +76,7 @@ final ChooseRandom level8 = new ChooseRandom(loopList :[[35, ArmorType.HARDENEDS
 final ChooseRandom level9 = new ChooseRandom(loopList :[[35, ArmorType.TUNGSTENCARBIDEARMOR], [15, ArmorType.DIAMONDARMOR], [35, WeaponType.TUNGSTENCARBIDEANDURIL], [15, WeaponType.DIAMONDHIROSSWORD]]);
 final ChooseRandom level10 = new ChooseRandom(loopList :[[35, ArmorType.HULKARMOR], [15, ArmorType.NOKIAARMOR], [35, WeaponType.ADAMANTIUMCLAWS], [15, WeaponType.LIGHTSABER]]);
 
-final ChooseRandom troll = new ChooseRandom(loopList : [[75, TileType.GROUND], [25, MonsterType.GOBLIN]]);
+final ChooseRandom troll = new ChooseRandom(loopList : [[100, MonsterType.GOBLIN]]);
 
 
 

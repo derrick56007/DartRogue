@@ -293,7 +293,7 @@ var $$ = {};
   Chest: {
     "^": "Item;treasureType<,decription,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
     Chest$1: function(point) {
-      if ($.RNG.nextInt$1(4) !== 0)
+      if ($.RNG.nextInt$1(8) !== 0)
         switch ($.difficulty) {
           case 0:
             this.treasureType = $.get$level0().pick$0();
@@ -480,11 +480,8 @@ var $$ = {};
       if (t2 >>> 0 !== t2 || t2 >= t3.length)
         return H.ioore(t3, t2);
       J.$indexSet$ax(t3[t2], t4.x, this);
-      if (J.get$type$x(this.tileObject) === C.TileType_apl) {
+      if (J.get$type$x(this.tileObject) === C.TileType_apl)
         --this.HP;
-        if (!!this.$isPlayer)
-          A.addToNarration("You stepped on spikes", "red");
-      }
     },
     Entity$2: function(point, type) {
       this.isOpaque = true;
@@ -843,12 +840,12 @@ var $$ = {};
     "^": "Entity;COUNTMAX,followingCountdown<,followX,followY,pathToPlayer<,rng,atk,def,MAXHP,HP,items,armor,weapon,tileObject,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
     setAttributes$0: function() {
       switch (this.type) {
-        case C.MonsterType_tkU:
+        case C.MonsterType_G_goblin:
           this.MAXHP = 5;
           this.atk = 1;
           this.COUNTMAX = 6;
           break;
-        case C.MonsterType_yrN:
+        case C.MonsterType_L_lizard:
           this.MAXHP = 5;
           this.atk = 1;
           this.COUNTMAX = 4;
@@ -972,7 +969,7 @@ var $$ = {};
       if (this.HP > 0)
         A.refreshStats(this);
       else {
-        if (t1 === C.MonsterType_iL9)
+        if (t1 === C.MonsterType_G_keyholder)
           $.world.setTileTypeAtPoint$2(this.point, C.ItemType_K_key);
         else {
           t1 = this.rng.nextInt$1(3) === 0 && this.items.length > 0;
@@ -989,7 +986,7 @@ var $$ = {};
           C.JSArray_methods.remove$1($.world.monsters, this);
           J.set$opacity$x($.enemyStats.style, "0");
         }
-        A.addToNarration("You killed a " + t2 + "!", "green");
+        A.addToNarration("You kill a " + t2 + "!", "green");
       }
     },
     Monster$2: function(point, type) {
@@ -1026,26 +1023,32 @@ var $$ = {};
   Player: {
     "^": "Entity;atk,def,MAXHP,HP,items,armor,weapon,tileObject,type,isOpaque,isVisible,isSolid,isWalkable,point,g,h,f,opened,closed,parent",
     getAttackedWithDmg$2: function(monster, counter) {
-      var damage, t1;
+      var damage;
       if (counter)
         monster.getAttackedWithDmg$1(this);
       if (monster.HP > 0) {
         damage = this.takeDmg$1(monster);
-        t1 = monster.type.NAME;
-        A.addToNarration("A " + t1 + " attacks you! (-" + damage + " HP)", "red");
-        if (this.HP > 0)
-          A.refreshStats(this);
-        else {
-          A.refreshStats(this);
-          A.addToNarration("You got killed by a " + t1, "red");
-        }
+        A.addToNarration("A " + monster.type.NAME + " attacks you! (-" + damage + " HP)", "red");
+        this.checkIfDead$1(monster);
       }
     },
     movePlayer$1: function(move) {
       var moveY, moveX, t1, t2, t3, tileToMoveTo, chest;
       moveY = move.y;
       moveX = move.x;
-      if (!J.$eq(moveX, 0) || !J.$eq(moveY, 0)) {
+      if (!J.$eq(moveX, 0) || !J.$eq(moveY, 0))
+        if (J.$lt$n(J.$add$ns(this.point.y, moveY), $.world.grid.nodes.length)) {
+          t1 = J.$add$ns(this.point.x, moveX);
+          t2 = $.world.grid.nodes;
+          if (0 >= t2.length)
+            return H.ioore(t2, 0);
+          t2 = J.$lt$n(t1, J.get$length$asx(t2[0]));
+          t1 = t2;
+        } else
+          t1 = false;
+      else
+        t1 = false;
+      if (t1) {
         J.set$opacity$x($.enemyStats.style, "0");
         t1 = $.world;
         t2 = H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]);
@@ -1056,12 +1059,16 @@ var $$ = {};
         tileToMoveTo = J.$index$asx(t1[t3], t2.x);
         t1 = J.getInterceptor(tileToMoveTo);
         if (!t1.$isItem)
-          if (!tileToMoveTo.get$isSolid())
-            this.moveTo$1(0, H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]));
-          else if (!!t1.$isRangedMonster)
+          if (!tileToMoveTo.get$isSolid()) {
+            this.moveTo$1(0, tileToMoveTo.point);
+            if (tileToMoveTo.type === C.TileType_apl) {
+              A.addToNarration("You step on a spike", "red");
+              this.checkIfDead$1(tileToMoveTo);
+            }
+          } else if (!!t1.$isRangedMonster)
             tileToMoveTo.getAttackedWithDmg$1(this);
           else
-            A.addToNarration("You ran into a " + tileToMoveTo.type.NAME, "black");
+            A.addToNarration("You run into a " + tileToMoveTo.type.NAME, "black");
         else {
           t1 = $.world;
           t2 = H.setRuntimeTypeInfo(new P.Point(J.$add$ns(this.point.x, moveX), J.$add$ns(this.point.y, moveY)), [null]);
@@ -1076,11 +1083,10 @@ var $$ = {};
             if (C.JSArray_methods.contains$1(t1, C.ItemType_K_key)) {
               C.JSArray_methods.remove$1(t1, C.ItemType_K_key);
               $.world.setTileTypeAtPoint$2(chest.get$point(), chest.get$treasureType());
-              A.addToNarration("You used a key to open a chest (-1 key)", "green");
+              A.addToNarration("You use a key to open a chest (-1 key)", "green");
               t1 = chest.treasureType;
-              t2 = J.getInterceptor(t1);
-              if (!t2.$isItemType && !t2.$isArmorType && !t2.$isWeaponType)
-                A.addToNarration("The chest contains " + t1.get$NAME() + "...", "red");
+              if (!!J.getInterceptor(t1).$isMonsterType)
+                A.addToNarration("The chest contains a " + t1.get$NAME() + "...", "red");
             } else
               A.addToNarration("You need a key to open this chest!", "black");
           } else if (!!t1.$isItem) {
@@ -1106,7 +1112,7 @@ var $$ = {};
               this.items.push(chest.type);
               $.world.setTileTypeAtPoint$2(chest.point, C.TileType_CF3);
             }
-            A.addToNarration("You picked up " + chest.type.NAME, "green");
+            A.addToNarration("You pick up " + chest.type.NAME, "green");
           }
         }
         t1 = $.world;
@@ -1119,6 +1125,11 @@ var $$ = {};
         t1.loopTiles$0();
         A.refreshStats(t1.player);
       }
+    },
+    checkIfDead$1: function(tile) {
+      A.refreshStats(this);
+      if (this.HP <= 0)
+        A.addToNarration("A " + tile.type.NAME + " kills you", "red");
     },
     $isPlayer: true
   }
@@ -1509,7 +1520,7 @@ var $$ = {};
         t3 = point.x;
         tileObject = J.$index$asx(t1[t2], t3);
         tileObject.set$isVisible(true);
-        if (tileObject.type === C.MonsterType_yrN) {
+        if (tileObject.type === C.MonsterType_L_lizard) {
           tileObject.setProjectilePath$1(this);
           t1 = tileObject.followingCountdown;
           t4 = tileObject.COUNTMAX;
@@ -1664,7 +1675,7 @@ var $$ = {};
         J.$indexSet$ax(t1[t2], coord.x, V.TileObject$(coord, type));
       } else if (!!t1.$isMonsterType) {
         t1 = this.grid;
-        if (type !== C.MonsterType_yrN) {
+        if (type !== C.MonsterType_L_lizard) {
           t1 = t1.nodes;
           t2 = coord.y;
           if (t2 >>> 0 !== t2 || t2 >= t1.length)
@@ -1711,7 +1722,7 @@ var $$ = {};
         t4.isWalkable = true;
         switch (type) {
           case C.PlayerType_8aB:
-            t4.MAXHP = 25;
+            t4.MAXHP = 50;
             t4.atk = 1;
             break;
           default:
@@ -9152,7 +9163,7 @@ var $$ = {};
         t1.isWalkable = true;
         switch (type) {
           case C.PlayerType_8aB:
-            t1.MAXHP = 25;
+            t1.MAXHP = 50;
             t1.atk = 1;
             break;
           default:
@@ -9858,9 +9869,9 @@ C.JS_CONST_rr7 = function(hooks) {
   hooks.getTag = getTagFixed;
   hooks.prototypeForTag = prototypeForTagFixed;
 };
-C.MonsterType_iL9 = new Y.MonsterType("G", "a keyholder");
-C.MonsterType_tkU = new Y.MonsterType("G", "a goblin");
-C.MonsterType_yrN = new Y.MonsterType("L", "a lizard");
+C.MonsterType_G_goblin = new Y.MonsterType("G", "goblin");
+C.MonsterType_G_keyholder = new Y.MonsterType("G", "keyholder");
+C.MonsterType_L_lizard = new Y.MonsterType("L", "lizard");
 C.PlayerType_8aB = new L.PlayerType("@", "generic player");
 C.RoomType_2bL = new M.RoomType("MONSTORROOM", "monster room");
 C.RoomType_AqM = new M.RoomType("SPIKEROOM", "spike room");
@@ -9970,10 +9981,10 @@ Isolate.$lazy($, "level10", "level10", "get$level10", function() {
   return S.ChooseRandom$([[35, C.ArmorType_dSs], [15, C.ArmorType_wrR], [35, C.WeaponType_QKc], [15, C.WeaponType_OCd]]);
 });
 Isolate.$lazy($, "troll", "troll", "get$troll", function() {
-  return S.ChooseRandom$([[75, C.TileType_CF3], [25, C.MonsterType_tkU]]);
+  return S.ChooseRandom$([[100, C.MonsterType_G_goblin]]);
 });
 Isolate.$lazy($, "monsterList", "monsterList", "get$monsterList", function() {
-  return S.ChooseRandom$([[80, C.MonsterType_tkU], [20, C.MonsterType_yrN]]);
+  return S.ChooseRandom$([[80, C.MonsterType_G_goblin], [20, C.MonsterType_L_lizard]]);
 });
 Isolate.$lazy($, "globalThis", "globalThis", "get$globalThis", function() {
   return function() {

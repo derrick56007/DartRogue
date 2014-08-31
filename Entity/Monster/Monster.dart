@@ -149,6 +149,6 @@ class Monster extends Entity
       world.monsters.remove(this);
       enemyStats.style.opacity = "0";
     }
-    addToNarration("You killed a ${this.type.NAME}!", "green");
+    addToNarration("You kill a ${this.type.NAME}!", "green");
   }
 }
