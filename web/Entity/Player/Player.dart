@@ -13,6 +13,7 @@ import '../../Items/Armor/Armor.dart';
 import '../../Items/Weapon/Weapon.dart';
 import '../../Items/Armor/ArmorType.dart';
 import '../../Items/Weapon/WeaponType.dart';
+import '../Monster/MonsterType.dart';
 import '../Monster/RangedMonster.dart';
 import 'dart:math';
 
@@ -30,7 +31,7 @@ class Player extends Entity
     switch(this.type)
     {
       case PlayerType.GENERIC:
-        this.MAXHP = 25;
+        this.MAXHP = 50;
         this.atk = 1;
         break;
       default:
@@ -48,15 +49,7 @@ class Player extends Entity
     {
       int damage = takeDmg(monster);
       addToNarration("A ${monster.type.NAME} attacks you! (-$damage HP)", "red");
-      if(this.HP > 0)
-      {
-        refreshStats(this);
-      }
-      else
-      {
-        refreshStats(this);// TODO died
-        addDeathToNarration(monster);
-      }
+      checkIfDead(monster);
     }
   }
   
@@ -65,7 +58,7 @@ class Player extends Entity
     int moveY = move.y;
     int moveX = move.x;
 
-    if(moveX != 0 || moveY != 0)
+    if((moveX != 0 || moveY != 0) && (this.point.y + moveY < world.grid.nodes.length && this.point.x + moveX < world.grid.nodes[0].length))
     {
       enemyStats.style.opacity = "0";
       TileObject tileToMoveTo = world.getAtPoint(new Point(this.point.x + moveX, this.point.y + moveY));
@@ -73,7 +66,12 @@ class Player extends Entity
       {
         if(!tileToMoveTo.isSolid)
         {
-          moveTo(new Point(this.point.x + moveX, this.point.y + moveY));
+          moveTo(tileToMoveTo.point);
+          if(tileToMoveTo.type == TileType.SPIKE)
+          {
+            addToNarration("You step on a spike", "red");
+            checkIfDead(tileToMoveTo);
+          }
         }
         else if(tileToMoveTo is RangedMonster)
         {
@@ -82,7 +80,7 @@ class Player extends Entity
         }
         else
         {
-          addToNarration("You ran into a ${tileToMoveTo.type.NAME}", "black");
+          addToNarration("You run into a ${tileToMoveTo.type.NAME}", "black");
         }
       }
       else
@@ -106,10 +104,10 @@ class Player extends Entity
         this.items.remove(ItemType.KEY);
         Chest chest = item;
         world.setTileTypeAtPoint(chest.point, chest.treasureType);
-        addToNarration("You used a key to open a chest (-1 key)", "green");
-        if(!(chest.treasureType is ItemType) && !(chest.treasureType is ArmorType) && !(chest.treasureType is WeaponType))
+        addToNarration("You use a key to open a chest (-1 key)", "green");
+        if(chest.treasureType is MonsterType)
         {
-          addToNarration("The chest contains ${chest.treasureType.NAME}...", "red");
+          addToNarration("The chest contains a ${chest.treasureType.NAME}...", "red");
         }
       }
       else
@@ -120,7 +118,7 @@ class Player extends Entity
     else if(item is Item)
     {
       addToInventory(item);
-      addToNarration("You picked up ${item.type.NAME}", "green");
+      addToNarration("You pick up ${item.type.NAME}", "green");
     }
   }
   
@@ -157,8 +155,17 @@ class Player extends Entity
     }
   }
   
-  void addDeathToNarration(Monster monster)
+  void checkIfDead(TileObject tile)
   {
-    addToNarration("You got killed by a ${monster.type.NAME}", "red");
+    refreshStats(this);
+    if(this.HP <= 0)
+    {
+      addDeathToNarration(tile);
+    }
+  }
+  
+  void addDeathToNarration(TileObject tile)
+  {
+    addToNarration("A ${tile.type.NAME} kills you", "red");
   }
 }
