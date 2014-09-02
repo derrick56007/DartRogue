@@ -5,7 +5,7 @@ import 'TileObject/TileType.dart';
 import 'Room/RoomType.dart';
 import 'Room/Room.dart';
 import '../Entity/Player/Player.dart';
-import '../Game.dart';
+import '../Game/Game.dart';
 import '../Entity/Monster/MonsterType.dart';
 import '../Entity/Monster/Monster.dart';
 import 'dart:math';
@@ -33,39 +33,39 @@ class World
   Player player;
   ChooseRandom roomTypes = new ChooseRandom();
   ChooseRandom roomSizes = new ChooseRandom();
-  
+
   World(this.width, this.height)
   {
     this.grid = new Grid(this.width, this.height);
     clearGrid();
-    
+
     roomTypes.add(RoomType.MONSTERROOM, 20);
     roomTypes.add(RoomType.NORMAL,  50);
     roomTypes.add(RoomType.SPIKEROOM, 25);
     roomTypes.add(RoomType.TREASUREROOM, 5);
-    
+
     roomSizes.add("large", 20);
     roomSizes.add("small", 80);
-    
+
     generateContent();
   }
-  
+
   void generateContent()
   {
     generateRooms(getPosOrNeg((this.width*this.height)~/350, (this.width *this.height)~/900));
     loopDigCorridors();
     setRoom();
-    refreshStats(player);
+    display.refreshStats(player);
     loopTiles();
   }
-  
+
   void timeStep()
   {
     timeStepMonsters();
     loopTiles();
-    refreshStats(player);
+    display.refreshStats(player);
   }
-  
+
   void timeStepMonsters()
   {
     //
@@ -74,18 +74,18 @@ class World
     {
       var monster = monsters[i];
       if(monster.followingCountdown > 0)
-      { 
+      {
         monster.pathToPlayer = astar.findPath(monster.point, this.player.point, grid.clone());
       }
     }
-    
+
     monsters.sort((a,b) => a.pathToPlayer.length.compareTo(b.pathToPlayer.length));
     for(int i = 0; i < monsters.length; i++)
     {
       monsters[i].timeStep(this);
     }
   }
-  
+
   void loopTiles()
   {
     if(shadowsOn)
@@ -98,7 +98,7 @@ class World
         }
       }
     }
-    
+
     for(int i = 0; i < this.height; i++)
     {
       for(int j = 0; j < this.width; j++)
@@ -107,13 +107,13 @@ class World
       }
     }
   }
-  
+
   void lineOfSight(Point point,Point point2)
   {
       int w = point2.x - point.x ;
       int h = point2.y - point.y ;
       int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0 ;
-      
+
       if (w<0) dx1 = -1 ; else if (w>0) dx1 = 1 ;
       if (h<0) dy1 = -1 ; else if (h>0) dy1 = 1 ;
       if (w<0) dx2 = -1 ; else if (w>0) dx2 = 1 ;
@@ -124,15 +124,15 @@ class World
           longest = h.abs() ;
           shortest = w.abs() ;
           if (h<0) dy2 = -1 ; else if (h>0) dy2 = 1 ;
-          dx2 = 0 ;            
+          dx2 = 0 ;
       }
-      
+
       int numerator = longest >> 1 ;
-      for (int i=0;i<=longest;i++) 
+      for (int i=0;i<=longest;i++)
       {
         var tileObject = grid.nodes[point.y][point.x];
         tileObject.isVisible = true;
-        
+
         if(tileObject.type == MonsterType.LIZARD)
         {
           RangedMonster monster = tileObject;
@@ -150,26 +150,26 @@ class World
             monster.followCountSetMax();
           }
         }
-        
+
         if (!grid.nodes[point.y][point.x].isOpaque) break;
-        
+
         numerator += shortest ;
-        if (!(numerator < longest)) 
+        if (!(numerator < longest))
         {
             numerator -= longest ;
             point = new Point(point.x + dx1, point.y + dy1);
         }
-        else 
+        else
         {
             point = new Point(point.x + dx2, point.y + dy2);
         }
       }
   }
-  
+
   void clearGrid()
   {
     var row = [];
-       
+
     for(int y = 0, height = this.height; y < height; y++)
     {
       row = [];
@@ -183,15 +183,15 @@ class World
         {
           row.add(new TileObject(new Point( x, y), TileType.WALL));
         }
-      }      
+      }
       grid.nodes.add(row);
     }
   }
-  
+
   void generateRooms(int numOfRooms)
   {
-    List<RoomType> defaultRooms = [RoomType.STARTROOM, RoomType.TREASUREROOM]; 
-    
+    List<RoomType> defaultRooms = [RoomType.STARTROOM, RoomType.TREASUREROOM];
+
     for(int i = 0; i < numOfRooms; i++)
     {
       int roomWidth;
@@ -206,7 +206,7 @@ class World
         roomWidth = RNG.nextInt(10) + 14;
         roomHeight = RNG.nextInt(10) + 14;
       }
-      
+
       int x = this.width - roomWidth - RNG.nextInt(width - roomWidth);
       int y = this.height - roomHeight  - RNG.nextInt(height - roomHeight);
       Room room;
@@ -237,7 +237,7 @@ class World
       }
     }
   }
-  
+
   void setRoom()
   {
     for(int i = 0, length = rooms.length; i < length; i++) //number of rooms to iterate through
@@ -253,7 +253,7 @@ class World
       }
     }
   }
-  
+
   void loopDigCorridors()
   {
     for(int i = 1, length = rooms.length; i < length; i++)
@@ -265,7 +265,7 @@ class World
       digCorridor(oldRoom.midY, newRoom.midY, newRoom.midX, 0 ); //ver
     }
   }
-  
+
   void digCorridor(int pos1, int pos2, int constantPos, int dir)
   {
     for(int i = min(pos1, pos2), maxPos = max(pos1, pos2); i < maxPos + 1 + dir; i++)
@@ -282,7 +282,7 @@ class World
       }
     }
   }
-  
+
   void setTileTypeAtPoint(Point coord, Enum type)
   {
     if(type is TileType)
@@ -323,12 +323,12 @@ class World
       grid.nodes[coord.y][coord.x] = new Item(coord, type);
     }
   }
-  
+
   void setAtPoint(Point coord, dynamic thing)
   {
     this.grid.nodes[coord.y][coord.x] = thing;
   }
-  
+
   TileObject getAtPoint(Point atPoint)
   {
     return grid.nodes[atPoint.y][atPoint.x];

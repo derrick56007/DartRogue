@@ -5,6 +5,5 @@ import 'dart:math';
 
 class Weapon extends Item
 {
-  int atk;
   Weapon(Point point, var type) : super(point, type);
 }

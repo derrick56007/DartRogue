@@ -1,6 +1,6 @@
 library CHOOSERANDOM;
 
-import '../Game.dart';
+import '../Game/Game.dart';
 
 class ChooseRandom
 {

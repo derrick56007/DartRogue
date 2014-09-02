@@ -2,7 +2,7 @@ library ROOM;
 
 import 'RoomType.dart';
 import '../TileObject/TileType.dart';
-import '../../Game.dart';
+import '../../Game/Game.dart';
 import '../../Entity/Monster/MonsterType.dart';
 import '../../Entity/Player/PlayerType.dart';
 import '../../Items/Enum.dart';

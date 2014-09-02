@@ -1,7 +1,7 @@
 library MONSTER;
 
 import '../Entity.dart';
-import '../../Game.dart';
+import '../../Game/Game.dart';
 import '../Player/Player.dart';
 import 'MonsterType.dart';
 import '../../World/TileObject/TileType.dart';
@@ -9,6 +9,7 @@ import 'dart:math';
 import '../../Items/Item/ItemType.dart';
 import '../Pathfinding/astar.dart';
 import '../../World/World.dart';
+import '../../Game/Visual/Display.dart';
 
 class Monster extends Entity
 {
@@ -17,7 +18,7 @@ class Monster extends Entity
   int followX, followY;
   List pathToPlayer = [];
   Random rng;
-  
+
   Monster(Point point, MonsterType type) : super(point, type)
   {
     this.isSolid = true;
@@ -27,7 +28,7 @@ class Monster extends Entity
     this.items.add(ItemType.KEY);
     this.rng = new Random(RNG.nextInt(pow(2, 32)));
   }
-  
+
   void setAttributes()
   {
     switch(this.type) //TODO attributes based on difficulty
@@ -46,7 +47,7 @@ class Monster extends Entity
         break;
     }
   }
-  
+
   void timeStep(World world)
   {
     if(this.followingCountdown > 0)
@@ -66,7 +67,7 @@ class Monster extends Entity
       moveIdle();
     }
   }
-  
+
   void moveTowardsPlayer()
   {
     if(world.grid.nodes[pathToPlayer[1][1]][pathToPlayer[1][0]].isWalkable)
@@ -94,7 +95,7 @@ class Monster extends Entity
       moveTowardsPlayer();
     }
   }
-  
+
   void moveIdle()
   {
     if(this.rng.nextInt(5) == 0)
@@ -110,26 +111,26 @@ class Monster extends Entity
       }
     }
   }
-  
+
   void followCountSetMax()
   {
     this.followingCountdown = COUNTMAX;
   }
-  
+
   void getAttackedWithDmg(Player player)
   {
     takeDmg(player);
-    addToNarration("You attack a ${this.type.NAME}! (${player.atk + player.weapon.atk} dmg)", "black");
+    display.addToNarration("You attack a ${this.type.NAME}! (${player.atk + player.weapon.atk} dmg)", "black");
     if(this.HP > 0)
     {
-      refreshStats(this);
+      display.refreshStats(this);
     }
     else
     {
       doWhenDead();
     }
   }
-  
+
   void doWhenDead()
   {
     if(this.type == MonsterType.KEYHOLDER)
@@ -149,6 +150,6 @@ class Monster extends Entity
       world.monsters.remove(this);
       enemyStats.style.opacity = "0";
     }
-    addToNarration("You kill a ${this.type.NAME}!", "green");
+    display.addToNarration("You kill a ${this.type.NAME}!", "green");
   }
 }

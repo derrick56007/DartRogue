@@ -1,3 +1,12 @@
+html {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 body {
   background-color: #F8F8F8;
   font-family: "Courier New";
@@ -8,7 +17,7 @@ body {
 
 @font-face {
   font-family: Roboto-Regular;
-  src: url(Assets/Fonts/Roboto-Regular.ttf);
+  src: url(../Fonts/Roboto-Regular.ttf);
 }
 
 #display {
@@ -16,6 +25,12 @@ body {
   font-size: 1em;
   font-weight: bold;
   float: left;
+  -webkit-touch-callout: text;
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
 }
 
 h1 {
@@ -49,32 +64,28 @@ h1 {
   float: right;
 }
 
-.stats, #narration, #display, #decision, .choice
-{
+.stats, #narration, #display, #decision, .choice {
   border: solid 1px black;
   border-radius: 3px;
   text-align: left;
 }
 
-.itemsStat
-{
-  white-space: pre-wrap;      /* CSS3 */   
-  white-space: -moz-pre-wrap; /* Firefox */    
-  white-space: -pre-wrap;     /* Opera <7 */   
-  white-space: -o-pre-wrap;   /* Opera 7 */    
-  word-wrap: break-word;      /* IE */
+.itemsStat {
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
 }
 
-#narrationHolder
-{
+#narrationHolder {
   height: 210px;
   width: 1010px;
   margin: auto;
   margin-top: 15px;
 }
 
-#narration
-{
+#narration {
   height: 210px;
   width: 800px;
   overflow: hidden;
@@ -82,8 +93,7 @@ h1 {
   float: left;
 }
 
-.statTitle
-{
+.statTitle {
   font-size: 2em;
   text-align: center;
   margin-top: 5px;
@@ -92,16 +102,15 @@ h1 {
 .narrationLine {
   font-family: Roboto-Regular;
   text-align: left;
-  white-space: pre-wrap;      /* CSS3 */   
-  white-space: -moz-pre-wrap; /* Firefox */    
-  white-space: -pre-wrap;     /* Opera <7 */   
-  white-space: -o-pre-wrap;   /* Opera 7 */    
-  word-wrap: break-word;      /* IE */
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
   margin-bottom: 9px;
 }
 
-#decision
-{
+#decision {
   font-family: Roboto-Regular;
   display: inline-block;
   width: 198px;
@@ -118,12 +127,33 @@ h1 {
   padding-right: 5px;
 }
 
-#ynHolder
-{
+#ynHolder {
   float: bottom;
   margin: auto;
   width: 90%;
   padding: 5%;
   display: table;
   table-layout: fixed;
+}
+
+.dialogBox {
+  width: 500px;
+  height: 300px;
+  border: 1px solid black;
+  border-radius: 3px;
+  background-color: #F8F8F8;
+  color: black;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -250px;
+  margin-top: -150px;
+  font-family: Roboto-Regular;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: -pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+  text-align: left;
+  padding: 25px;
 }

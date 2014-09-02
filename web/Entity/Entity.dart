@@ -2,7 +2,7 @@ library ENTITY;
 
 import '../World/TileObject/TileObject.dart';
 import '../Items/Item/ItemType.dart';
-import '../Game.dart';
+import '../Game/Game.dart';
 import '../Items/Weapon/WeaponType.dart';
 import '../World/TileObject/TileType.dart';
 import '../Items/Armor/ArmorType.dart';

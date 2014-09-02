@@ -3,7 +3,7 @@ library RANGEDMONSTER;
 import 'Monster.dart';
 import 'dart:math';
 import 'MonsterType.dart';
-import '../../Game.dart';
+import '../../Game/Game.dart';
 import '../../World/TileObject/TileObject.dart';
 import '../../World/TileObject/TileType.dart';
 import '../Entity.dart';
@@ -27,7 +27,7 @@ class RangedMonster extends Monster
     this.rng = new Random(RNG.nextInt(pow(2, 32)));
     this.isVisible = !shadowsOn;
   }
-  
+
   void timeStep(World world)
   {
     if(this.projectilePath != null)
@@ -52,7 +52,7 @@ class RangedMonster extends Monster
     }
     this.delayCount--;
   }
-  
+
   setProjectilePath(World world)
   {
     if(this.projectilePath == null && this.delayCount <= 0)
@@ -60,36 +60,70 @@ class RangedMonster extends Monster
       this.projectilePath = [];
       Point point = this.point;
       Point point2 = world.player.point;
-      int w = point2.x - point.x ;
-      int h = point2.y - point.y ;
+      int width = point2.x - point.x ;
+      int height = point2.y - point.y ;
 
-      int dx1 = 0, dy1 = 0, dx2 = 0, dy2 = 0 ;
-      
-      if (w<0) dx1 = -1 ; else if (w>0) dx1 = 1 ;
-      if (h<0) dy1 = -1 ; else if (h>0) dy1 = 1 ;
-      if (w<0) dx2 = -1 ; else if (w>0) dx2 = 1 ;
-      int longest = w.abs();
-      int shortest = h.abs();
-      if (!(longest > shortest))
+      int dx1 = 0;
+      int dy1 = 0;
+      int dx2 = 0;
+      int dy2 = 0 ;
+
+      if(width < 0)
       {
-          longest = h.abs() ;
-          shortest = w.abs() ;
-          if (h<0) dy2 = -1 ; else if (h>0) dy2 = 1 ;
-          dx2 = 0 ;            
+        dx1 = -1;
       }
-      
+      else if(width > 0)
+      {
+        dx1 = 1;
+      }
+
+      if(height < 0)
+      {
+        dy1 = -1;
+      }
+      else if(height > 0)
+      {
+        dy1 = 1;
+      }
+
+      if(width < 0)
+      {
+        dx2 = -1;
+      }
+      else if(width > 0)
+      {
+        dx2 = 1;
+      }
+
+      int longest = width.abs();
+      int shortest = height.abs();
+      if(!(longest > shortest))
+      {
+          longest = height.abs() ;
+          shortest = width.abs() ;
+          if(height < 0)
+          {
+            dy2 = -1;
+          }
+          else if(height > 0)
+          {
+            dy2 = 1;
+          }
+          dx2 = 0;
+      }
+
       int numerator = longest >> 1 ;
-      for (int i=0;i<=longest;i++) 
+      for (int i = 0;i <= longest;i++)
       {
         this.projectilePath.add( point);
-        
+
         numerator += shortest ;
-        if (!(numerator < longest)) 
+        if(!(numerator < longest))
         {
             numerator -= longest ;
             point = new Point(point.x + dx1, point.y + dy1);
         }
-        else 
+        else
         {
             point = new Point(point.x + dx2, point.y + dy2);
         }
@@ -98,7 +132,7 @@ class RangedMonster extends Monster
       this.projectile = this.projectilePath[1];
     }
   }
-  
+
   void moveProjectile(World world)
   {
     if(this.projectilePath.length > 0)
@@ -107,6 +141,7 @@ class RangedMonster extends Monster
       {
         this.projectilePath.removeAt(0);
       }
+
       TileObject tileToMoveTo = world.getAtPoint(this.projectilePath.first);
       if(tileToMoveTo.type == TileType.GROUND)
       {
@@ -135,7 +170,7 @@ class RangedMonster extends Monster
       }
     }
   }
-  
+
   void removeProjectile(World world)
   {
     if(world.getAtPoint(this.projectile).type == TileType.PROJECTILE)
@@ -143,7 +178,7 @@ class RangedMonster extends Monster
       world.setTileTypeAtPoint(this.projectile, TileType.GROUND);
     }
   }
-  
+
   void erasePath()
   {
     this.projectilePath = null;

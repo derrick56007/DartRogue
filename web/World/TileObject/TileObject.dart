@@ -1,10 +1,13 @@
 library TILEOBJECT;
 
-import '../../Game.dart';
+import '../../Game/Game.dart';
 import 'TileType.dart';
 import '../../Items/Enum.dart';
 import 'dart:math';
 
+/*
+ * Basis of all objects in the game grid
+ */
 class TileObject
 {
   Enum type;
@@ -17,7 +20,7 @@ class TileObject
   bool opened, closed;
   TileObject parent;
   String toString() => "${type.toString()}";
-  
+
   TileObject(this.point, this.type)
   {
     if(this.type == TileType.WALL)
@@ -25,7 +28,6 @@ class TileObject
       this.isSolid = true;
       this.isOpaque = false;
       this.isWalkable = !this.isSolid;
-      
     }
     else if(this.type == TileType.GROUND)
     {

@@ -2,7 +2,7 @@ library CHEST;
 
 import 'Item.dart';
 import 'ItemType.dart';
-import '../../Game.dart';
+import '../../Game/Game.dart';
 import '../Armor/ArmorType.dart';
 import '../Weapon/WeaponType.dart';
 import '../../Entity/Monster/MonsterType.dart';

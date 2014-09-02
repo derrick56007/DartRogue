@@ -3,7 +3,7 @@ library PLAYER;
 import '../Entity.dart';
 import '../../World/TileObject/TileObject.dart';
 import 'PlayerType.dart';
-import '../../Game.dart';
+import '../../Game/Game.dart';
 import '../Monster/Monster.dart';
 import '../../Items/Item/Item.dart';
 import '../../World/TileObject/TileType.dart';
@@ -16,6 +16,7 @@ import '../../Items/Weapon/WeaponType.dart';
 import '../Monster/MonsterType.dart';
 import '../Monster/RangedMonster.dart';
 import 'dart:math';
+import '../../Game/Visual/Display.dart';
 
 class Player extends Entity
 {
@@ -25,7 +26,7 @@ class Player extends Entity
     setAttributes();
     this.HP = this.MAXHP;
   }
-  
+
   void setAttributes()
   {
     switch(this.type)
@@ -34,11 +35,12 @@ class Player extends Entity
         this.MAXHP = 50;
         this.atk = 1;
         break;
+
       default:
         break;
     }
   }
-  
+
   void getAttackedWithDmg(Monster monster, bool counter)
   {
     if(counter)
@@ -48,20 +50,18 @@ class Player extends Entity
     if(monster.HP > 0)
     {
       int damage = takeDmg(monster);
-      addToNarration("A ${monster.type.NAME} attacks you! (-$damage HP)", "red");
+      display.addToNarration("A ${monster.type.NAME} attacks you! (-$damage HP)", "red");
       checkIfDead(monster);
     }
   }
-  
+
   void movePlayer(Point move)
   {
-    int moveY = move.y;
-    int moveX = move.x;
-
-    if((moveX != 0 || moveY != 0) && (this.point.y + moveY < world.grid.nodes.length && this.point.x + moveX < world.grid.nodes[0].length))
+    if((move.x != 0 || move.y != 0) && (this.point.y + move.y < world.grid.nodes.length && this.point.x + move.x < world.grid.nodes[0].length))
     {
       enemyStats.style.opacity = "0";
-      TileObject tileToMoveTo = world.getAtPoint(new Point(this.point.x + moveX, this.point.y + moveY));
+      TileObject tileToMoveTo = world.getAtPoint(new Point(this.point.x + move.x, this.point.y + move.y));
+
       if(!(tileToMoveTo is Item))
       {
         if(!tileToMoveTo.isSolid)
@@ -69,7 +69,7 @@ class Player extends Entity
           moveTo(tileToMoveTo.point);
           if(tileToMoveTo.type == TileType.SPIKE)
           {
-            addToNarration("You step on a spike", "red");
+            display.addToNarration("You step on a spike", "red");
             checkIfDead(tileToMoveTo);
           }
         }
@@ -80,12 +80,12 @@ class Player extends Entity
         }
         else
         {
-          addToNarration("You run into a ${tileToMoveTo.type.NAME}", "black");
+          display.addToNarration("You run into a ${tileToMoveTo.type.NAME}", "black");
         }
       }
       else
       {
-        touchedItem(world.getAtPoint(new Point(this.point.x + moveX, this.point.y + moveY)));
+        touchedItem(world.getAtPoint(new Point(this.point.x + move.x, this.point.y + move.y)));
       }
       world.timeStep();
     }
@@ -94,7 +94,7 @@ class Player extends Entity
       world.timeStep();
     }
   }
-  
+
   void touchedItem(Item item)
   {
     if(item.type == ItemType.TREASURECHEST)
@@ -104,24 +104,24 @@ class Player extends Entity
         this.items.remove(ItemType.KEY);
         Chest chest = item;
         world.setTileTypeAtPoint(chest.point, chest.treasureType);
-        addToNarration("You use a key to open a chest (-1 key)", "green");
+        display.addToNarration("You use a key to open a chest (-1 key)", "green");
         if(chest.treasureType is MonsterType)
         {
-          addToNarration("The chest contains a ${chest.treasureType.NAME}...", "red");
+          display.addToNarration("The chest contains a ${chest.treasureType.NAME}...", "red");
         }
       }
       else
       {
-        addToNarration("You need a key to open this chest!", "black");
+        display.addToNarration("You need a key to open this chest!", "black");
       }
     }
     else if(item is Item)
     {
       addToInventory(item);
-      addToNarration("You pick up ${item.type.NAME}", "green");
+      display.addToNarration("You pick up ${item.type.NAME}", "green");
     }
   }
-  
+
   void addToInventory(Item item)
   {
     if(item is Armor)
@@ -154,18 +154,18 @@ class Player extends Entity
       world.setTileTypeAtPoint(item.point, TileType.GROUND);
     }
   }
-  
+
   void checkIfDead(TileObject tile)
   {
-    refreshStats(this);
+    display.refreshStats(this);
     if(this.HP <= 0)
     {
       addDeathToNarration(tile);
     }
   }
-  
+
   void addDeathToNarration(TileObject tile)
   {
-    addToNarration("A ${tile.type.NAME} kills you", "red");
+    display.addToNarration("A ${tile.type.NAME} kills you", "red");
   }
 }
