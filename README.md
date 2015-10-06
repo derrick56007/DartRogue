@@ -1,25 +1,7 @@
-DartRogue
+﻿DartRogue
 =========
 A roguelike made in dart 
 
-Try it [here!](http://thesneakynarwhal.github.io/DartRogue)
-Controls
-========
-
-      +---+---+---+    +---+---+---+
-      | Q | W | E |    | 7 | 8 | 9 |
-      +---+---+---+    +---+---+---+      All are movement keys except
-      | A | S | D | or | 4 | 5 | 6 |      for 'S' and '5', which just performs a
-      +---+---+---+    +---+---+---+      timestep
-      | Z | X | C |    | 1 | 2 | 3 |
-      +---+---+---+    +---+---+---+
-
-Features
-========
-```
-1. Random dungeon generation
-2. Monsters
-3. Projectiles
 4. Treasure
 5. Shadow casting
 6. Pathfinging AI
