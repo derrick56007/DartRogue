@@ -26,7 +26,7 @@ Features
 7. Armors, Weapons, and Items
 8. Deterministic generator (seed is displayed in the dev console)
    How to set the seed: add ?SEEDNUMBER at the end of the page and then refresh
-   ex: http://thesneakynarwhal.github.io/DartRogue/?965
+   ex: http://derrick56007.github.io/DartRogue/?965
   
 9. World displayed in text (you can copy and paste your screen)
 ```
@@ -53,7 +53,7 @@ Credits
 
 Pathfinding Library Port - Pavel Jbanov (https://github.com/pavelgj/PathFinding.dart)
 
-[Wiki](https://github.com/TheSneakyNarwhal/DartRogue/wiki)
+[Wiki](https://github.com/Derrick56007/DartRogue/wiki)
 ====
 
-[Roadmap](https://github.com/TheSneakyNarwhal/DartRogue/wiki/ROADMAP)
+[Roadmap](https://github.com/Derrick56007/DartRogue/wiki/ROADMAP)
