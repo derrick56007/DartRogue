@@ -2,7 +2,7 @@ DartRogue
 =========
 A roguelike made in dart 
 
-Try it [here!](http://thesneakynarwhal.github.io/DartRogue)
+Try it [here!](http://derrick56007.github.io/DartRogue/)
 Controls
 ========
 
